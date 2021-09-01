@@ -4,6 +4,15 @@ project("FIBER" VERSION 0.1 LANGUAGES C)
 
 set(CMAKE_C_FLAGS "-lm")
 
+# FIBER uses C99 features (in-loop definition of for loop variables)
+if (CMAKE_VERSION VERSION_LESS "3.1")
+    if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
+        set (CMAKE_C_FLAGS "-std=gnu99 ${CMAKE_C_FLAGS}")
+    endif ( CMAKE_C_COMPILER_ID )
+else ()
+    set ( CMAKE_C_STANDARD 99 )
+endif ()
+
 find_package(MPI REQUIRED) # always a dependency
 
 # Add include paths

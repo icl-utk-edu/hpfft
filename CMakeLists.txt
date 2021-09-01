@@ -10,7 +10,7 @@ find_package(MPI REQUIRED) # always a dependency
 include_directories($ENV{HOME}/heffte/build/include)
 include_directories($ENV{HOME}/Benchmarks_FFT/fftmpi/src)
 include_directories($ENV{HOME}/Benchmarks_FFT/accfft/build/include)
-include_directories($ENV{HOME}/Benchmarks_FFT/p3dfft.3/include())
+include_directories($ENV{HOME}/Benchmarks_FFT/p3dfft.3/include)
 include_directories($ENV{HOME}/Benchmarks_FFT/FFTE-C-1.1/include)
 include_directories($ENV{HOME}/Benchmarks_FFT/SWFFT/)
 include_directories($ENV{HOME}/Benchmarks_FFT/2decomp_fft/src)

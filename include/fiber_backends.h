@@ -27,15 +27,15 @@ struct fiber_map_backend_d2z
 };
 
 const struct fiber_map_backend_d2z fiber_execute_d2z[] = {
-    { "heffte",   &compute_d2z_heffte   },
-    { "fftmpi",   &compute_d2z_fftmpi   },
-    { "accfft",   &compute_d2z_accfft   },
-    { "p3dfft",   &compute_d2z_p3dfft   },
-    { "ffte",     &compute_d2z_ffte     },
-    { "swfft",    &compute_d2z_swfft    },
-    { "decomp2d", &compute_d2z_decomp2d },
-    { "nb3dfft",  &compute_d2z_nb3dfft  },
-    { "fftw",     &compute_d2z_fftw     },
+    { "heffte",   &compute_d2z_heffte   }
+   ,{ "fftmpi",   &compute_d2z_fftmpi   }
+   ,{ "accfft",   &compute_d2z_accfft   }
+   ,{ "p3dfft",   &compute_d2z_p3dfft   }
+   ,{ "ffte",     &compute_d2z_ffte     }
+   ,{ "swfft",    &compute_d2z_swfft    }
+   ,{ "decomp2d", &compute_d2z_decomp2d }
+   ,{ "nb3dfft",  &compute_d2z_nb3dfft  }
+   ,{ "fftw",     &compute_d2z_fftw     }
 };
 
 
@@ -47,15 +47,17 @@ struct fiber_map_backend_z2d
 };
 
 const struct fiber_map_backend_z2d fiber_execute_z2d[] = {
-    { "heffte",   &compute_z2d_heffte   },
-    { "fftmpi",   &compute_z2d_fftmpi   },
-    { "accfft",   &compute_z2d_accfft   }
-    // { "p3dfft",   &compute_z2d_p3dfft   },
-    // { "ffte",     &compute_z2d_ffte     },
-    // { "swfft",    &compute_z2d_swfft    },
-    // { "decomp2d", &compute_z2d_decomp2d },
-    // { "nb3dfft",  &compute_z2d_nb3dfft  },
-    // { "fftw",     &compute_z2d_fftw     },
+    { "heffte",   &compute_z2d_heffte   }
+   ,{ "fftmpi",   &compute_z2d_fftmpi   }
+   ,{ "accfft",   &compute_z2d_accfft   }
+    /*
+   ,{ "p3dfft",   &compute_z2d_p3dfft   }
+   ,{ "ffte",     &compute_z2d_ffte     }
+   ,{ "swfft",    &compute_z2d_swfft    }
+   ,{ "decomp2d", &compute_z2d_decomp2d }
+   ,{ "nb3dfft",  &compute_z2d_nb3dfft  }
+   ,{ "fftw",     &compute_z2d_fftw     }
+   */
 };
 
 
@@ -66,15 +68,15 @@ struct fiber_map_backend_z2z
 };
 
 const struct fiber_map_backend_z2z fiber_execute_z2z[] = {
-    { "heffte",   &compute_z2z_heffte    },
-    { "fftmpi",   &compute_z2z_fftmpi    },
-    { "accfft",   &compute_z2z_accfft    },
-    { "p3dfft",   &compute_z2z_p3dfft    },
-    { "ffte",     &compute_z2z_ffte      },
-    { "swfft",    &compute_z2z_swfft     },
-    { "decomp2d", &compute_z2z_decomp2d  },
-    { "nb3dfft",  &compute_z2z_nb3dfft  },
-    { "fftw",     &compute_z2z_fftw     },
+    { "heffte",   &compute_z2z_heffte   }
+   ,{ "fftmpi",   &compute_z2z_fftmpi   }
+   ,{ "accfft",   &compute_z2z_accfft   }
+   ,{ "p3dfft",   &compute_z2z_p3dfft   }
+   ,{ "ffte",     &compute_z2z_ffte     }
+   ,{ "swfft",    &compute_z2z_swfft    }
+   ,{ "decomp2d", &compute_z2z_decomp2d }
+   ,{ "nb3dfft",  &compute_z2z_nb3dfft  }
+   ,{ "fftw",     &compute_z2z_fftw     }
 };
 
 #endif  //! FIBER_BACKENDS_H_ 

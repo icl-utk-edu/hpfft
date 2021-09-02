@@ -2,7 +2,8 @@
 #define FIBER_BACKENDS_H_
 
 
-#include "mpi.h"
+#include <mpi.h>
+
 #include "fiber_backend_heffte.h"
 #include "fiber_backend_fftmpi.h"
 #include "fiber_backend_accfft.h"

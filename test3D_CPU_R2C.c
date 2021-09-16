@@ -5,12 +5,15 @@
 */
 
 // Use this program to verify the correct integration of a third-party library
-// make -j; mpirun -n 2 ./test3D_CPU_C2C
+// make -j; mpirun -n 2 ./test3D_CPU_R2C
 
 #include "fiber_backends.h"
 #include "fiber_utils.h"
 
 int main(int argc, char** argv){
+
+    // Choose backend type
+    int my_backend  = heffte;
 
     MPI_Init(&argc, &argv);
     MPI_Comm comm = MPI_COMM_WORLD;
@@ -42,11 +45,28 @@ int main(int argc, char** argv){
     double *input  = malloc(size_inbox * sizeof(double));
     fiber_complex *output = calloc(size_outbox, sizeof(fiber_complex));
 
+    // Data Initialization
     for(i=0; i<size_inbox; i++)
         input[i] = (double) i;
 
+    for(i=0; i<size_outbox; i++) 
+        // printf("  %g+%gi  \t ", input[i].r, input[i].i);
+        printf("  %g \t ", input[i]);
+    printf("\n");        
+    printf("\n");        
+
     double timer[20];
-    fiber_execute_d2z[heffte].function(box_low, box_high, box_low, box_high, comm, input, output, 0, timer);
+
+    // ********************************
+    // Compute forward (D2Z) transform
+    // ********************************
+    fiber_execute_d2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, output, 0, timer);
+
+    // Output after forward
+    for(i=0; i<size_outbox; i++) 
+        printf(" %g+%gi  \t ", output[i].r, output[i].i);
+    printf("\n");
+    printf("\n");        
 
     // Error computation after forward
     if (me == 1){
@@ -63,14 +83,22 @@ int main(int argc, char** argv){
     }
     
     if(me == 0)
-        printf("\t\t%s library computed a correct forward R2C 3-D transform \n ", backends[heffte] );
+        printf("\t\t%s library computed a correct forward R2C 3-D transform \n \n ", backends[my_backend] );
 
-    /* 
-    // Compute backwad transform
+
+    // ********************************
+    // Compute backwad (Z2D) transform
+    // ********************************
     for(i=0; i<size_inbox; i++) input[i] = 0.0;
 
     // Backward execution
-    fiber_execute_z2d[heffte].function(box_low, box_high, box_low, box_high, comm, output, input, timer);
+    fiber_execute_z2d[my_backend].function(box_low, box_high, box_low, box_high, comm, output, input, timer);
+
+    // Output after backward
+    for(i=0; i<size_inbox; i++) 
+        printf("  %g \t ", input[i]);
+    printf("\n");
+    printf("\n");        
 
     // Error computation after backward
     double err = 0.0;
@@ -78,11 +106,7 @@ int main(int argc, char** argv){
         if (fabs(input[i] - (double) i) > err)
             err = fabs(input[i] - (double) i);
 
-    if (me == 0) printf("rank 0 computed error: %1.6le\n", err);
-    MPI_Barrier(comm);
-    if (me == 1) printf("rank 1 computed error: %1.6le\n", err);
-
-    */
+    printf("%s: rank %d computed error |X - ifft(fft(X)) |: %1.6le\n", backends[my_backend], me, err);
 
     // Data deallocation 
     free(input);

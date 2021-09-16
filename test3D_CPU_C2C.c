@@ -12,6 +12,9 @@
 
 int main(int argc, char** argv){
 
+    // Choose backend type
+    int my_backend  = heffte;
+
     MPI_Init(&argc, &argv);
     MPI_Comm comm = MPI_COMM_WORLD;
 
@@ -42,7 +45,7 @@ int main(int argc, char** argv){
     fiber_complex *input  = calloc(size_outbox, sizeof(fiber_complex));
     fiber_complex *output = calloc(size_outbox, sizeof(fiber_complex));
 
-
+    // Data Initialization
     for(i=0; i<size_inbox; i++){
         input[i].r = (double) i;
         input[i].i = (double) 0*i;
@@ -51,53 +54,23 @@ int main(int argc, char** argv){
     input[0].r = 1;
     input[0].i = 2;
 
+    for(i=0; i<size_inbox; i++) 
+        printf("  %g+%gi  \t ", input[i].r, input[i].i);
+    printf("\n");        
+    printf("\n");      
+
     double timer[20];
 
-    if (me == 0){
-        printf("\t\t_________________________________________________________ \n");
-        printf("\t\t\t  FFT Infraestructure Benchmark for Exascale Research   \n");
-        printf("\t\t\t           Fixed-size 3-D FFT Benchmark                 \n");
-        printf("\t\t_________________________________________________________ \n");
+    // ********************************
+    // Compute forward (Z2Z) transform
+    // ********************************
+    fiber_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, output, 0, timer);
 
-        printf("\t\tFFT size   : 4x4x4         \n");
-        printf("\t\tPrecision  : DOUBLE        \n");
-        printf("\t\tComputing  : C2C 1 FORWARD and 1 BACKWARD \n");
-        // printf("\t\tNum. Iter. : %d \n", n_iterations);
-
-        printf("\t\t_________________________________________________ \n");
-        printf("\t\t%10s \t %12s \t %12s \n", "LIBRARY", "Time Plan (s)", "Time FFT (s)");
-        printf("\t\t_________________________________________________ \n");
-    }
-
-    /*
-    * Benchmark multiple libraries at the time, some libs still in progress
-    for (int i = 0; i < 9; i++)
-    {
-        fiber_execute_z2z[i].function(box_low, box_high, box_low, box_high, comm, input, output, timer);
-        if (me == 0){
-            printf("\t\t%10s \t %6.3e \t %6.3e \n", backends[i], timer[0], timer[1]);
-            printf("\t\t------------------------------------------------- \n");
-        }        
-    }
-    */
-
-    /*
-    * Or benchmark a single library:
-    */
-    fiber_execute_z2z[heffte].function(box_low, box_high, box_low, box_high, comm, input, output, 0, timer);
-    // fiber_execute_z2z[p3dfft].function(box_low, box_high, box_low, box_high, comm, input, output);
-
-    /*
-    * We computed the solution by hand, so the library has to give the same result, which is:
+    // Output after forward
     for(i=0; i<size_outbox; i++) 
-        printf(" %g + %g i", output[i].r, output[i].i);
+        printf(" %g+%gi \t ", output[i].r, output[i].i);
     printf("\n");
-    */
-
-    // Check correctness after forward
-    // for(i=0; i<size_inbox; i++) 
-    //     printf(" %g + %gi  | ", output[i].r, output[i].i);
-    // printf("\n");
+    printf("\n");
 
     if (me == 1){
         int pass = 0;
@@ -116,26 +89,26 @@ int main(int argc, char** argv){
     }
 
     if(me == 0)
-        printf("\t\t%s library computed a correct forward C2C 3-D transform \n ", backends[heffte] );
+        printf("\t\t%s library computed a correct forward C2C 3-D transform \n \n", backends[my_backend] );
 
 
-/* 
-    // Compute backwad transform
+    // ********************************
+    // Compute backward (Z2Z) transform
+    // ********************************
     for(i=0; i<size_inbox; i++){
         input[i].r = 0.0;
         input[i].i = 0.0;
     }        
-    fiber_execute_z2z[heffte].function(box_low, box_high, box_low, box_high, comm, output, input, 1, timer);
 
-    // Check correctness after backward
+    fiber_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, output, input, 1, timer);
 
-    printf("\n");
-    printf("\n");
-
+    // Output after backward
     for(i=0; i<size_inbox; i++) 
-        printf(" %g + %gi  | ", input[i].r, input[i].i);
+        printf(" %g+%gi  \t ", input[i].r, input[i].i);
+    printf("\n");
     printf("\n");
 
+    // Error computation after backward
     double err = 0.0;
     for(i=1; i<size_inbox; i++)
         if (fabs(input[i].r - (double) i - 1) > err)
@@ -144,12 +117,8 @@ int main(int argc, char** argv){
     err = fmax( fabs(input[0].r - (double) 1) , err);
     err = fmax( fabs(input[0].r - (double) 2) , err);
 
-
     // Print errors
-    if (me == 0) printf("rank 0 computed error: %1.6le\n", err);
-    MPI_Barrier(comm);
-    if (me == 1) printf("rank 1 computed error: %1.6le\n", err);
-*/
+    printf("%s: rank %d computed error |X - ifft(fft(X)) |: %1.6le\n", backends[my_backend], me, err);
 
     // Data deallocation 
     free(input);

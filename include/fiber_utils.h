@@ -166,5 +166,30 @@ int factorize(int n)
   return(nfactor);
 }
 
+int fiber_get_backend(char * backend)
+{
+      if (strcmp(backend,"heffte") == 0)
+         return 0;
+      else if (strcmp(backend,"fftmpi") == 0)
+         return 1;
+      else if (strcmp(backend,"accfft") == 0)
+         return 2;
+      else if (strcmp(backend,"p3dfft") == 0)
+         return 3;
+      else if (strcmp(backend,"ffte") == 0)
+         return 4;
+      else if (strcmp(backend,"swfft") == 0)
+         return 5;
+      else if (strcmp(backend,"decomp2d") == 0)
+         return 6;
+      else if (strcmp(backend,"nb3dfft") == 0)
+         return 7;
+      else if (strcmp(backend,"fftw") == 0)
+         return 8;
+      else
+         printf("Invalid Backend \n" );
+}
+
+
 
 #endif//! FIBER_UTILS_H

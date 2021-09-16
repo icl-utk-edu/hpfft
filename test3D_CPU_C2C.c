@@ -11,9 +11,9 @@
 #include "fiber_utils.h"
 
 int main(int argc, char** argv){
-
-    // Choose backend type
-    int my_backend  = heffte;
+   
+    // Get backend type from user
+    int my_backend  = fiber_get_backend(argv[1]);
 
     MPI_Init(&argc, &argv);
     MPI_Comm comm = MPI_COMM_WORLD;
@@ -27,6 +27,17 @@ int main(int argc, char** argv){
     if (num_ranks != 2){
         if (me == 0) printf(" example is set to 2 mpi ranks, exiting \n");
         return 0;
+    }
+
+    if (me == 0){
+        printf("\t\t_________________________________________________________ \n");
+        printf("\t\t\t  FFT Infraestructure Benchmark for Exascale Research   \n");
+        printf("\t\t\t           Fixed-size 3-D FFT Benchmark                 \n");
+        printf("\t\t_________________________________________________________ \n");
+        printf("\t\tLibrary    : %s         \n", argv[1]);
+        printf("\t\tFFT size   : 4x4x4         \n");
+        printf("\t\tPrecision  : DOUBLE        \n");
+        printf("\t\tComputing  : C2C 1 FORWARD and 1 BACKWARD \n");
     }
 
     int i;

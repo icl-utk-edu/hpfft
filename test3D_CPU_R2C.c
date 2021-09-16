@@ -2,17 +2,16 @@
 * Harness software for benchmarking parallel FFT libraries.
 * Benchmark: R2C 3-D transform, double precision, 2 MPI ranks.
 * Autor: Alan Ayala - ICL, UTK.
+------------------------------------------------------------------------------
+Use this program to verify the correct integration of a third-party library
+make clean; make -j; mpirun -n 2 ./test3D_CPU_C2C <library>
 */
-
-// Use this program to verify the correct integration of a third-party library
-// make -j; 
-// mpirun -n 2 ./test3D_CPU_R2C heffte
 
 #include "fiber_backends.h"
 #include "fiber_utils.h"
 
 int main(int argc, char** argv){
-    
+
     MPI_Init(&argc, &argv);
     MPI_Comm comm = MPI_COMM_WORLD;
 

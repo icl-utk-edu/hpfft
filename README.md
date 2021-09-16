@@ -1,4 +1,4 @@
-<!-- ![FBI_banner](https://bitbucket.org/aayala32/logos/raw/4fd193bfb8e06939c1d8ca4d3ffc389fee50f7f6/FBI_logo.png) -->
+<!-- ![FBI_banner](https://bitbucket.org/aayala32/logos/raw/4fd193bfb8e06939c1d8ca4d3ffc389fee50f7f6/FIBER_logo.png) -->
 
 **FFT Benchmarking Initiative**
 
@@ -16,7 +16,7 @@
 About
 =====
 
-The FFT Benchmarking Initiative (FBI) provides a framework for Fast Fourier Transform (FFT) benchmarks targeting exascale computing systems. It evaluates performance and scalability of distributed FFTs on different architectures. Furthermore, it analyzes the effect on applications that directly depend on FFTs. It can also stress and test the overall network of a supercomputer, give an indication on bisection bandwidth, noise, and other network and MPI collectives limitations that are of interest to many other ECP applications.
+The FFT Infrastructure Benchmark for Exascale Research (FIBER) provides a framework for Fast Fourier Transform (FFT) benchmarks targeting exascale computing systems. It evaluates performance and scalability of distributed FFTs on different architectures. Furthermore, it analyzes the effect on applications that directly depend on FFTs. It can also stress and test the overall network of a supercomputer, give an indication on bisection bandwidth, noise, and other network and MPI collectives limitations that are of interest to many other ECP applications.
 
 
 The current harness software allows to compute 3-D complex-to-complex and real-to-complex FFTs.
@@ -55,7 +55,7 @@ Documentation
 Getting Help
 ============
 
-For assistance with FBI, email *aayala@icl.utk.edu* or start a GitHub issue. 
+For assistance with the FIBER project, email *fiber@icl.utk.edu* or start a GitHub issue. 
 
 Contributions are very welcome, please create a pull request.
 

@@ -1,4 +1,4 @@
-<!-- ![FBI_banner](https://bitbucket.org/aayala32/logos/raw/4fd193bfb8e06939c1d8ca4d3ffc389fee50f7f6/FIBER_logo.png) -->
+![FBI_banner](https://bitbucket.org/aayala32/logos/raw/de08df3c3bfd9d595587bf840f31afcb45d6019c/fiber.png)
 
 **FFT Benchmarking Initiative**
 
@@ -7,9 +7,6 @@
 **University of Tennessee**
 
 
-* * *
-
-[TOC]
 
 * * *
 
@@ -24,8 +21,38 @@ The current harness software allows to compute 3-D complex-to-complex and real-t
 
 * * *
 
-Compilation & first experiment
-==============================
+Setting up
+==========
+
+Create a folder  `Benchmarks_FFT`, and install the FFT libraries to benchmark.
+
+~~~
+|-- $HOME -> /
+-- Benchmarks_FFT
+        |-- heFFTe
+        |-- fftMPI
+        |-- AccFFT
+        |-- P3DFFT
+        |-- FFTE
+        |-- SWFFT
+        |-- 2DECOMP&FFT
+        |-- nb3dFFT
+        |-- FFTW
+~~~
+
+Current libraries targeted by FIBER:
+- CPU support: [fftMPI](https://lammps.github.io/fftmpi/), [SWFFT](https://xgitlab.cels.anl.gov/hacc/SWFFT), 
+[P3DFFT](https://github.com/sdsc/p3dfft.3),
+[nb3dFFT](https://gitlab.jsc.fz-juelich.de/goebbert/nb3dfft),
+[2DECOMP&FFT](http://www.2decomp.org/download.html)
+
+- CPU-GPU support: [heFFTe](https://bitbucket.org/icl/heffte), [AccFFT](https://github.com/amirgholami/accfft),   [FFTE](http://www.ffte.jp/)
+
+
+Compilation
+===========
+
+Next clone this repository and create  build folder, and execute the `cmake` commands.
 
 ~~~
 mkdir build; cd $_
@@ -34,15 +61,17 @@ build/
     make -j
 ~~~
 
-*Integrated libraries*: heFFTe, FFTMPI and AccFFT.
 
-*In progress*: P3DFFT, FFTE, SWFFT, 2DECOMP&FFT, nb3dFFT, FFTW
+First experiments
+=================
 
-Running examples:
+Run tests as follows:
 ~~~
-mpirun -n 2 ./test3D_CPU_C2C
-mpirun -n 2 ./test3D_CPU_R2C
+mpirun -n 2 ./test3D_CPU_C2C <library>
+mpirun -n 2 ./test3D_CPU_R2C <library>
 ~~~
+
+where `library` has to be replaced by one of the nine available libraries, provided user has it installed.
 
 
 Documentation

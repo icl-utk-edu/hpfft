@@ -114,7 +114,7 @@ void compute_d2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
   type_ids[0] = P3DFFT_CFFT_FORWARD_D;
   type_ids[1] = P3DFFT_CFFT_FORWARD_D;
   type_ids[2] = P3DFFT_CFFT_FORWARD_D;
-  type_ids[d] = P3DFFT_R2CFFT_FORWARD_D;
+  type_ids[d] = P3DFFT_R2CFFT_D;
 
   type_forward = p3dfft_init_3Dtype(type_ids);
 
@@ -194,7 +194,7 @@ void compute_z2d_p3dfft( int const inbox_low[3], int const inbox_high[3],
   type_ids[0] = P3DFFT_CFFT_FORWARD_D;
   type_ids[1] = P3DFFT_CFFT_FORWARD_D;
   type_ids[2] = P3DFFT_CFFT_FORWARD_D;
-  type_ids[d] = P3DFFT_C2RFFT_FORWARD_D;
+  type_ids[d] = P3DFFT_C2RFFT_D;
 
   type_backward = p3dfft_init_3Dtype(type_ids);
 

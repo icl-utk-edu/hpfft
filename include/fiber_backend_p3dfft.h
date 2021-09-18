@@ -9,8 +9,6 @@
 #include <stdio.h>
 #include <p3dfft.h>
 
-extern int P3DFFT_CFFT_FORWARD_D, P3DFFT_C2RFFT_FORWARD_D, P3DFFT_R2CFFT_FORWARD_D;
-
 //=====================  Complex-to-Complex transform =========================
 
 void compute_z2z_p3dfft( int const inbox_low[3], int const inbox_high[3],

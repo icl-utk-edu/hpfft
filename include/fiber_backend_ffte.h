@@ -4,9 +4,11 @@
 * ---------------
 */
 #ifndef FIBER_BACKEND_FFTE_H
-#define FIBER_BACKEND_FFTE_H 1
+#define FIBER_BACKEND_FFTE_H
 
 #include <stdio.h>
+
+#if defined(FIBER_ENABLE_FFTE)
 
 extern void pzfft3d_(void const *in, void *out, int *nx, int *ny, int *nz,
     MPI_Fint fcomm, int *comm_size, int *opt);
@@ -15,10 +17,10 @@ extern void pdzfft3d_(double const *in, void *out, int *nx, int *ny, int *nz,
 
 /* =====================  Complex-to-Complex transform ========================= */
 
-void
-compute_z2z_ffte(int const inbox_low[3], int const inbox_high[3],
-    int const outbox_low[3], int const outbox_high[3], MPI_Comm const comm,
-    void const *in, void *out, double *timer) {
+void compute_z2z_ffte(int const inbox_low[3], int const inbox_high[3],
+                    int const outbox_low[3], int const outbox_high[3], MPI_Comm const comm,
+                    void const *in, void *out, double *timer) {
+
     int comm_size, opt, nd[3];
     MPI_Fint fcomm = MPI_Comm_c2f(comm);
 
@@ -66,13 +68,13 @@ compute_z2z_ffte(int const inbox_low[3], int const inbox_high[3],
     printf("Benchmarking FFTE: Get Complex-to-Complex backend using ptest3d.f\n");
 }
 
+
 /* =====================  Real-to-Complex transform ========================= */
 
-
-void
-compute_d2z_ffte(int const inbox_low[3], int const inbox_high[3],
+void compute_d2z_ffte(int const inbox_low[3], int const inbox_high[3],
     int const outbox_low[3], int const outbox_high[3], MPI_Comm const comm,
     double const *in, void *out, double *timer) {
+
     int comm_rank, comm_size, opt, nd[3];
     MPI_Fint fcomm = MPI_Comm_c2f(comm);
 
@@ -120,5 +122,35 @@ compute_d2z_ffte(int const inbox_low[3], int const inbox_high[3],
 
     printf("Benchmarking FFTE: Get Real-to-Complex backend using prtest3d.f\n");
 }
+
+/* =====================  Complex-to-Real transform ========================= */
+
+void compute_z2d_ffte(int const inbox_low[3], int const inbox_high[3],
+                    int const outbox_low[3], int const outbox_high[3], MPI_Comm const comm,
+                    void const *in, double *out, double *timer) 
+{
+// Missing!
+
+
+}
+
+#else 
+
+void compute_z2z_ffte(int const inbox_low[3], int const inbox_high[3],
+                    int const outbox_low[3], int const outbox_high[3], MPI_Comm const comm,
+                    void const *in, void *out, double *timer) 
+{}
+
+void compute_d2z_ffte(int const inbox_low[3], int const inbox_high[3],
+                    int const outbox_low[3], int const outbox_high[3], MPI_Comm const comm,
+                    double const *in, void *out, double *timer) 
+{}
+
+void compute_z2d_ffte(int const inbox_low[3], int const inbox_high[3],
+                    int const outbox_low[3], int const outbox_high[3], MPI_Comm const comm,
+                    void const *in, double *out, double *timer) 
+{}
+
+#endif
 
 #endif  /* ! FIBER_BACKEND_FFTE_H */

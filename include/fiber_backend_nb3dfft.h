@@ -9,6 +9,7 @@
 #include <stdio.h>
 // #include "nb3dfft.h"
 
+#if defined(FIBER_ENABLE_NB3DFFT)
 //=====================  Complex-to-Complex transform =========================
 
 void compute_z2z_nb3dfft( int const inbox_low[3], int const inbox_high[3],
@@ -59,7 +60,37 @@ void compute_d2z_nb3dfft( int const inbox_low[3], int const inbox_high[3],
     MPI_Abort(comm, 1);
 }
 
+//=====================  Complex-to-Real transform =========================
 
+void compute_z2d_nb3dfft( int const inbox_low[3], int const inbox_high[3],
+                  int const outbox_low[3], int const outbox_high[3], 
+                  MPI_Comm const comm,
+                  void const *in, double *out, double *timer)
+{
+// Missing!
+
+}
+
+#else
+void compute_z2z_nb3dfft( int const inbox_low[3], int const inbox_high[3],
+                  int const outbox_low[3], int const outbox_high[3], 
+                  MPI_Comm const comm,
+                  void const *in, void *out, double *timer)
+{}
+
+void compute_d2z_nb3dfft( int const inbox_low[3], int const inbox_high[3],
+                  int const outbox_low[3], int const outbox_high[3], 
+                  MPI_Comm const comm,
+                  double const *in, void *out, double *timer)
+{}
+
+void compute_z2d_nb3dfft( int const inbox_low[3], int const inbox_high[3],
+                  int const outbox_low[3], int const outbox_high[3], 
+                  MPI_Comm const comm,
+                  void const *in, double *out, double *timer)
+{}
+
+#endif 
 
 
 #endif  //! FIBER_BACKEND_NB3DFFT_H

@@ -6,9 +6,9 @@
 #ifndef FIBER_BACKEND_ACCFFT_H
 #define FIBER_BACKEND_ACCFFT_H
 
-// #include <accfft.h>
 
-
+#if defined(FIBER_ENABLE_ACCFFT)
+#include <accfft.h>
 //=====================  Complex-to-Complex transform =========================
 
 void compute_z2z_accfft( int const inbox_low[3], int const inbox_high[3],
@@ -135,6 +135,26 @@ void compute_z2d_accfft( int const inbox_low[3], int const inbox_high[3],
 
 }
 
+#else
 
+void compute_z2z_accfft( int const inbox_low[3], int const inbox_high[3],
+                  int const outbox_low[3], int const outbox_high[3], 
+                  MPI_Comm const comm,
+                  void const *in, void *out, double *timer)
+{}
+
+void compute_d2z_accfft( int const inbox_low[3], int const inbox_high[3],
+                  int const outbox_low[3], int const outbox_high[3], 
+                  MPI_Comm const comm,
+                  double const *in, void *out, double *timer)
+{}
+
+void compute_z2d_accfft( int const inbox_low[3], int const inbox_high[3],
+                  int const outbox_low[3], int const outbox_high[3], 
+                  MPI_Comm const comm,
+                  void const *in, double *out, double *timer)
+{}
+
+#endif
 
 #endif  //! FIBER_BACKEND_ACCFFT_H

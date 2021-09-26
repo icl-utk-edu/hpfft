@@ -6,11 +6,12 @@
 #ifndef FIBER_BACKEND_HEFFTE_H
 #define FIBER_BACKEND_HEFFTE_H
 
-
 #include <stdio.h>
-#include "heffte.h"
 
 //=====================  Complex-to-Complex transform =========================
+
+#if defined(FIBER_ENABLE_HEFFTE)
+#include "heffte.h"
 
 void compute_z2z_heffte( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
@@ -56,6 +57,7 @@ void compute_d2z_heffte( int const inbox_low[3], int const inbox_high[3],
                   MPI_Comm const comm,
                   double const *in, void *out, int scale, double *timer)
 {
+
     // Plan definition
     heffte_plan plan;
 
@@ -122,7 +124,24 @@ void compute_z2d_heffte( int const inbox_low[3], int const inbox_high[3],
 
 // ========================================================================================
 
+#else
+void compute_z2z_heffte( int const inbox_low[3], int const inbox_high[3],
+                  int const outbox_low[3], int const outbox_high[3], 
+                  MPI_Comm const comm,
+                  void const *in, void *out, int scale, double *timer)
+{}
 
+void compute_d2z_heffte( int const inbox_low[3], int const inbox_high[3],
+                  int const outbox_low[3], int const outbox_high[3], 
+                  MPI_Comm const comm,
+                  double const *in, void *out, int scale, double *timer)
+{}
 
+void compute_z2d_heffte( int const inbox_low[3], int const inbox_high[3],
+                  int const outbox_low[3], int const outbox_high[3], 
+                  MPI_Comm const comm,
+                  void const *in, double *out, double *timer)
+{}
+#endif
 
 #endif  //! FIBER_BACKEND_HEFFTE_H

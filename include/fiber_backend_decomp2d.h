@@ -7,10 +7,11 @@
 #define FIBER_BACKEND_DECOM2D_H
 
 #include <stdio.h>
-// #include "decomp_2d.h"
+
+#if defined(FIBER_ENABLE_2DECOMP)
+#include <decomp_2d.h>
 
 //=====================  Complex-to-Complex transform =========================
-
 void compute_z2z_decomp2d( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
@@ -82,7 +83,40 @@ void compute_d2z_decomp2d( int const inbox_low[3], int const inbox_high[3],
     MPI_Abort(comm, 1);
 }
 
+//=====================  Complex-to-Real transform =========================
 
+void compute_z2d_decomp2d( int const inbox_low[3], int const inbox_high[3],
+                  int const outbox_low[3], int const outbox_high[3], 
+                  MPI_Comm const comm,
+                  void const *in, double *out, double *timer)
+{
+
+// Missing!
+
+
+}
+
+
+#else
+void compute_z2z_decomp2d( int const inbox_low[3], int const inbox_high[3],
+                  int const outbox_low[3], int const outbox_high[3], 
+                  MPI_Comm const comm,
+                  void const *in, void *out, double *timer)
+{}
+
+void compute_d2z_decomp2d( int const inbox_low[3], int const inbox_high[3],
+                  int const outbox_low[3], int const outbox_high[3], 
+                  MPI_Comm const comm,
+                  double const *in, void *out, double *timer)
+{}
+
+void compute_z2d_decomp2d( int const inbox_low[3], int const inbox_high[3],
+                  int const outbox_low[3], int const outbox_high[3], 
+                  MPI_Comm const comm,
+                  void const *in, double *out, double *timer)
+{}
+
+#endif
 
 
 #endif  //! FIBER_BACKEND_DECOM2D_H

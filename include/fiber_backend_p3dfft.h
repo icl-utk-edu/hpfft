@@ -7,6 +7,8 @@
 #define FIBER_BACKEND_P3DFFT_H
 
 #include <stdio.h>
+
+#if defined(FIBER_ENABLE_P3DFFT)
 #include <p3dfft.h>
 
 //=====================  Complex-to-Complex transform =========================
@@ -14,7 +16,7 @@
 void compute_z2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-			 void const *in, void *out, double *timer, int const pgrid_in[3], int const pgrid_out[3])
+			            void const *in, void *out, double *timer, int const pgrid_in[3], int const pgrid_out[3])
 {
 
   int i,j;
@@ -86,7 +88,7 @@ void compute_z2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
 void compute_d2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-			 double const *in, void *out, double *timer,int pgrid_in[3],int pgrid_out[3])
+			            double const *in, void *out, double *timer,int pgrid_in[3],int pgrid_out[3])
 {
 
   int i,j,d;
@@ -166,7 +168,7 @@ void compute_d2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
 void compute_z2d_p3dfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-			 double const *in, void *out, double *timer,int pgrid_in[3],int pgrid_out[3])
+			            void const *in, double *out, double *timer,int pgrid_in[3],int pgrid_out[3])
 {
 
   int i,j,d;
@@ -239,7 +241,26 @@ void compute_z2d_p3dfft( int const inbox_low[3], int const inbox_high[3],
     //MPI_Abort(comm, 1);
 }
 
+#endif
+void compute_z2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
+                  int const outbox_low[3], int const outbox_high[3], 
+                  MPI_Comm const comm,
+			            void const *in, void *out, double *timer, int const pgrid_in[3], int const pgrid_out[3])
+{}
 
+void compute_d2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
+                  int const outbox_low[3], int const outbox_high[3], 
+                  MPI_Comm const comm,
+			            double const *in, void *out, double *timer,int pgrid_in[3],int pgrid_out[3])
+{}
+
+void compute_z2d_p3dfft( int const inbox_low[3], int const inbox_high[3],
+                  int const outbox_low[3], int const outbox_high[3], 
+                  MPI_Comm const comm,
+            			void const *in, double *out, double *timer,int pgrid_in[3],int pgrid_out[3])
+{}
+
+#else
 
 
 #endif  //! FIBER_BACKEND_P3DFFT_H

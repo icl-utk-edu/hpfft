@@ -27,10 +27,10 @@ int main(int argc, char** argv){
     }
 
     if (me == 0){
-        printf("\t\t_________________________________________________________ \n");
-        printf("\t\t\t  FFT Infraestructure Benchmark for Exascale Research   \n");
-        printf("\t\t\t           Fixed-size 3-D FFT Benchmark                 \n");
-        printf("\t\t_________________________________________________________ \n");
+        printf("\t\t______________________________________________________ \n");
+        printf("\t\t FFT Infraestructure Benchmark for Exascale Research   \n");
+        printf("\t\t           Fixed-size 3-D FFT Benchmark                \n");
+        printf("\t\t______________________________________________________ \n");
         printf("\t\tLibrary    : %s         \n", argv[1]);
         printf("\t\tFFT size   : 4x4x4         \n");
         printf("\t\tPrecision  : DOUBLE        \n");
@@ -60,8 +60,7 @@ int main(int argc, char** argv){
     for(i=0; i<size_inbox; i++)
         input[i] = (double) i;
 
-    for(i=0; i<size_outbox; i++) 
-        // printf("  %g+%gi  \t ", input[i].r, input[i].i);
+    for(i=0; i<size_inbox; i++) 
         printf("  %g \t ", input[i]);
     printf("\n");        
     printf("\n");        

@@ -56,10 +56,10 @@ int main(int argc, char** argv){
     // ********************************
 
     if (me == 0){
-        printf("\t\t_________________________________________________________ \n");
-        printf("\t\t\t  FFT Infraestructure Benchmark for Exascale Research   \n");
-        printf("\t\t\t           Fixed-size 3-D FFT Benchmark                 \n");
-        printf("\t\t_________________________________________________________ \n");
+        printf("\t\t______________________________________________________ \n");
+        printf("\t\t FFT Infraestructure Benchmark for Exascale Research   \n");
+        printf("\t\t           Fixed-size 3-D FFT Benchmark                \n");
+        printf("\t\t______________________________________________________ \n");
 
         printf("\t\tFFT size   : 4x4x4         \n");
         printf("\t\tPrecision  : DOUBLE        \n");

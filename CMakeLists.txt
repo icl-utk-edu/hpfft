@@ -11,8 +11,8 @@ option(FIBER_ENABLE_2DECOMP   "Enable the 2DECOMP backend"      OFF)
 option(FIBER_ENABLE_NB3DFFT   "Enable the NB3DFFT backend"      OFF)
 option(FIBER_ENABLE_FFTW      "Enable the FFTW backend"         OFF)
 
-set(FIBER_FFT_INCLUDE_DIR "" CACHE FILEPATH "Path to FFT library headers")
-set(FIBER_FFT_LIB_DIR "" CACHE FILEPATH "Path to FFT library files")
+set(FIBER_FFT_INCLUDE_DIRS "" CACHE FILEPATH "Path to FFT library headers")
+set(FIBER_FFT_LIB_DIRS "" CACHE FILEPATH "Path to FFT library files")
 
 set(CMAKE_C_FLAGS "-lm")
 
@@ -28,8 +28,8 @@ endif ()
 find_package(MPI REQUIRED)
 
 # Location of the FFT library
-include_directories(${FIBER_FFT_INCLUDE_DIR})
-link_directories(${FIBER_FFT_LIB_DIR})
+include_directories(${FIBER_FFT_INCLUDE_DIRS})
+link_directories(${FIBER_FFT_LIB_DIRS})
 
 # Location of FFTW
 include_directories(${FFTW_DIR}/include)
@@ -41,6 +41,8 @@ include_directories(include)
 # Location of MPI
 include_directories(${MPI_DIR}/include)
 link_directories(${MPI_DIR}/lib)
+
+add_definitions(-DFIBER_ENABLE_HEFFTE)
 
 if (FIBER_ENABLE_CUDA)
     find_package(CUDA REQUIRED)

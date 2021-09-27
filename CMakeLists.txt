@@ -25,6 +25,38 @@ else ()
     set ( CMAKE_C_STANDARD 99 )
 endif ()
 
+if (FIBER_ENABLE_HEFFTE)
+add_definitions(-DFIBER_ENABLE_HEFFTE)
+endif()
+
+if (FIBER_ENABLE_FFTMPI)
+add_definitions(-DFIBER_ENABLE_FFTMPI)
+endif()
+
+if (FIBER_ENABLE_ACCFFT)
+add_definitions(-DFIBER_ENABLE_ACCFFT)
+endif()
+
+if (FIBER_ENABLE_P3DFFT)
+add_definitions(-DFIBER_ENABLE_P3DFFT)
+endif()
+
+if (FIBER_ENABLE_FFTE)
+add_definitions(-DFIBER_ENABLE_FFTE)
+endif()
+
+if (FIBER_ENABLE_SWFFT)
+add_definitions(-DFIBER_ENABLE_SWFFT)
+endif()
+
+if (FIBER_ENABLE_2DECOMP)
+add_definitions(-DFIBER_ENABLE_2DECOMP)
+endif()
+
+if (FIBER_ENABLE_NB3DFFT)
+add_definitions(-DFIBER_ENABLE_NB3DFFT)
+endif()
+
 find_package(MPI REQUIRED)
 
 # Location of the FFT library
@@ -41,8 +73,6 @@ include_directories(include)
 # Location of MPI
 include_directories(${MPI_DIR}/include)
 link_directories(${MPI_DIR}/lib)
-
-add_definitions(-DFIBER_ENABLE_HEFFTE)
 
 if (FIBER_ENABLE_CUDA)
     find_package(CUDA REQUIRED)

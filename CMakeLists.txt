@@ -11,6 +11,9 @@ option(FIBER_ENABLE_2DECOMP   "Enable the 2DECOMP backend"      OFF)
 option(FIBER_ENABLE_NB3DFFT   "Enable the NB3DFFT backend"      OFF)
 option(FIBER_ENABLE_FFTW      "Enable the FFTW backend"         OFF)
 
+set(FIBER_FFT_INCLUDE_DIRS "" CACHE FILEPATH "Path to FFT library headers")
+set(FIBER_FFT_LIB_DIRS "" CACHE FILEPATH "Path to FFT library files")
+
 set(CMAKE_C_FLAGS "-lm")
 
 # FIBER uses C99 features (in-loop definition of for loop variables)
@@ -22,63 +25,54 @@ else ()
     set ( CMAKE_C_STANDARD 99 )
 endif ()
 
-find_package(MPI REQUIRED)
-
-# Add include paths
 if (FIBER_ENABLE_HEFFTE)
 add_definitions(-DFIBER_ENABLE_HEFFTE)
-include_directories($ENV{HOME}/heffte/build/include)
-link_directories($ENV{HOME}/heffte/build)
 endif()
 
 if (FIBER_ENABLE_FFTMPI)
 add_definitions(-DFIBER_ENABLE_FFTMPI)
-include_directories($ENV{HOME}/Benchmarks_FFT/fftmpi/src)
-link_directories($ENV{HOME}/Benchmarks_FFT/fftmpi/src)
 endif()
 
 if (FIBER_ENABLE_ACCFFT)
 add_definitions(-DFIBER_ENABLE_ACCFFT)
-include_directories($ENV{HOME}/Benchmarks_FFT/accfft/build/include)
-link_directories($ENV{HOME}/Benchmarks_FFT/accfft/build)
 endif()
 
 if (FIBER_ENABLE_P3DFFT)
 add_definitions(-DFIBER_ENABLE_P3DFFT)
-include_directories($ENV{HOME}/Benchmarks_FFT/p3dfft/include)
-link_directories($ENV{HOME}/Benchmarks_FFT/p3dfft/build)
 endif()
 
 if (FIBER_ENABLE_FFTE)
 add_definitions(-DFIBER_ENABLE_FFTE)
-include_directories($ENV{HOME}/Benchmarks_FFT/ffte-7.0/include)
-link_directories($ENV{HOME}/Benchmarks_FFT/ffte-7.0/src)
 endif()
 
 if (FIBER_ENABLE_SWFFT)
 add_definitions(-DFIBER_ENABLE_SWFFT)
-include_directories($ENV{HOME}/Benchmarks_FFT/SWFFT/)
-link_directories($ENV{HOME}/Benchmarks_FFT/SWFFT/build)
 endif()
 
 if (FIBER_ENABLE_2DECOMP)
 add_definitions(-DFIBER_ENABLE_2DECOMP)
-include_directories($ENV{HOME}/Benchmarks_FFT/2decomp_fft/src)
-link_directories($ENV{HOME}/Benchmarks_FFT/2decomp_fft/build)
 endif()
 
 if (FIBER_ENABLE_NB3DFFT)
 add_definitions(-DFIBER_ENABLE_NB3DFFT)
-include_directories($ENV{HOME}/Benchmarks_FFT/nb3dfft/src)
-link_directories($ENV{HOME}/Benchmarks_FFT/nb3dfft/src)
 endif()
 
-include_directories(/sw/spack/2021-02-12/opt/spack/linux-scientific7-x86_64/gcc-7.3.0/fftw-3.3.9-xvbumufiowb3nqnifdffjdqga4gqsz2l/include)
-include_directories($ENV{HOME}/fiber/include)
-include_directories(/sw/openmpi/4.0.0/include)
+find_package(MPI REQUIRED)
 
-link_directories(/sw/spack/2021-02-12/opt/spack/linux-scientific7-x86_64/gcc-7.3.0/fftw-3.3.9-xvbumufiowb3nqnifdffjdqga4gqsz2l/lib)
-link_directories(/sw/openmpi/4.0.0/lib)
+# Location of the FFT library
+include_directories(${FIBER_FFT_INCLUDE_DIRS})
+link_directories(${FIBER_FFT_LIB_DIRS})
+
+# Location of FFTW
+include_directories(${FFTW_DIR}/include)
+link_directories(${FFTW_DIR}/lib)
+
+# Location of harness headers
+include_directories(include)
+
+# Location of MPI
+include_directories(${MPI_DIR}/include)
+link_directories(${MPI_DIR}/lib)
 
 if (FIBER_ENABLE_CUDA)
     find_package(CUDA REQUIRED)

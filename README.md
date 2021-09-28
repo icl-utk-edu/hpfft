@@ -24,10 +24,9 @@ The current harness software allows to compute 3-D complex-to-complex and real-t
 Setting up
 ==========
 
-Create a folder  `Benchmarks_FFT`, and install the FFT libraries to benchmark.
+Create a folder; e.g., `Benchmarks_FFT`, and install the FFT libraries to benchmark.
 
 ~~~
-|-- $HOME -> /
 -- Benchmarks_FFT
         |-- heFFTe
         |-- fftMPI
@@ -53,14 +52,19 @@ Compilation
 ===========
 
 Next clone this repository and create  build folder, and execute the `cmake` commands.
+In the following example, we install FIBER with heFFTe and fftMPI backends:
 
 ~~~
 mkdir build; cd $_
 build/
-    cmake ..
-    make -j
+cmake -DFIBER_FFT_LIB_DIRS="/home/Benchmarks_FFT/fftmpi/src;/home/heffte/build/lib"
+-DFIBER_FFT_INCLUDE_DIRS="/home/Benchmarks_FFT/fftmpi/src;/home/heffte/build/include"
+-DFIBER_ENABLE_HEFFTE=ON -DFIBER_ENABLE_FFTMPI=ON
+-DMPI_DIR=/sw/openmpi/4.0.0/ .. 
+make -j
 ~~~
 
+List the `lib` and `include` folders of libraries to test, respectively, in `FIBER_FFT_LIB_DIRS` and `FIBER_FFT_INCLUDE_DIRS`.
 
 First experiments
 =================
@@ -72,6 +76,7 @@ mpirun -n 2 ./test3D_CPU_R2C <library>
 ~~~
 
 where `library` has to be replaced by one of the nine available libraries, provided user has it installed.
+Once a parallel FFT library has been correctly integrated to heFFTe, running these benchmarks should report a correct validation output.
 
 
 Documentation

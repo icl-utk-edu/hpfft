@@ -45,6 +45,10 @@ if (FIBER_ENABLE_FFTE)
 add_definitions(-DFIBER_ENABLE_FFTE)
 endif()
 
+if (FIBER_ENABLE_FFTW)
+add_definitions(-DFIBER_ENABLE_FFTW)
+endif()
+
 if (FIBER_ENABLE_SWFFT)
 add_definitions(-DFIBER_ENABLE_SWFFT)
 endif()

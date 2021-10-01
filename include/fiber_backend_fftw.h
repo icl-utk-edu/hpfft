@@ -7,9 +7,10 @@
 #define FIBER_BACKEND_FFTW_H
 
 #include <stdio.h>
-#include "fftw3.h"
 
 #if defined(FIBER_ENABLE_FFTW)
+#include <fftw3.h>
+
 //=====================  Complex-to-Complex transform =========================
 
 void compute_z2z_fftw( int const inbox_low[3], int const inbox_high[3],

@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 project("FIBER" VERSION 0.1 LANGUAGES C)
+
 option(FIBER_ENABLE_HEFFTE    "Enable the HEFFTE backend"       OFF)
 option(FIBER_ENABLE_FFTMPI    "Enable the FFTMPI backend"       OFF)
 option(FIBER_ENABLE_ACCFFT    "Enable the ACCFFT backend"       OFF)
@@ -11,8 +12,15 @@ option(FIBER_ENABLE_2DECOMP   "Enable the 2DECOMP backend"      OFF)
 option(FIBER_ENABLE_NB3DFFT   "Enable the NB3DFFT backend"      OFF)
 option(FIBER_ENABLE_FFTW      "Enable the FFTW backend"         OFF)
 
+option(BUILD_SHARED_LIBS      "Builds shared libraries using CMake conventions"  ON)
+
 set(FIBER_FFT_INCLUDE_DIRS "" CACHE FILEPATH "Path to FFT library headers")
 set(FIBER_FFT_LIB_DIRS "" CACHE FILEPATH "Path to FFT library files")
+
+# Set default install path to build folder
+if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set (CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}" CACHE PATH "default install path" FORCE )
+endif()
 
 set(CMAKE_C_FLAGS "-lm")
 
@@ -26,35 +34,39 @@ else ()
 endif ()
 
 if (FIBER_ENABLE_HEFFTE)
-add_definitions(-DFIBER_ENABLE_HEFFTE)
+    add_definitions(-DFIBER_ENABLE_HEFFTE)
 endif()
 
 if (FIBER_ENABLE_FFTMPI)
-add_definitions(-DFIBER_ENABLE_FFTMPI)
+    add_definitions(-DFIBER_ENABLE_FFTMPI)
 endif()
 
 if (FIBER_ENABLE_ACCFFT)
-add_definitions(-DFIBER_ENABLE_ACCFFT)
+    add_definitions(-DFIBER_ENABLE_ACCFFT)
 endif()
 
 if (FIBER_ENABLE_P3DFFT)
-add_definitions(-DFIBER_ENABLE_P3DFFT)
+    add_definitions(-DFIBER_ENABLE_P3DFFT)
 endif()
 
 if (FIBER_ENABLE_FFTE)
-add_definitions(-DFIBER_ENABLE_FFTE)
+    add_definitions(-DFIBER_ENABLE_FFTE)
 endif()
 
 if (FIBER_ENABLE_SWFFT)
-add_definitions(-DFIBER_ENABLE_SWFFT)
+    add_definitions(-DFIBER_ENABLE_SWFFT)
 endif()
 
 if (FIBER_ENABLE_2DECOMP)
-add_definitions(-DFIBER_ENABLE_2DECOMP)
+    add_definitions(-DFIBER_ENABLE_2DECOMP)
 endif()
 
 if (FIBER_ENABLE_NB3DFFT)
-add_definitions(-DFIBER_ENABLE_NB3DFFT)
+    add_definitions(-DFIBER_ENABLE_NB3DFFT)
+endif()
+
+if (FIBER_ENABLE_FFTW)
+    add_definitions(-DFIBER_ENABLE_FFTW)
 endif()
 
 find_package(MPI REQUIRED)
@@ -63,10 +75,6 @@ find_package(MPI REQUIRED)
 include_directories(${FIBER_FFT_INCLUDE_DIRS})
 link_directories(${FIBER_FFT_LIB_DIRS})
 
-# Location of FFTW
-include_directories(${FFTW_DIR}/include)
-link_directories(${FFTW_DIR}/lib)
-
 # Location of harness headers
 include_directories(include)
 
@@ -74,55 +82,39 @@ include_directories(include)
 include_directories(${MPI_DIR}/include)
 link_directories(${MPI_DIR}/lib)
 
+# libfiber source files
+set(fiber_common_sources
+include/fiber_backend_accfft.h   
+include/fiber_backend_fftw.h     
+include/fiber_backend_swfft.h
+include/fiber_backend_decomp2d.h 
+include/fiber_backend_heffte.h   
+include/fiber_backends.h
+include/fiber_backend_ffte.h     
+include/fiber_backend_nb3dfft.h  
+include/fiber_utils.h
+include/fiber_backend_fftmpi.h   
+include/fiber_backend_p3dfft.h
+# benchmarks/Bench_3D_R2C_CPU.c
+benchmarks/test3D_CPU_R2C.c
+# benchmarks/test3D_CPU_C2C.c
+)
+
+# Build libfiber, with or without GPU support
 if (FIBER_ENABLE_CUDA)
     find_package(CUDA REQUIRED)
-    list(APPEND CUDA_NVCC_FLAGS "-std=c++11")
+    cuda_add_library(fiber ${fiber_common_sources}
+                            benchmarks/test3D_GPU_R2C.c)
+
     cuda_add_cufft_to_target(fiber)
-    target_include_directories(fiber PUBLIC $<INSTALL_INTERFACE:${CUDA_INCLUDE_DIRS}>)
+else()
+    add_library(fiber ${fiber_common_sources})
 endif()
 
-macro(fiber_add_benchmark fiber_benchmark)
-    
-    add_executable(${fiber_benchmark} "${fiber_benchmark}.c")
-    target_link_libraries(${fiber_benchmark} mpi)
-    target_include_directories(${fiber_benchmark} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include/>)
-
-    if (FIBER_ENABLE_HEFFTE)
-        target_link_libraries(${fiber_benchmark} heffte)
-    endif()
-    if (FIBER_ENABLE_FFTMPI)
-    target_link_libraries(${fiber_benchmark} fft3dmpi)
-    endif()
-    if (FIBER_ENABLE_ACCFFT)
-    target_link_libraries(${fiber_benchmark} accfft)
-    endif()
-    if (FIBER_ENABLE_P3DFFT)
-    target_link_libraries(${fiber_benchmark} p3dfft)
-    endif()
-    if (FIBER_ENABLE_FFTE)
-    target_link_libraries(${fiber_benchmark} ffte)
-    endif()
-    if (FIBER_ENABLE_SWFFT)
-    target_link_libraries(${fiber_benchmark} swfft)
-    endif()
-    if (FIBER_ENABLE_2DECOMP)
-    target_link_libraries(${fiber_benchmark} 2decomp_fft)
-    endif()
-    if (FIBER_ENABLE_NB3DFFT)
-    target_link_libraries(${fiber_benchmark} nb3dfft)
-    endif()
-    if (FIBER_ENABLE_FFTW)
-    target_link_libraries(${fiber_benchmark} fftw3)
-    endif()
-
-    endmacro()
-
-fiber_add_benchmark(test3D_CPU_R2C)
-fiber_add_benchmark(test3D_CPU_C2C)
-
-if (FIBER_ENABLE_CUDA)
-fiber_add_benchmark(test3D_GPU_R2C)
-endif()
+##############
+# Benchmarks #
+##############
+add_subdirectory(benchmarks)
 
 # Print summary of the CMake options
 if (${CMAKE_PROJECT_NAME} STREQUAL ${PROJECT_NAME})

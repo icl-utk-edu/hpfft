@@ -6,6 +6,9 @@ macro(fiber_add_benchmark fiber_benchmark)
     
     add_executable(${fiber_benchmark} "${fiber_benchmark}.c")
     target_link_libraries(${fiber_benchmark} mpi)
+    if (FIBER_ENABLE_CUDA)
+        target_link_libraries(${fiber_benchmark} ${CUDA_LIBRARIES})
+    endif()        
     target_include_directories(${fiber_benchmark} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include/>)
 
     if (FIBER_ENABLE_HEFFTE)
@@ -38,8 +41,9 @@ macro(fiber_add_benchmark fiber_benchmark)
 
 endmacro()
 
+fiber_add_benchmark(test3D_CPU_R2C)
+fiber_add_benchmark(test3D_CPU_C2C)
+
 if (FIBER_ENABLE_CUDA)
     fiber_add_benchmark(test3D_GPU_R2C)
-else()    
-    fiber_add_benchmark(test3D_CPU_R2C)
 endif()

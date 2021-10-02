@@ -23,6 +23,11 @@ if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 endif()
 
 set(CMAKE_C_FLAGS "-lm")
+if(NOT CMAKE_CXX_CREATE_SHARED_LIBRARY)
+  set(CMAKE_CXX_CREATE_SHARED_LIBRARY
+      "<CMAKE_CXX_COMPILER> <CMAKE_SHARED_LIBRARY_CXX_FLAGS> <LANGUAGE_COMPILE_FLAGS> <LINK_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS> <SONAME_FLAG><TARGET_SONAME> -o <TARGET> <OBJECTS> <LINK_LIBRARIES>")
+endif()
+
 
 # FIBER uses C99 features (in-loop definition of for loop variables)
 if (CMAKE_VERSION VERSION_LESS "3.1")
@@ -103,10 +108,12 @@ benchmarks/test3D_CPU_R2C.c
 # Build libfiber, with or without GPU support
 if (FIBER_ENABLE_CUDA)
     find_package(CUDA REQUIRED)
+    list(APPEND CUDA_NVCC_FLAGS "-std=c++11")
     cuda_add_library(fiber ${fiber_common_sources}
                             benchmarks/test3D_GPU_R2C.c)
 
     cuda_add_cufft_to_target(fiber)
+    target_include_directories(fiber PUBLIC $<INSTALL_INTERFACE:${CUDA_INCLUDE_DIRS}>)
 else()
     add_library(fiber ${fiber_common_sources})
 endif()

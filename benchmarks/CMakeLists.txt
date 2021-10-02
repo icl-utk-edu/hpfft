@@ -38,9 +38,8 @@ macro(fiber_add_benchmark fiber_benchmark)
 
 endmacro()
 
-fiber_add_benchmark(test3D_CPU_R2C)
-fiber_add_benchmark(test3D_CPU_C2C)
-
 if (FIBER_ENABLE_CUDA)
     fiber_add_benchmark(test3D_GPU_R2C)
+else()    
+    fiber_add_benchmark(test3D_CPU_R2C)
 endif()

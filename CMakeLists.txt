@@ -116,6 +116,13 @@ endif()
 ##############
 add_subdirectory(benchmarks)
 
+###############
+# Documentation
+###############
+if (FIBER_ENABLE_DOXYGEN)
+    add_subdirectory(doxygen)
+endif()
+
 # Print summary of the CMake options
 if (${CMAKE_PROJECT_NAME} STREQUAL ${PROJECT_NAME})
     include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/print_summary.cmake)

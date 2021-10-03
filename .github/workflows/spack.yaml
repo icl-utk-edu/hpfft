@@ -1,0 +1,16 @@
+spack:
+  definitions:
+  - pkgs:
+    - gcc@7.3.0
+    - cmake
+    - fftw
+    - heffte+fftw+cuda cuda_arch=70
+    - openmpi
+
+  view: true
+  concretization: together
+  specs:
+  - matrix:
+    - [$pkgs]
+    - ['%gcc@7.3.0']
+    - [arch=x86_64 os=centos7]

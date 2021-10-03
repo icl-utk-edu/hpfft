@@ -26,23 +26,20 @@ jobs:
       - name: Set up dependencies
         run: |
           source ~/spack_setup
-          spack env create -d .
-          spack env activate -V -d .
-          COMPILER=gcc@7.3.0
-          sload $COMPILER%gcc@4.8.5
+          sload gcc@7.3.0
           spack compiler find
-          spack install cmake %$COMPILER
-          spack install fftw %$COMPILER
-          spack install heffte+fftw+cuda cuda_arch=70 %$COMPILER
-          spack install openmpi %$COMPILER
+          spack unload -a
+          cp .github/workflows/spack.yaml .
+          spack env activate -d .
+          spack install
 
       - name: Build
         run: |
           mkdir build && cd build
           source ~/spack_setup
           spack env activate -d .
-          spack load --first cmake fftw heffte openmpi
-          HEFFTE=`slocation heffte`
-          MPI_DIR=`slocation openmpi`
+          spack load --first gcc cmake heffte openmpi
+          HEFFTE=`spack location -i heffte`
+          MPI_DIR=`spack location -i openmpi`
           cmake -DFIBER_ENABLE_HEFFTE=ON -DFIBER_FFT_INCLUDE_DIRS=$HEFFTE/include -DFIBER_FFT_LIB_DIRS=$HEFFTE/lib -DMPI_DIR=$MPI_DIR ..
           make VERBOSE=1

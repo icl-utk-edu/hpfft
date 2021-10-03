@@ -27,7 +27,7 @@ jobs:
         run: |
           source ~/spack_setup
           spack env create -d .
-          spack env activate -d .
+          spack env activate -V -d .
           COMPILER=gcc@7.3.0
           sload $COMPILER%gcc@4.8.5
           spack compiler find

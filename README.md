@@ -71,6 +71,7 @@ First experiments
 
 Run tests as follows:
 ~~~
+cd build/benchmarks
 mpirun -n 2 ./test3D_CPU_C2C <library>
 mpirun -n 2 ./test3D_CPU_R2C <library>
 ~~~

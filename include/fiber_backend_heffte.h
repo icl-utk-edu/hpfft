@@ -63,7 +63,15 @@ void compute_d2z_heffte( int const inbox_low[3], int const inbox_high[3],
 
     MPI_Barrier(comm);
     timer[0] = -MPI_Wtime();
-    int status = heffte_plan_create(Heffte_BACKEND_FFTW, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
+    int status;
+    if(scale == 1){
+        printf("Calling GPU heffte \n");
+        status = heffte_plan_create(Heffte_BACKEND_CUFFT, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
+    }        
+    else{        
+        printf("Calling CPU heffte \n");
+        status = heffte_plan_create(Heffte_BACKEND_FFTW, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
+    }        
     MPI_Barrier(comm);
     timer[0] = +MPI_Wtime();
 
@@ -76,7 +84,7 @@ void compute_d2z_heffte( int const inbox_low[3], int const inbox_high[3],
     MPI_Barrier(comm);
     timer[1] = -MPI_Wtime();
     // compute
-    heffte_forward_d2z(plan, in, out, scale);
+    heffte_forward_d2z(plan, in, out, Heffte_SCALE_NONE);
     MPI_Barrier(comm);
     timer[1] = +MPI_Wtime();
 
@@ -110,7 +118,7 @@ void compute_z2d_heffte( int const inbox_low[3], int const inbox_high[3],
     MPI_Barrier(comm);
     timer[1] = -MPI_Wtime();
     // compute
-    heffte_backward_z2d(plan, in, out, 1);
+    heffte_backward_z2d(plan, in, out, Heffte_SCALE_FULL);
     MPI_Barrier(comm);
     timer[1] = +MPI_Wtime();
 

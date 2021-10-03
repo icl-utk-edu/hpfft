@@ -73,14 +73,14 @@ int main(int argc, char** argv){
 
 
 //  Benchmark multiple libraries at the time, some libs still in progress
-    for (int i = 0; i < 9; i++)
-    {
-        fiber_execute_z2z[i].function(box_low, box_high, box_low, box_high, comm, input, output, timer);
-        if (me == 0){
-            printf("\t\t%10s \t %6.3e \t %6.3e \n", backends[i], timer[0], timer[1]);
-            printf("\t\t------------------------------------------------- \n");
-        }        
-    }
+    // for (int i = 0; i < 9; i++)
+    // {
+    //     fiber_execute_z2z[i].function(box_low, box_high, box_low, box_high, comm, input, output, timer);
+    //     if (me == 0){
+    //         printf("\t\t%10s \t %6.3e \t %6.3e \n", backends[i], timer[0], timer[1]);
+    //         printf("\t\t------------------------------------------------- \n");
+    //     }        
+    // }
 
     // Data deallocation 
     free(input);

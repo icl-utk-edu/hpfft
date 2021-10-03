@@ -36,7 +36,7 @@ macro(fiber_add_benchmark fiber_benchmark)
         target_link_libraries(${fiber_benchmark} nb3dfft)
     endif()
     if (FIBER_ENABLE_FFTW)
-        target_link_libraries(${fiber_benchmark} fftw3)
+        target_link_libraries(${fiber_benchmark} fftw3_mpi fftw3)
     endif()
 
 endmacro()

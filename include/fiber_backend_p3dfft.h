@@ -19,15 +19,15 @@ void compute_z2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
 			            void const *in, void *out, double *timer, int const pgrid_in[3], int const pgrid_out[3])
 {
 
-  int i,j;
-  int dmap1[3],dmap2[3],mo1[3],mo2[3],type_ids1[3],type_ids2[3],type_forward,type_backward;
-  int gdims[3],gdims2[3],ldims1[3];
+  int i, j;
+  int dmap1[3], dmap2[3], mo1[3], mo2[3], type_ids1[3], type_ids2[3], type_forward, type_backward;
+  int gdims[3], gdims2[3], ldims1[3];
 
-  for(i=0;i<3;i++) {
+  for(i=0; i<3; i++) {
     dmap1[i] = mo1[i] = i;
-    for(j=0;j<3;j++)
+    for(j=0; j<3; j++)
       if(pgrid_in[i] == pgrid_out[j])
-	dmap2[j] = mo2[j] = i;
+	  dmap2[j] = mo2[j] = i;
   }
 
   p3dfft_setup();
@@ -38,18 +38,18 @@ void compute_z2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
 
   type_forward = p3dfft_init_3Dtype(type_ids1);
 
-  ldims1[0] = inbox_high[0]-inbox_low[0]+1;
-  ldims1[1] = inbox_high[1]-inbox_low[1]+1;
-  ldims1[2] = inbox_high[2]-inbox_low[2]+1;
+  ldims1[0] = inbox_high[0] - inbox_low[0] + 1;
+  ldims1[1] = inbox_high[1] - inbox_low[1] + 1;
+  ldims1[2] = inbox_high[2] - inbox_low[2] + 1;
 
-  for(i=0;i<3;i++)
+  for(i=0; i<3; i++)
     gdims[i] = ldims1[i] * pgrid_in[i];
 
-  int Pgrid = p3dfft_init_proc_grid(pgrid_in,comm);
+  int Pgrid = p3dfft_init_proc_grid(pgrid_in, comm);
 
-  Grid *Xpencil = p3dfft_init_data_grid(gdims,-1,Pgrid,dmap1,mo1);
+  Grid *Xpencil = p3dfft_init_data_grid(gdims, -1, Pgrid, dmap1, mo1);
 
-  Grid *Zpencil = p3dfft_init_data_grid(gdims,-1,Pgrid,dmap2,mo2);
+  Grid *Zpencil = p3dfft_init_data_grid(gdims, -1, Pgrid, dmap2, mo2);
 
 
     // Plan creation ...
@@ -59,7 +59,7 @@ void compute_z2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
     timer[0] = -MPI_Wtime();
 
     // plan create
-    Plan3D trans_f = p3dfft_plan_3Dtrans(Xpencil,Zpencil,type_forward);
+    Plan3D trans_f = p3dfft_plan_3Dtrans(Xpencil, Zpencil, type_forward);
 
     MPI_Barrier(comm);
     timer[0] += MPI_Wtime();
@@ -71,7 +71,7 @@ void compute_z2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
     timer[1] = -MPI_Wtime();
 
     // compute FFT 
-    p3dfft_exec_3Dtrans_double(trans_f,in,out,0);
+    p3dfft_exec_3Dtrans_double(trans_f, in, out, 0);
 
     MPI_Barrier(comm);
     timer[1] = +MPI_Wtime();
@@ -88,24 +88,24 @@ void compute_z2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
 void compute_d2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-			            double const *in, void *out, double *timer,int pgrid_in[3],int pgrid_out[3])
+			            double const *in, void *out, double *timer, int pgrid_in[3], int pgrid_out[3])
 {
 
-  int i,j,d;
-  int dmap1[3],dmap2[3],mo1[3],mo2[3],type_ids[3],type_forward;
-  int gdims[3],gdims2[3],ldims1[3],trans_b,Pgrid;
+  int i, j, d;
+  int dmap1[3], dmap2[3], mo1[3], mo2[3], type_ids[3], type_forward;
+  int gdims[3], gdims2[3], ldims1[3], trans_b, Pgrid;
   
 
-  for(i=0;i<3;i++) {
+  for(i=0; i<3; i++) {
     dmap1[i] = mo1[i] = i;
-    for(j=0;j<3;j++)
+    for(j=0; j<3; j++)
       if(pgrid_in[i] == pgrid_out[j])
-	dmap2[j] = mo2[j] = i;
+	  dmap2[j] = mo2[j] = i;
   }
 
   p3dfft_setup();
 
-  for(i=0;i<3;i++)
+  for(i=0; i<3; i++)
     if(pgrid_in[i] == 1) {
       d = i;
       break;
@@ -118,19 +118,19 @@ void compute_d2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
 
   type_forward = p3dfft_init_3Dtype(type_ids);
 
-  ldims1[0] = inbox_high[0]-inbox_low[0]+1;
-  ldims1[1] = inbox_high[1]-inbox_low[1]+1;
-  ldims1[2] = inbox_high[2]-inbox_low[2]+1;
+  ldims1[0] = inbox_high[0] - inbox_low[0] + 1;
+  ldims1[1] = inbox_high[1] - inbox_low[1] + 1;
+  ldims1[2] = inbox_high[2] - inbox_low[2] + 1;
 
-  for(i=0;i<3;i++)
+  for(i=0; i<3; i++)
     gdims[i] = gdims2[i] = ldims1[i] * pgrid_in[i];
 
-  Pgrid = p3dfft_init_proc_grid(pgrid_in,comm);
+  Pgrid = p3dfft_init_proc_grid(pgrid_in, comm);
 
-  Grid *Xpencil = p3dfft_init_data_grid(gdims,-1,Pgrid,dmap1,mo1);
+  Grid *Xpencil = p3dfft_init_data_grid(gdims, -1, Pgrid, dmap1, mo1);
   
   gdims2[d] = gdims2[d]/2+1;
-  Grid *Zpencil = p3dfft_init_data_grid(gdims2,d,Pgrid,dmap2,mo2);
+  Grid *Zpencil = p3dfft_init_data_grid(gdims2, d, Pgrid, dmap2, mo2);
 
     // Plan creation ...
     // void *plan;
@@ -139,7 +139,7 @@ void compute_d2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
   timer[0] = -MPI_Wtime();
   
   // plan create
-  Plan3D trans_f = p3dfft_plan_3Dtrans(Xpencil,Zpencil,type_forward);
+  Plan3D trans_f = p3dfft_plan_3Dtrans(Xpencil, Zpencil, type_forward);
   
   MPI_Barrier(comm);
   timer[0] += MPI_Wtime();
@@ -151,7 +151,7 @@ void compute_d2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
   timer[1] = -MPI_Wtime();
   
   // compute FFT 
-  p3dfft_exec_3Dtrans_double(trans_f,in,out,0);
+  p3dfft_exec_3Dtrans_double(trans_f, in, out,0);
   
   MPI_Barrier(comm);
   timer[1] = +MPI_Wtime();
@@ -168,24 +168,24 @@ void compute_d2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
 void compute_z2d_p3dfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-			            void const *in, double *out, double *timer,int pgrid_in[3],int pgrid_out[3])
+			            void const *in, double *out, double *timer, int pgrid_in[3], int pgrid_out[3])
 {
 
-  int i,j,d;
-  int dmap1[3],dmap2[3],mo1[3],mo2[3],type_ids[3],type_backward;
-  int gdims[3],gdims2[3],ldims1[3],ldims2[3],trans_b,Pgrid;
+  int i, j, d;
+  int dmap1[3], dmap2[3], mo1[3], mo2[3], type_ids[3], type_backward;
+  int gdims[3], gdims2[3], ldims1[3], ldims2[3], trans_b, Pgrid;
 
 
-  for(i=0;i<3;i++) {
+  for(i=0; i<3; i++) {
     dmap1[i] = mo1[i] = i;
     for(j=0;j<3;j++)
       if(pgrid_in[i] == pgrid_out[j])
-	dmap2[j] = mo2[j] = i;
+	  dmap2[j] = mo2[j] = i;
   }
 
   p3dfft_setup();
 
-  for(i=0;i<3;i++)
+  for(i=0; i<3; i++)
     if(pgrid_out[i] == 1) {
       d = i;
       break;
@@ -198,18 +198,18 @@ void compute_z2d_p3dfft( int const inbox_low[3], int const inbox_high[3],
 
   type_backward = p3dfft_init_3Dtype(type_ids);
 
-  ldims2[0] = outbox_high[0]-outbox_low[0]+1;
-  ldims2[1] = outbox_high[1]-outbox_low[1]+1;
-  ldims2[2] = outbox_high[2]-outbox_low[2]+1;
+  ldims2[0] = outbox_high[0] - outbox_low[0] + 1;
+  ldims2[1] = outbox_high[1] - outbox_low[1] + 1;
+  ldims2[2] = outbox_high[2] - outbox_low[2] + 1;
 
-  for(i=0;i<3;i++)
+  for(i=0; i<3; i++)
     gdims[i] = gdims2[i] = ldims1[i] * pgrid_out[i];
   gdims[d] = gdims2[d]/2+1;
-  Pgrid = p3dfft_init_proc_grid(pgrid_in,comm);
+  Pgrid = p3dfft_init_proc_grid(pgrid_in, comm);
 
-  Grid *Zpencil = p3dfft_init_data_grid(gdims,-1,Pgrid,dmap1,mo1);
+  Grid *Zpencil = p3dfft_init_data_grid(gdims, -1, Pgrid, dmap1, mo1);
   
-  Grid *Xpencil = p3dfft_init_data_grid(gdims2,d,Pgrid,dmap2,mo2);
+  Grid *Xpencil = p3dfft_init_data_grid(gdims2, d, Pgrid, dmap2, mo2);
 
     // Plan creation ...
     // void *plan;
@@ -218,7 +218,7 @@ void compute_z2d_p3dfft( int const inbox_low[3], int const inbox_high[3],
   timer[0] = -MPI_Wtime();
   
     // plan create
-  trans_b = p3dfft_plan_3Dtrans(Zpencil,Xpencil,type_backward);
+  trans_b = p3dfft_plan_3Dtrans(Zpencil, Xpencil, type_backward);
   
   MPI_Barrier(comm);
   timer[0] += MPI_Wtime();
@@ -230,7 +230,7 @@ void compute_z2d_p3dfft( int const inbox_low[3], int const inbox_high[3],
   timer[1] = -MPI_Wtime();
   
   // compute FFT 
-  p3dfft_exec_3Dtrans_double(trans_b,in,out,0);
+  p3dfft_exec_3Dtrans_double(trans_b, in, out,0);
   
   MPI_Barrier(comm);
   timer[1] = +MPI_Wtime();
@@ -251,13 +251,13 @@ void compute_z2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
 void compute_d2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-			            double const *in, void *out, double *timer,int pgrid_in[3],int pgrid_out[3])
+			            double const *in, void *out, double *timer, int pgrid_in[3], int pgrid_out[3])
 {}
 
 void compute_z2d_p3dfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-            			void const *in, double *out, double *timer,int pgrid_in[3],int pgrid_out[3])
+            			void const *in, double *out, double *timer, int pgrid_in[3], int pgrid_out[3])
 {}
 
 #else

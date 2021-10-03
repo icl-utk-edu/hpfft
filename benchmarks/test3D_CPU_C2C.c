@@ -44,6 +44,7 @@ int main(int argc, char** argv){
     // Initial configuration setup
     int box_low[3]  = {0, 0, 0};
     int box_high[3] = {3, 3, 3};
+    int fftsize = 64;
 
     if (me == 0) // split across the last dimension
         box_high[2] = 1;
@@ -99,7 +100,7 @@ int main(int argc, char** argv){
         }
     }
 
-    if(me == 0)
+    if(me == 1)
         printf("\t\t%s library computed a correct forward C2C 3-D transform \n \n", backends[my_backend] );
 
 
@@ -114,22 +115,35 @@ int main(int argc, char** argv){
     fiber_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, output, input, 1, timer);
 
     // Output after backward
-    for(i=0; i<size_inbox; i++) 
+    for(i=0; i<size_inbox; i++) {
+        // Scaling
+        input[i].r /= fftsize;
+        input[i].i /= fftsize;
         printf(" %g+%gi  \t ", input[i].r, input[i].i);
+    }        
     printf("\n");
     printf("\n");
 
     // Error computation after backward
     double err = 0.0;
-    for(i=1; i<size_inbox; i++)
-        if (fabs(input[i].r - (double) i - 1) > err)
+    for(i=1; i<size_inbox; i++){
+        // printf("%g+%g ----- %d \n" , input[i].r, input[i].i, i);
+
+        if (fabs(input[i].r - (double) i ) > err){
+            // printf("error at %g+%g ----- %d \n" , input[i].r, input[i].i, i);
             err = fabs(input[i].r - (double) i - 1);
+        }
+
+        if( fabs(input[i].i) > 1.E-11 )
+             err = fmax( fabs(input[0].i) , err);
+        // printf("%g \n" , err);
+    }
 
     err = fmax( fabs(input[0].r - (double) 1) , err);
-    err = fmax( fabs(input[0].r - (double) 2) , err);
+    err = fmax( fabs(input[0].i - (double) 2) , err);
 
     // Print errors
-    printf("%s: rank %d computed error |X - ifft(fft(X)) |: %1.6le\n", backends[my_backend], me, err);
+    printf("%s: rank [%d] computed error |X - ifft(fft(X)) |_{max}: %1.6le\n", backends[my_backend], me, err);
 
     // Data deallocation 
     free(input);

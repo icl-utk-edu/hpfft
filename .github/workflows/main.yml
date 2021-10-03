@@ -1,5 +1,3 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
 # Controls when the workflow will run
@@ -28,18 +26,23 @@ jobs:
       - name: Set up dependencies
         run: |
           source ~/spack_setup
-          spack install cmake
-          spack install fftw
-          spack install heffte+fftw
-          spack install openmpi
+          spack env create -d .
+          spack env activate -d .
+          COMPILER=gcc@7.3.0
+          sload $COMPILER%gcc@4.8.5
+          spack compiler find
+          spack install cmake %$COMPILER
+          spack install fftw %$COMPILER
+          spack install heffte+fftw+cuda cuda_arch=70 %$COMPILER
+          spack install openmpi %$COMPILER
 
       - name: Build
         run: |
           mkdir build && cd build
           source ~/spack_setup
+          spack env activate -d .
           spack load --first cmake fftw heffte openmpi
-          HASH=`spack find --no-groups --loaded -l heffte | awk '{print $1}'`
-          HEFFTE=`spack location -i /$HASH`
-          MPI_DIR=`spack location -i openmpi`
+          HEFFTE=`slocation heffte`
+          MPI_DIR=`slocation openmpi`
           cmake -DFIBER_ENABLE_HEFFTE=ON -DFIBER_FFT_INCLUDE_DIRS=$HEFFTE/include -DFIBER_FFT_LIB_DIRS=$HEFFTE/lib -DMPI_DIR=$MPI_DIR ..
           make VERBOSE=1

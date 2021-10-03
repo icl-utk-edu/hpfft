@@ -44,5 +44,6 @@ jobs:
           
           cmake -DFIBER_ENABLE_HEFFTE=ON -DFIBER_FFT_INCLUDE_DIRS=$HEFFTE/include -DFIBER_FFT_LIB_DIRS=$HEFFTE/lib -DMPI_DIR=$MPI_DIR ..
           make VERBOSE=1
-          find .
+          
+          cd benchmarks
           mpirun -n 2 ./test3D_CPU_C2C

@@ -46,4 +46,4 @@ fiber_add_benchmark(test3D_CPU_C2C)
 
 if (FIBER_ENABLE_CUDA)
     fiber_add_benchmark(test3D_GPU_R2C)
-endif()
+endif() 

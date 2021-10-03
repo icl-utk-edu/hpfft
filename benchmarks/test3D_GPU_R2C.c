@@ -60,8 +60,8 @@ int main(int argc, char** argv){
     double *d_input = NULL;
     fiber_complex *d_output = NULL;
 
-    cudaMalloc((void**) &d_input,  2*size_inbox);
-    cudaMalloc((void**) &d_output, 2*size_outbox);
+    cudaMalloc((void**) &d_input,     sizeof(double) * size_inbox);
+    cudaMalloc((void**) &d_output,  2*sizeof(double) * size_inbox);
 
     // Data Initialization
     for(i=0; i<size_inbox; i++)
@@ -80,7 +80,7 @@ int main(int argc, char** argv){
     // ********************************
     // Compute forward (D2Z) transform
     // ********************************
-    fiber_execute_d2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, output, 0, timer);
+    fiber_execute_d2z[my_backend].function(box_low, box_high, box_low, box_high, comm, d_input, d_output, 1, timer);
 
     // Moving data: GPU->CPU
     fiber_copy_gpu2cpu(output, d_output, size_outbox);
@@ -105,7 +105,7 @@ int main(int argc, char** argv){
         }
     }
     
-    if(me == 0)
+    if(me == 1)
         printf("\t\t%s library computed a correct forward R2C 3-D transform \n \n ", backends[my_backend] );
 
 

@@ -101,21 +101,17 @@ include/fiber_utils.h
 include/fiber_backend_fftmpi.h   
 include/fiber_backend_p3dfft.h
 benchmarks/test3D_CPU_R2C.c
-# benchmarks/Bench_3D_R2C_CPU.c
-# benchmarks/test3D_CPU_C2C.c
 )
 
 # Build libfiber, with or without GPU support
+add_library(fiber ${fiber_common_sources})
+
 if (FIBER_ENABLE_CUDA)
     find_package(CUDA REQUIRED)
     list(APPEND CUDA_NVCC_FLAGS "-std=c++11")
-    cuda_add_library(fiber ${fiber_common_sources}
-                            benchmarks/test3D_GPU_R2C.c)
 
     cuda_add_cufft_to_target(fiber)
     target_include_directories(fiber PUBLIC $<INSTALL_INTERFACE:${CUDA_INCLUDE_DIRS}>)
-else()
-    add_library(fiber ${fiber_common_sources})
 endif()
 
 ##############

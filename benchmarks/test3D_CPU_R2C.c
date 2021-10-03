@@ -92,7 +92,7 @@ int main(int argc, char** argv){
         }
     }
     
-    if(me == 0)
+    if(me == 1)
         printf("\t\t%s library computed a correct forward R2C 3-D transform \n \n ", backends[my_backend] );
 
 

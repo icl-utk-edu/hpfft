@@ -31,12 +31,13 @@ jobs:
           spack install cmake
           spack install fftw
           spack install heffte+fftw
+          spack install openmpi
 
       - name: Build
         run: |
           mkdir build && cd build
           source ~/spack_setup
-          spack load --first cmake fftw heffte
+          spack load --first cmake fftw heffte openmpi
           HASH=`spack find --no-groups --loaded -l heffte | awk '{print $1}'`
           HEFFTE=`spack location -i /$HASH`
           cmake -DFIBER_ENABLE_HEFFTE=ON -DFIBER_FFT_INCLUDE_DIRS=$HEFFTE/include -DFIBER_FFT_LIB_DIRS=$HEFFTE/lib ..

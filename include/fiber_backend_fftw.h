@@ -18,6 +18,12 @@ void compute_z2z_fftw( int const inbox_low[3], int const inbox_high[3],
                   MPI_Comm const comm,
                   void const *in, void *out, double *timer)
 {
+    // FFTW tuning flags: 
+    // FFTW_MEASURE is more time consuming than FFTW_ESTIMATE, it runs and measures the execution time of several FFTs in order to find the
+    // best way to compute the transform, given the FFT size and resources.
+    
+    int fftw_set_tuning = 0;
+
     int niter = 1;
     int nx = inbox_high[0]-inbox_low[0];
     int ny = inbox_high[1]-inbox_low[1];
@@ -25,13 +31,12 @@ void compute_z2z_fftw( int const inbox_low[3], int const inbox_high[3],
 
     // Plan creation ...
     void *plan_z2z;
-    int tuning_option = 0
 
     MPI_Barrier(comm);
     timer[0] = -MPI_Wtime();
-    if (tuning_option==0)
+    if (fftw_set_tuning==0)
         plan_z2z = fftw_mpi_plan_dft_c2c_3d(nx, ny, nz, in, out, comm, FFTW_ESTIMATE);
-    if (tuning_option==1)
+    if (fftw_set_tuning==1)
         plan_z2z = fftw_mpi_plan_dft_c2c_3d(nx, ny, nz, in, out, comm, FFTW_MEASURE);
     timer[0] += MPI_Wtime();
 
@@ -58,7 +63,7 @@ void compute_d2z_fftw( int const inbox_low[3], int const inbox_high[3],
                   MPI_Comm const comm,
                   double const *in, void *out, double *timer)
 {
-
+    int fftw_set_tuning = 0;
     int niter = 1;
     int nx = inbox_high[0]-inbox_low[0];
     int ny = inbox_high[1]-inbox_low[1];
@@ -66,13 +71,12 @@ void compute_d2z_fftw( int const inbox_low[3], int const inbox_high[3],
 
     // Plan creation ...
     void *plan_d2z;
-    int tuning_option = 0
 
     MPI_Barrier(comm);
     timer[0] = -MPI_Wtime();
-    if (tuning_option==0)
+    if (fftw_set_tuning==0)
         plan_d2z = fftw_mpi_plan_dft_r2c_3d(nx, ny, nz, in, out, comm, FFTW_ESTIMATE);
-    if (tuning_option==1)
+    if (fftw_set_tuning==1)
         plan_d2z = fftw_mpi_plan_dft_r2c_3d(nx, ny, nz, in, out, comm, FFTW_MEASURE);
     timer[0] += MPI_Wtime();
 
@@ -99,6 +103,7 @@ void compute_z2d_fftw( int const inbox_low[3], int const inbox_high[3],
                   MPI_Comm const comm,
                   void const *in, double *out, double *timer)
 {
+    int fftw_set_tuning = 0;
     int niter = 1;
     int nx = inbox_high[0]-inbox_low[0];
     int ny = inbox_high[1]-inbox_low[1];
@@ -106,13 +111,12 @@ void compute_z2d_fftw( int const inbox_low[3], int const inbox_high[3],
 
     // Plan creation ...
     void *plan_z2d;
-    int tuning_option = 0
 
     MPI_Barrier(comm);
     timer[0] = -MPI_Wtime();
-    if (tuning_option==0)
+    if (fftw_set_tuning==0)
         plan_z2d = fftw_mpi_plan_dft_c2r_3d(nx, ny, nz, in, out, comm, FFTW_ESTIMATE);
-    if (tuning_option==1)
+    if (fftw_set_tuning==1)
         plan_z2d = fftw_mpi_plan_dft_c2r_3d(nx, ny, nz, in, out, comm, FFTW_MEASURE);
     timer[0] += MPI_Wtime();
 

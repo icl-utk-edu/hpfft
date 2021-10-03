@@ -26,7 +26,7 @@ jobs:
       - name: Set up dependencies
         run: |
           source ~/spack_setup
-          sload gcc@7.3.0
+          sload gcc@7.3.0%gcc@4.8.5
           spack compiler find
           spack unload -a
           cp .github/workflows/spack.yaml .

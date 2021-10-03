@@ -9,7 +9,7 @@
 #if defined(FIBER_ENABLE_CUDA)
   #include <cufft.h>
   #define fiber_copy_cpu2gpu(h_, g_, size_)  cudaMemcpy((g_), (h_), (size_), cudaMemcpyHostToDevice)
-  #define fiber_copy_gpu2cpu(h_, g_, size_)  cudaMemcpy((h_), (g_), (size_), cudaMemcpyDeviceToHost)
+  #define fiber_copy_gpu2cpu(g_, h_, size_)  cudaMemcpy((h_), (g_), (size_), cudaMemcpyDeviceToHost)
 #else 
   #define fiber_copy_cpu2gpu(h_, g_, size_)
   #define fiber_copy_gpu2cpu(h_, g_, size_)

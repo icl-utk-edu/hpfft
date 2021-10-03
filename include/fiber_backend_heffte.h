@@ -66,10 +66,12 @@ void compute_d2z_heffte( int const inbox_low[3], int const inbox_high[3],
     int status;
     if(scale == 1){
         printf("Calling GPU heffte \n");
+        // status = heffte_plan_create_r2c(Heffte_BACKEND_CUFFT, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, 0, comm, NULL, &plan);
         status = heffte_plan_create(Heffte_BACKEND_CUFFT, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
     }        
     else{        
         printf("Calling CPU heffte \n");
+        // status = heffte_plan_create_r2c(Heffte_BACKEND_FFTW, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, 0, comm, NULL, &plan);
         status = heffte_plan_create(Heffte_BACKEND_FFTW, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
     }        
     MPI_Barrier(comm);
@@ -79,6 +81,13 @@ void compute_d2z_heffte( int const inbox_low[3], int const inbox_high[3],
         printf("Failed at heffte_plan_create() with error code: %d\n", status);
         MPI_Abort(comm, 1);
     }
+
+    printf("size in = %d \n" , heffte_size_inbox(plan) );
+    printf("size ou = %d \n" , heffte_size_outbox(plan) );
+    printf("size wr = %d \n" , heffte_size_workspace(plan) );
+    printf("backend = %d \n" , heffte_get_backend(plan)  );
+    printf("r2c = %d \n" , heffte_is_r2c(plan)  );
+
 
     // FFT execution
     MPI_Barrier(comm);

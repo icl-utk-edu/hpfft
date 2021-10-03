@@ -37,7 +37,7 @@ jobs:
         run: |
           mkdir build && cd build
           source ~/spack_setup
-          spack env activate -d .
+          spack env activate -d ..
           spack load --first gcc cmake heffte openmpi
           HEFFTE=`spack location -i heffte`
           MPI_DIR=`spack location -i openmpi`

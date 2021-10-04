@@ -26,10 +26,6 @@ void compute_z2z_fftw( int const inbox_low[3], int const inbox_high[3],
 
     ptrdiff_t local_nx, local_x_start, nx, ny, nz;
 
-    // nx = inbox_high[0] - inbox_low[0] + 1;
-    // ny = inbox_high[1] - inbox_low[1] + 1;
-    // nz = inbox_high[2] - inbox_low[2] + 1;
-
     // Global size, to come as input later on
     nx=ny=nz=4;
     printf(" global size: %d \t %d \t %d  \n" , nx, ny, nz);
@@ -87,10 +83,6 @@ void compute_d2z_fftw( int const inbox_low[3], int const inbox_high[3],
     local_nx = inbox_high[0] - inbox_low[0] + 1;
     local_x_start = 0;
 
-    // nx = inbox_high[0] - inbox_low[0] + 1;
-    // ny = inbox_high[1] - inbox_low[1] + 1;
-    // nz = inbox_high[2] - inbox_low[2] + 1;
-
     // Plan creation ...
     void *plan_d2z;
     
@@ -139,10 +131,6 @@ void compute_z2d_fftw( int const inbox_low[3], int const inbox_high[3],
     nx=ny=nz=4;
     local_nx = inbox_high[0] - inbox_low[0] + 1;
     local_x_start = 0;
-
-    // nx = inbox_high[0] - inbox_low[0] + 1;
-    // ny = inbox_high[1] - inbox_low[1] + 1;
-    // nz = inbox_high[2] - inbox_low[2] + 1;
 
     // Plan creation ...
     void *plan_z2d;

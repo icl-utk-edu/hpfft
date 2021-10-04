@@ -43,10 +43,7 @@ jobs:
           FFTW=`spack location -i fftw`
           MPI_DIR=`spack location -i openmpi`
           
-          cmake -DFIBER_ENABLE_HEFFTE=ON -DFIBER_ENABLE_FFTW=ON \
-             -DFIBER_FFT_INCLUDE_DIRS=$HEFFTE/include;$FFTW/include \
-             -DFIBER_FFT_LIB_DIRS=$HEFFTE/lib;$FFTW/lib \  
-             -DMPI_DIR=$MPI_DIR ..
+          cmake -DFIBER_ENABLE_HEFFTE=ON -DFIBER_ENABLE_FFTW=ON -DFIBER_FFT_INCLUDE_DIRS=$HEFFTE/include;$FFTW/include -DFIBER_FFT_LIB_DIRS=$HEFFTE/lib;$FFTW/lib -DMPI_DIR=$MPI_DIR ..
           make VERBOSE=1
           
           cd benchmarks

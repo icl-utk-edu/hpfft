@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.10)
 
 project("FIBER" VERSION 0.1 LANGUAGES C)
 
+#################
+# Default Options
+#################
 option(FIBER_ENABLE_HEFFTE    "Enable the HEFFTE backend"       OFF)
 option(FIBER_ENABLE_FFTMPI    "Enable the FFTMPI backend"       OFF)
 option(FIBER_ENABLE_ACCFFT    "Enable the ACCFFT backend"       OFF)
@@ -38,6 +41,9 @@ else ()
     set ( CMAKE_C_STANDARD 99 )
 endif ()
 
+#####################
+# Library definitions
+#####################
 if (FIBER_ENABLE_HEFFTE)
     add_definitions(-DFIBER_ENABLE_HEFFTE)
 endif()
@@ -87,7 +93,9 @@ include_directories(include)
 include_directories(${MPI_DIR}/include)
 link_directories(${MPI_DIR}/lib)
 
+#######################
 # libfiber source files
+#######################
 set(fiber_common_sources
 include/fiber_backend_accfft.h   
 include/fiber_backend_fftw.h     
@@ -113,6 +121,17 @@ if (FIBER_ENABLE_CUDA)
     cuda_add_cufft_to_target(fiber)
     target_include_directories(fiber PUBLIC $<INSTALL_INTERFACE:${CUDA_INCLUDE_DIRS}>)
 endif()
+
+#########
+# install
+#########
+install(TARGETS fiber EXPORT fiber_Targets DESTINATION lib)
+install(EXPORT fiber_Targets FILE fiberTargets.cmake NAMESPACE fiber:: DESTINATION lib/cmake/fiber)
+
+install(DIRECTORY include/ DESTINATION include FILES_MATCHING PATTERN "*.h"
+                                                              PATTERN "**~" EXCLUDE
+                                                              PATTERN "*.cu*" EXCLUDE
+                                                              )
 
 ##############
 # Benchmarks #

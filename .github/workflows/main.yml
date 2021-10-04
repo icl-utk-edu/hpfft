@@ -46,6 +46,7 @@ jobs:
           make VERBOSE=1
           
           cd benchmarks
-          mpirun -n 2 ./test3D_CPU_C2C
-          mpirun -n 2 ./test3D_CPU_R2C
+          ls -l
+          mpirun -n 2 ./test3D_CPU_C2C heffte
+          mpirun -n 2 ./test3D_CPU_R2C heffte
           echo Done

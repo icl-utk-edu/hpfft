@@ -44,8 +44,8 @@ jobs:
           mkdir build && cd build
           LIBRARY_DIR=`spack location -i ${{ matrix.library }}`
           MPI_DIR=`spack location -i openmpi`
-          
-          cmake -DFIBER_ENABLE_${{ matrix.library }}=ON -DFIBER_FFT_INCLUDE_DIRS="$LIBRARY_DIR/include" -DFIBER_FFT_LIB_DIRS="$LIBRARY_DIR/lib" -DMPI_DIR=$MPI_DIR ..
+          LIBNAME=${{ matrix.library }}
+          cmake -DFIBER_ENABLE_${LIBNAME^^}=ON -DFIBER_FFT_INCLUDE_DIRS="$LIBRARY_DIR/include" -DFIBER_FFT_LIB_DIRS="$LIBRARY_DIR/lib" -DMPI_DIR=$MPI_DIR ..
           make VERBOSE=1
         
       - name: Test with ${{ matrix.library }}

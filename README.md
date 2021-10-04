@@ -76,6 +76,13 @@ mpirun -n 2 ./test3D_CPU_C2C <library>
 mpirun -n 2 ./test3D_CPU_R2C <library>
 ~~~
 
+If FIBER was build linked to GPU enabled libraries:
+~~~
+cd build/benchmarks
+mpirun -n 2 ./test3D_GPU_C2C <gpu_library>
+mpirun -n 2 ./test3D_GPU_R2C <gpu_library>
+~~~
+
 where `library` has to be replaced by one of the nine available libraries, provided user has it installed.
 Once a parallel FFT library has been correctly integrated to heFFTe, running these benchmarks should report a correct validation output.
 

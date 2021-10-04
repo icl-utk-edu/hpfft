@@ -26,7 +26,10 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
+      
+      - name: C++ Style Check (compiled)
+        uses: Dal-Papa/actions-uncrustify@v1.2
+        
       - name: Set up dependencies
         run: |
           source .github/CI/spack_setup.sh

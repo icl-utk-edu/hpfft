@@ -11,6 +11,23 @@
 #if defined(FIBER_ENABLE_FFTW)
 #include <fftw3-mpi.h>
 
+
+/*!
+ * \ingroup CPU_libraries
+ * \addtogroup fiber_cpu Backend fftw3
+ *
+ * Wrappers and template specializations related to the FFTW backend.
+ * Requires CMake option:
+ * \code
+ *  -D Heffte_ENABLE_FFTW=ON
+ * \endcode
+ * Flag:
+ * The fftw_switch flag works as follows:
+ * For C2C transforms: it chooses between FFTW_FORWARD and FFTW_BACKWARD flags
+ * For R2C transforms: it chooses between FFTW_ESTIMATE and FFTW_MEASURE flags
+ */
+
+
 //=====================  Complex-to-Complex transform =========================
 
 void compute_z2z_fftw( int const inbox_low[3], int const inbox_high[3],

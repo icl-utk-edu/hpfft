@@ -33,23 +33,21 @@ jobs:
           spack env activate -d .
           spack install
 
-      - name: Build
+      - name: Build with heffte
         run: |
           source .github/CI/spack_setup.sh
           mkdir build && cd build
           spack env activate -d ..
-          spack load --first gcc cmake fftw heffte openmpi
+          spack load --first gcc cmake heffte openmpi
           HEFFTE=`spack location -i heffte`
-          FFTW=`spack location -i fftw`
           MPI_DIR=`spack location -i openmpi`
           
-          cmake -DFIBER_ENABLE_HEFFTE=ON -DFIBER_ENABLE_FFTW=ON -DFIBER_FFT_INCLUDE_DIRS="$HEFFTE/include;$FFTW/include" -DFIBER_FFT_LIB_DIRS="$HEFFTE/lib;$FFTW/lib" -DMPI_DIR=$MPI_DIR ..
+          cmake -DFIBER_ENABLE_HEFFTE=ON -DFIBER_FFT_INCLUDE_DIRS="$HEFFTE/include" -DFIBER_FFT_LIB_DIRS="$HEFFTE/lib" -DMPI_DIR=$MPI_DIR ..
           make VERBOSE=1
-          
-          cd benchmarks
-          ls -l
+        
+      - name: Test with heffte
+        run: |
+          cd build/benchmarks
           mpirun -n 2 ./test3D_CPU_C2C heffte
           mpirun -n 2 ./test3D_CPU_R2C heffte
-          mpirun -n 2 ./test3D_CPU_C2C fftw
-          mpirun -n 2 ./test3D_CPU_R2C fftw
-          echo Done
+          

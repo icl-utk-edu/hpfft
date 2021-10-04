@@ -46,5 +46,6 @@ jobs:
           make VERBOSE=1
           
           cd benchmarks
-          ls | xargs -n1 mpirun -n 2
+          mpirun -n 2 ./test3D_CPU_C2C
+          mpirun -n 2 ./test3D_CPU_R2C
           echo Done

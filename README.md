@@ -16,7 +16,7 @@ About
 The FFT Infrastructure Benchmark for Exascale Research (FIBER) provides a framework for Fast Fourier Transform (FFT) benchmarks targeting exascale computing systems. It evaluates performance and scalability of distributed FFTs on different architectures. Furthermore, it analyzes the effect on applications that directly depend on FFTs. It can also stress and test the overall network of a supercomputer, give an indication on bisection bandwidth, noise, and other network and MPI collectives limitations that are of interest to many other ECP applications.
 
 
-The current harness software allows to compute 3-D complex-to-complex and real-to-complex FFTs.
+The current harness software puts together FFT libraries supporting distributed 3-D complex-to-complex and real-to-complex FFTs.
 
 
 * * *
@@ -24,7 +24,7 @@ The current harness software allows to compute 3-D complex-to-complex and real-t
 Setting up
 ==========
 
-Create a folder; e.g., `Benchmarks_FFT`, and install the FFT libraries to benchmark.
+Create a folder; e.g., `Benchmarks_FFT`, and install the FFT libraries to benchmark; or load them as modules.
 
 ~~~
 -- Benchmarks_FFT

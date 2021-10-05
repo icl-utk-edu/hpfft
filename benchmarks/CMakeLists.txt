@@ -41,6 +41,14 @@ macro(fiber_add_benchmark fiber_benchmark)
 
 endmacro()
 
+macro(fiber_add_mpi_test)
+    cmake_parse_arguments(_fiber "" "NAME;COMMAND;RANKS" "" ${ARGN} )
+    add_test(${_fiber_NAME} ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} ${_fiber_RANKS} ${MPIEXEC_PREFLAGS} ${CMAKE_CURRENT_BINARY_DIR}/${_fiber_COMMAND} ${MPIEXEC_POSTFLAGS})
+    unset(_fiber_NAME)
+    unset(_fiber_RANKS)
+    unset(_fiber_COMMAND)
+endmacro()
+
 fiber_add_benchmark(test3D_CPU_R2C)
 fiber_add_benchmark(test3D_CPU_C2C)
 

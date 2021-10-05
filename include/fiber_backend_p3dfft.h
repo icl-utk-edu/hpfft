@@ -16,8 +16,11 @@
 void compute_z2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-			            void const *in, void *out, double *timer, int const pgrid_in[3], int const pgrid_out[3])
+			            void const *in, void *out, int p3dfft_switch, double *timer)
 {
+
+  int pgrid_in[3]  = {1,1,2};
+  int pgrid_out[3] = {1,1,2};
 
   int i, j;
   int dmap1[3], dmap2[3], mo1[3], mo2[3], type_ids1[3], type_ids2[3], type_forward, type_backward;
@@ -88,8 +91,11 @@ void compute_z2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
 void compute_d2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-			            double const *in, void *out, double *timer, int pgrid_in[3], int pgrid_out[3])
+			            double const *in, void *out, int p3dfft_switch, double *timer)
 {
+
+  int pgrid_in[3]  = {1,1,2};
+  int pgrid_out[3] = {1,1,2};
 
   int i, j, d;
   int dmap1[3], dmap2[3], mo1[3], mo2[3], type_ids[3], type_forward;
@@ -168,8 +174,11 @@ void compute_d2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
 void compute_z2d_p3dfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-			            void const *in, double *out, double *timer, int pgrid_in[3], int pgrid_out[3])
+			            void const *in, double *out, int p3dfft_switch, double *timer)
 {
+
+  int pgrid_in[3]  = {1,1,2};
+  int pgrid_out[3] = {1,1,2};
 
   int i, j, d;
   int dmap1[3], dmap2[3], mo1[3], mo2[3], type_ids[3], type_backward;
@@ -245,19 +254,19 @@ void compute_z2d_p3dfft( int const inbox_low[3], int const inbox_high[3],
 void compute_z2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-			            void const *in, void *out, double *timer, int const pgrid_in[3], int const pgrid_out[3])
+			            void const *in, void *out, int p3dfft_switch, double *timer)
 {}
 
 void compute_d2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-			            double const *in, void *out, double *timer, int pgrid_in[3], int pgrid_out[3])
+			            double const *in, void *out, int p3dfft_switch, double *timer)
 {}
 
 void compute_z2d_p3dfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-            			void const *in, double *out, double *timer, int pgrid_in[3], int pgrid_out[3])
+            			void const *in, double *out, int p3dfft_switch, double *timer)
 {}
 
 #else

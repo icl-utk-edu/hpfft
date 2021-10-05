@@ -78,45 +78,48 @@ int main(int argc, char** argv){
     printf("\n");
     printf("\n");        
 
-    // Error computation after forward
-    if (me == 1){
-        int pass = 0;
-        if (fabs(output[0].r + 512.0) > 1.E-11 || fabs(output[0].i) > 1.E-11)
-            pass = 1;
-        for(i=1; i<size_outbox; i++)
-            if (fabs(output[i].r) > 1.E-11 || fabs(output[i].i) > 1.E-11)
+    // Error computation after forward, verify with printed output in case your library only stores part of the result
+    if (my_backend == 0){
+        if (me == 1){
+            int pass = 0;
+            if (fabs(output[0].r + 512.0) > 1.E-11 || fabs(output[0].i) > 1.E-11)
                 pass = 1;
-        if (pass){
-            printf("The computed transform deviates by more than the tolerance.\n");
-            MPI_Abort(comm, 1);
+            for(i=1; i<size_outbox; i++)
+                if (fabs(output[i].r) > 1.E-11 || fabs(output[i].i) > 1.E-11)
+                    pass = 1;
+            if (pass){
+                printf("The computed transform deviates by more than the tolerance.\n");
+                MPI_Abort(comm, 1);
+            }
         }
-    }
     
-    if(me == 1)
-        printf("\t\t%s library computed a correct forward R2C 3-D transform \n \n ", backends[my_backend] );
-
+        if(me == 1)
+            printf("\t\t%s library computed a correct forward R2C 3-D transform \n \n ", backends[my_backend] );
+    }
 
     // ********************************
     // Compute backwad (Z2D) transform
     // ********************************
     for(i=0; i<size_inbox; i++) input[i] = 0.0;
 
-    // Backward execution
-    fiber_execute_z2d[my_backend].function(box_low, box_high, box_low, box_high, comm, output, input, timer);
+    if (my_backend == 0){
+        // Backward execution
+        fiber_execute_z2d[my_backend].function(box_low, box_high, box_low, box_high, comm, output, input, timer);
 
-    // Output after backward
-    for(i=0; i<size_inbox; i++) 
-        printf("  %g \t ", input[i]);
-    printf("\n");
-    printf("\n");        
+        // Output after backward
+        for(i=0; i<size_inbox; i++) 
+            printf("  %g \t ", input[i]);
+        printf("\n");
+        printf("\n");        
 
     // Error computation after backward
-    double err = 0.0;
-    for(i=0; i<size_inbox; i++)
-        if (fabs(input[i] - (double) i) > err)
-            err = fabs(input[i] - (double) i);
+        double err = 0.0;
+        for(i=0; i<size_inbox; i++)
+            if (fabs(input[i] - (double) i) > err)
+                err = fabs(input[i] - (double) i);
 
-    printf("%s: rank %d computed error |X - ifft(fft(X)) |: %1.6le\n", backends[my_backend], me, err);
+        printf("%s: rank %d computed error |X - ifft(fft(X)) |: %1.6le\n", backends[my_backend], me, err);
+    }
 
     // Data deallocation 
     free(input);

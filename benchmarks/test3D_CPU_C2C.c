@@ -113,7 +113,7 @@ int main(int argc, char** argv){
         input[i].i = 0.0;
     }        
 
-    fiber_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, output, input, 1, timer);
+    fiber_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, output, input, 0, timer);
 
     // Output after backward
     for(i=0; i<size_inbox; i++) {

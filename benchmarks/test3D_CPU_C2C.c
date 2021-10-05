@@ -3,7 +3,8 @@
 * Benchmark: C2C 3-D transform, double precision, 2 MPI ranks.
 * Autor: Alan Ayala - ICL, UTK.
 ------------------------------------------------------------------------------
-Use this program to verify the correct integration of a third-party library
+Use this program to verify the correct integration of a third-party library.
+All libraries must pass this error validation tester.
 make clean; make -j; mpirun -n 2 ./test3D_CPU_C2C <library>
 */
 

@@ -16,7 +16,7 @@
 void compute_z2z_fftmpi( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, void *out, double *timer)
+                  void const *in, void *out, int fftmpi_switch, double *timer)
 {
     // setup
     int nx,ny,nz;
@@ -96,7 +96,7 @@ void compute_z2z_fftmpi( int const inbox_low[3], int const inbox_high[3],
 void compute_d2z_fftmpi( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  double const *in, void *out, double *timer)
+                  double const *in, void *out, int fftmpi_switch, double *timer)
 {
     printf("Real-to-Complex transform is not available for FFTMPI. \n");
     timer[0] = -1;
@@ -109,7 +109,7 @@ void compute_d2z_fftmpi( int const inbox_low[3], int const inbox_high[3],
 void compute_z2d_fftmpi( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, double *out, double *timer)
+                  void const *in, double *out, int fftmpi_switch, double *timer)
 {
     printf("Complex-to-Real transform is not available for FFTMPI. \n");
     timer[0] = -1;
@@ -121,19 +121,19 @@ void compute_z2d_fftmpi( int const inbox_low[3], int const inbox_high[3],
 void compute_z2z_fftmpi( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, void *out, double *timer)
+                  void const *in, void *out, int fftmpi_switch, double *timer)
 {}
 
 void compute_d2z_fftmpi( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  double const *in, void *out, double *timer)
+                  double const *in, void *out, int fftmpi_switch, double *timer)
 {}
 
 void compute_z2d_fftmpi( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, double *out, double *timer)
+                  void const *in, double *out, int fftmpi_switch, double *timer)
 {}
 
 #endif

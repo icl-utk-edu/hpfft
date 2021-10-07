@@ -19,7 +19,7 @@ void compute_z2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
                   void const *in, void *out, int p3dfft_switch, double *timer)
 {
 
-    printf("Calling P3DFFT++ Complex-to-Complex FFT")
+    printf("Calling P3DFFT++ Complex-to-Complex FFT \n");
     int pgrid_in[3]  = {1,1,2};
     int pgrid_out[3] = {1,1,2};    
 
@@ -28,7 +28,7 @@ void compute_z2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
     timer[0] = -MPI_Wtime();
 
     int i, j;
-    int dmap1[3], dmap2[3], mo1[3], mo2[3], type_ids1[3], type_ids2[3], type_forward, type_backward;
+    int dmap1[3], dmap2[3], mo1[3], mo2[3], type_ids1[3], type_ids2[3], type_fft;
     int gdims[3], gdims2[3], ldims1[3];
 
     for(i=0; i<3; i++) {
@@ -39,12 +39,6 @@ void compute_z2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
     }
 
     p3dfft_setup();
-
-    type_ids1[0] = P3DFFT_CFFT_FORWARD_D;
-    type_ids1[1] = P3DFFT_CFFT_FORWARD_D;
-    type_ids1[2] = P3DFFT_CFFT_FORWARD_D;
-
-    type_forward = p3dfft_init_3Dtype(type_ids1);
 
     ldims1[0] = inbox_high[0] - inbox_low[0] + 1;
     ldims1[1] = inbox_high[1] - inbox_low[1] + 1;
@@ -59,15 +53,26 @@ void compute_z2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
     Grid *Zpencil = p3dfft_init_data_grid(gdims, -1, Pgrid, dmap2, mo2);
     
 
+    Plan3D trans_z2z;
+
     // plan create
-    if (p3dfft_switch=-0)
-        Plan3D trans_f = p3dfft_plan_3Dtrans(Xpencil, Zpencil, type_forward);
-    else if (p3dfft_switch=-1)
-        Plan3D trans_f = p3dfft_plan_3Dtrans(Xpencil, Zpencil, type_backward);
+    if (p3dfft_switch == 0){
+        type_ids1[0] = P3DFFT_CFFT_FORWARD_D;
+        type_ids1[1] = P3DFFT_CFFT_FORWARD_D;
+        type_ids1[2] = P3DFFT_CFFT_FORWARD_D;
+    }
+    else if (p3dfft_switch == 1){
+        type_ids1[0] = P3DFFT_CFFT_BACKWARD_D;
+        type_ids1[1] = P3DFFT_CFFT_BACKWARD_D;
+        type_ids1[2] = P3DFFT_CFFT_BACKWARD_D;
+    }
     else{
-        print("Invalid P3DFFT switch \n");
+        printf("Invalid P3DFFT switch \n");
         MPI_Abort(comm, 1);
-        }
+    }
+    
+    type_fft = p3dfft_init_3Dtype(type_ids1);
+    trans_z2z = p3dfft_plan_3Dtrans(Xpencil, Zpencil, type_fft);
 
     MPI_Barrier(comm);
     timer[0] += MPI_Wtime();
@@ -76,7 +81,7 @@ void compute_z2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
     // FFT execution 
     MPI_Barrier(comm);
     timer[1] = -MPI_Wtime();
-    p3dfft_exec_3Dtrans_double(trans_f, in, out, 0);
+    p3dfft_exec_3Dtrans_double(trans_z2z, in, out, 0);
     MPI_Barrier(comm);
     timer[1] = +MPI_Wtime();
 
@@ -91,7 +96,7 @@ void compute_d2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
                   double const *in, void *out, int p3dfft_switch, double *timer)
 {
 
-    printf("Calling P3DFFT++ Real-to-Complex FFT")
+    printf("Calling P3DFFT++ Real-to-Complex FFT \n");
     int pgrid_in[3]  = {1,1,2};
     int pgrid_out[3] = {1,1,2};    
 
@@ -100,8 +105,8 @@ void compute_d2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
     timer[0] = -MPI_Wtime();
 
     int i, j, d;
-    int dmap1[3], dmap2[3], mo1[3], mo2[3], type_ids[3], type_forward;
-    int gdims[3], gdims2[3], ldims1[3], trans_b;
+    int dmap1[3], dmap2[3], mo1[3], mo2[3], type_ids[3];
+    int gdims[3], gdims2[3], ldims1[3];
 
     for(i=0; i<3; i++) {
         dmap1[i] = mo1[i] = i;
@@ -123,7 +128,7 @@ void compute_d2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
     type_ids[2] = P3DFFT_CFFT_FORWARD_D;
     type_ids[d] = P3DFFT_R2CFFT_D;
 
-    type_forward = p3dfft_init_3Dtype(type_ids);
+    int type_forward = p3dfft_init_3Dtype(type_ids);
 
     ldims1[0] = inbox_high[0] - inbox_low[0] + 1;
     ldims1[1] = inbox_high[1] - inbox_low[1] + 1;
@@ -164,7 +169,7 @@ void compute_z2d_p3dfft( int const inbox_low[3], int const inbox_high[3],
                   void const *in, double *out, int p3dfft_switch, double *timer)
 {
 
-    printf("Calling P3DFFT++ Complex-to-Real FFT")
+    printf("Calling P3DFFT++ Complex-to-Real FFT \n");
     int pgrid_in[3]  = {1,1,2};
     int pgrid_out[3] = {1,1,2};    
 
@@ -173,8 +178,8 @@ void compute_z2d_p3dfft( int const inbox_low[3], int const inbox_high[3],
     timer[0] = -MPI_Wtime();
 
     int i, j, d;
-    int dmap1[3], dmap2[3], mo1[3], mo2[3], type_ids[3], type_forward;
-    int gdims[3], gdims2[3], ldims1[3], trans_b;
+    int dmap1[3], dmap2[3], mo1[3], mo2[3], type_ids[3];
+    int gdims[3], gdims2[3], ldims2[3];
 
     for(i=0; i<3; i++) {
         dmap1[i] = mo1[i] = i;
@@ -196,14 +201,14 @@ void compute_z2d_p3dfft( int const inbox_low[3], int const inbox_high[3],
     type_ids[2] = P3DFFT_CFFT_FORWARD_D;
     type_ids[d] = P3DFFT_C2RFFT_D;
 
-    type_backward = p3dfft_init_3Dtype(type_ids);
+    int type_backward = p3dfft_init_3Dtype(type_ids);
 
     ldims2[0] = outbox_high[0] - outbox_low[0] + 1;
     ldims2[1] = outbox_high[1] - outbox_low[1] + 1;
     ldims2[2] = outbox_high[2] - outbox_low[2] + 1;
 
     for(i=0; i<3; i++)
-        gdims[i] = gdims2[i] = ldims1[i] * pgrid_out[i];
+        gdims[i] = gdims2[i] = ldims2[i] * pgrid_out[i];
     gdims[d] = gdims2[d]/2+1;
 
     int Pgrid = p3dfft_init_proc_grid(pgrid_in, comm);

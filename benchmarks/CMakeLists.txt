@@ -51,6 +51,7 @@ endmacro()
 
 fiber_add_benchmark(test3D_CPU_R2C)
 fiber_add_benchmark(test3D_CPU_C2C)
+fiber_add_benchmark(Bench_3D_C2C_CPU)
 
 if (FIBER_ENABLE_CUDA)
     fiber_add_benchmark(test3D_GPU_R2C)

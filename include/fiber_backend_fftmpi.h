@@ -78,21 +78,6 @@ void compute_z2z_fftmpi( int const inbox_low[3], int const inbox_high[3],
     MPI_Barrier(comm);
     timer[1] = +MPI_Wtime();
 
-    printf("================================================================= \n");
-
-    for(int i=0; i<64; i++) {
-        printf("  %g  \t ", ( (double *)in )[i]);
-        // out = (fiber_complex *)in;
-        // printf("  %g  \t ", ( (double *)out )[i]);
-    }        
-    printf("\n");        
-    printf("\n");   
-
-    printf("================================================================= \n");
-
-
-
-
     // Delete plan
     fft3d_destroy(plan);
 }

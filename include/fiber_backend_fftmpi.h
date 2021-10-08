@@ -18,30 +18,19 @@ void compute_z2z_fftmpi( int const inbox_low[3], int const inbox_high[3],
                   MPI_Comm const comm,
                   void const *in, void *out, int fftmpi_switch, double *timer)
 {
+    printf("Complex-to-Complex with FFTMPI. \n");
     // setup
     int nx,ny,nz;
     nx = ny = nz = 4;
     int precision = 2;
 
-    // -m 0/1/2/3 = FFT mode (default = 0)
-    // 0 = 1 iteration = forward full FFT, backward full FFT
-    // 1 = 1 iteration = forward convolution FFT, backward convolution FFT
-    // 2 = 1 iteration = just forward full FFT
-    // 3 = 1 iteration = just forward convolution FFT
-
-    // int permute;
-    // if (mode == 0 || mode == 2) permute = 0;
-    // else permute = 2;
-
-    int permute = 2;
+    int permute = 0;
     int fftsize; // FFT buffer size returned by FFT setup
     int sendsize,recvsize;
 
 
     // Plan definition
     void *plan;
-
-
 
     int cflag = 0;   // point/all/combo
     int eflag = 0;   // pencil/brick
@@ -81,10 +70,28 @@ void compute_z2z_fftmpi( int const inbox_low[3], int const inbox_high[3],
     MPI_Barrier(comm);
     timer[1] = -MPI_Wtime();
 
-    fft3d_compute(plan, (double *) in, (double *) out, -1); // -1 is for Forward
+    if(fftmpi_switch==0)
+        fft3d_compute(plan, (double *)in , (double *)in , -1); // -1 is for Forward
+    else
+        fft3d_compute(plan, (double *)in , (double *)in , 1); // -1 is for Forward
 
     MPI_Barrier(comm);
     timer[1] = +MPI_Wtime();
+
+    printf("================================================================= \n");
+
+    for(int i=0; i<64; i++) {
+        printf("  %g  \t ", ( (double *)in )[i]);
+        // out = (fiber_complex *)in;
+        // printf("  %g  \t ", ( (double *)out )[i]);
+    }        
+    printf("\n");        
+    printf("\n");   
+
+    printf("================================================================= \n");
+
+
+
 
     // Delete plan
     fft3d_destroy(plan);

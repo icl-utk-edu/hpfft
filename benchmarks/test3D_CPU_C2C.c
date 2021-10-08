@@ -77,23 +77,24 @@ int main(int argc, char** argv){
     // ********************************
     // Compute forward (Z2Z) transform
     // ********************************
-    fiber_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, output, 0, timer);
+    fiber_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, input, 0, timer);
 
     // Output after forward
     for(i=0; i<size_outbox; i++) 
-        printf(" %g+%gi \t ", output[i].r, output[i].i);
+        // printf(" %g+%gi \t ", output[i].r, output[i].i);
+        printf(" %g+%gi \t ", input[i].r, input[i].i);
     printf("\n");
     printf("\n");
 
     if (me == 1){
         int pass = 0;
-        if (fabs(output[0].r + 510.0) > 1.E-11 || fabs(output[0].i - 4.0) > 1.E-11)
+        if (fabs(input[0].r + 510.0) > 1.E-11 || fabs(input[0].i - 4.0) > 1.E-11)
             pass = 1;
         for(i=1; i<16; i++)
-            if (fabs(output[i].r-2) > 1.E-11 || fabs(output[i].i-4) > 1.E-11)
+            if (fabs(input[i].r-2) > 1.E-11 || fabs(input[i].i-4) > 1.E-11)
                 pass = 1;
         for(i=16; i<32; i++)
-            if (fabs(output[i].r) > 1.E-11 || fabs(output[i].i) > 1.E-11)
+            if (fabs(input[i].r) > 1.E-11 || fabs(input[i].i) > 1.E-11)
                 pass = 1;
         if (pass){
             printf("The computed transform deviates by more than the tolerance.\n");
@@ -108,13 +109,13 @@ int main(int argc, char** argv){
     // ********************************
     // Compute backward (Z2Z) transform
     // ********************************
-    for(i=0; i<size_inbox; i++){
-        input[i].r = 0.0;
-        input[i].i = 0.0;
-    }        
+    // for(i=0; i<size_inbox; i++){
+    //     input[i].r = 0.0;
+    //     input[i].i = 0.0;
+    // }        
 
-    // fiber_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, output, input, 1, timer);
-    fiber_execute_z2z[8].function(box_low, box_high, box_low, box_high, comm, output, input, 1, timer);
+    // fiber_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, input, 1, timer);
+    fiber_execute_z2z[8].function(box_low, box_high, box_low, box_high, comm, input, input, 1, timer);
 
     // Output after backward
     for(i=0; i<size_inbox; i++) {

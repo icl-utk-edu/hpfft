@@ -63,6 +63,20 @@ int main(int argc, char** argv){
     // Compute forward (D2Z) transform
     // ********************************
 
+    double c2c_time[18];
+
+    for(i=0; i<9; i++) {   // Benchmark all 9 backends 
+        if(i>=4 && i<=7 ){ // currently missing these backends
+            c2c_time[2*i] = c2c_time[2*i+1] = -1;
+        }
+        else{
+            fiber_execute_z2z[i].function(box_low, box_high, box_low, box_high, comm, input, input, 0, timer);
+            c2c_time[2*i] = timer[0]; 
+            c2c_time[2*i+1] = timer[1];
+        }
+    }
+
+
     if (me == 0){
         printf("\t\t______________________________________________________ \n");
         printf("\t\t FFT Infraestructure Benchmark for Exascale Research   \n");
@@ -83,16 +97,9 @@ int main(int argc, char** argv){
 
     }
 
-    for(i=0; i<9; i++) {   // Benchmark all 9 backends 
-        if(i>=4 && i<=7 ){ // currently missing these backends
-            printf(" \t\t %10s \t %d \t          %d \n ", backends[i], -1, -1);
-        }
-        else{
-            fiber_execute_z2z[i].function(box_low, box_high, box_low, box_high, comm, input, input, 0, timer);
-            if(me==0)
-                printf(" \t\t %10s \t %g \t  %g \n ", backends[i], timer[0], timer[1]);
-        }
-    }
+    for(i=0; i<9; i++)
+        if(me==0)
+            printf(" \t\t %10s \t %g \t  %g \n ", backends[i], c2c_time[2*i], c2c_time[2*i+1]);
 
     // // Output after forward
     // for(i=0; i<size_outbox; i++) 

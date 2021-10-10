@@ -108,6 +108,7 @@ include/fiber_backend_nb3dfft.h
 include/fiber_utils.h
 include/fiber_backend_fftmpi.h   
 include/fiber_backend_p3dfft.h
+include/fiber_backend_fftadvmpi.h
 benchmarks/test3D_CPU_R2C.c
 )
 

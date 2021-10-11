@@ -1,7 +1,7 @@
 /*
-* ---------------
+* -----------------
 * FFTADVMPI backend
-* ---------------
+* -----------------
 */
 #ifndef FIBER_BACKEND_FFTADVMPI_H
 #define FIBER_BACKEND_FFTADVMPI_H
@@ -10,6 +10,107 @@
 
 #if defined(FIBER_ENABLE_FFTADVMPI)
 
+#include <fftw3-mpi.h>
+#include <mpi.h>
+#include <math.h>
+#include <complex.h>
+
+#define min(x, y) (((x) < (y)) ? (x) : (y))
+
+void decompose(int N, int M, int p, int *n, int *s)
+{
+    int q = N / M;
+    int r = N % M;
+    *n = q + (r > p);
+    *s = q * p + min(r, p);
+}
+
+
+void subcomm(MPI_Comm comm , int ndims , MPI_Comm subcomms[ndims])
+{
+    MPI_Comm comm_cart;
+    int nprocs , dims[ndims], periods[ndims], remdims[ndims];
+    for (int i = 0; i < ndims; i++)
+        { dims[i] = periods[i] = remdims[i] = 0; }
+    
+    MPI_Comm_size(comm , &nprocs);
+    MPI_Dims_create(nprocs , ndims , dims);
+    MPI_Cart_create(comm , ndims , dims , periods , 1, &comm_cart);
+
+    for (int i = 0; i < ndims; i++) {
+        remdims[i] = 1;
+        MPI_Cart_sub(comm_cart , remdims , &subcomms[i]);
+        remdims[i] = 0;
+    }
+    MPI_Comm_free(&comm_cart);
+}
+
+
+
+void subarray(MPI_Datatype datatype ,
+            int ndims ,
+            int sizes[ndims],
+            int axis ,
+            int nparts ,
+            MPI_Datatype subarrays[nparts])
+{
+    int subsizes[ndims], substarts[ndims], n, s;
+    for (int i = 0; i < ndims; i++){
+        subsizes[i] = sizes[i];
+        substarts[i] = 0;
+    }        
+    for (int p = 0; p < nparts; p++) {
+        decompose(sizes[axis], nparts , p, &n, &s);
+        subsizes[axis] = n; substarts[axis] = s;
+        MPI_Type_create_subarray(
+        ndims , sizes , subsizes , substarts ,
+        MPI_ORDER_C , datatype , &subarrays[p]);
+        MPI_Type_commit(&subarrays[p]);
+    }
+}
+
+
+void exchange(MPI_Comm comm ,
+                MPI_Datatype datatype ,
+                int ndims ,
+                int sizesA[ndims],
+                void *arrayA ,
+                int axisA ,
+                int sizesB[ndims],
+                void *arrayB ,
+                int axisB)
+{
+    int nparts;
+    MPI_Comm_size(comm , &nparts);
+    MPI_Datatype subarraysA[nparts], subarraysB[nparts];
+    subarray(datatype , ndims , sizesA , axisA , nparts , subarraysA);
+    subarray(datatype , ndims , sizesB , axisB , nparts , subarraysB);
+    int counts[nparts], displs[nparts];
+    for (int p = 0; p < nparts; p++)
+        { counts[p] = 1; displs[p] = 0; }
+        MPI_Alltoallw(arrayA , counts , displs , subarraysA ,
+        arrayB , counts , displs , subarraysB , comm);
+        for (int p = 0; p < nparts; p++) {
+            MPI_Type_free(&subarraysA[p]);
+            MPI_Type_free(&subarraysB[p]);
+        }
+}
+
+
+// Helper function to compute local sizes
+static int lsz(int N, MPI_Comm comm)
+{
+    int size , rank , n, s;
+    MPI_Comm_size(comm , &size);
+    MPI_Comm_rank(comm , &rank);
+    decompose(N, size , rank , &n, &s);
+    return n;
+}
+
+// Helper macros
+#define product(n) (n[0]*n[1]*n[2])
+#define allocate(t,n) malloc(product(n)*sizeof(t))
+#define deallocate(a) free(a)
 
 //=====================  Complex-to-Complex transform =========================
 
@@ -18,7 +119,69 @@ void compute_z2z_fftadvmpi( int const inbox_low[3], int const inbox_high[3],
                   MPI_Comm const comm,
                   void const *in, void *out, int fftw_switch, double *timer)
 {
+
+    printf("Calling FFTADVMPI \n");
+
+    int N[3] = {4, 4, 4};
+
+    MPI_Comm P[2];
+    subcomm(comm, 2, P);
+
+    // Define elementary MPI datatype
+    MPI_Datatype T = MPI_C_DOUBLE_COMPLEX;
+
+    int sizesA[3] = {lsz(N[0],P[0]), lsz(N[1],P[1]), N[2]};
+    int sizesB[3] = {lsz(N[0],P[0]), N[1], lsz(N[2],P[1])};
+    int sizesC[3] = {N[0], lsz(N[1],P[0]), lsz(N[2],P[1])};
+    double complex *arrayA = allocate(double complex , sizesA);
+    double complex *arrayB = allocate(double complex , sizesB);
+    double complex *arrayC = allocate(double complex , sizesC);
     
+    printf("Input kia kia \n");
+    arrayA[0] = 1 + 2 * I; 
+    for (int j=1; j<32; j++){
+        arrayA[j] = j + 0 * I; // Fill array with complex values
+        printf(" %.1f%+.1fi \t", creal(arrayA[j]), cimag(arrayA[j]) );
+    }
+
+    int inembed[]= {0,N[0]}; // size of 1 horizontal pencil
+    int onembed[]= {0,N[0]};
+
+    void *plan_1, *plan_2, *plan_3;
+    plan_1 = fftw_plan_many_dft(1, &N[0], N[1]*2, NULL, inembed, 1, N[0],        NULL, inembed, 1, N[0], FFTW_FORWARD, FFTW_ESTIMATE);
+    plan_2 = fftw_plan_many_dft(1, &N[1], N[1],   NULL, inembed, N[1], 1,        NULL, onembed, N[1], 1, FFTW_FORWARD, FFTW_ESTIMATE);
+    plan_3 = fftw_plan_many_dft(1, &N[2], N[1]*2, NULL, inembed, N[1]*N[2]/2, 1, NULL, onembed, N[1]*N[2]/2, 1, FFTW_FORWARD, FFTW_ESTIMATE);
+
+    fftw_execute_dft(plan_1, arrayA, arrayA);
+    exchange(P[1], T, 3, sizesA , arrayA , 2, sizesB , arrayB , 1);
+
+    for(int i=0;i<N[1];++i)
+        fftw_execute_dft(plan_2, arrayB + i*N[0]*N[2] , arrayB + i*N[0]*N[2]);
+    exchange(P[0], T, 3, sizesB , arrayB , 1, sizesC , arrayC , 0);
+
+    fftw_execute_dft(plan_3, arrayC, arrayC);
+    exchange(P[0], T, 3, sizesC , arrayC , 0, sizesB , arrayB , 1);
+
+    printf("\n");
+    printf("\n");
+    printf("Output kia \n");
+    printf("\n");
+    // for (int j=0, n=product(sizesA); j<n; j++){
+    for (int j=0; j<32; j++){
+        printf(" %.1f%+.1fi \t", creal(arrayB[j]), cimag(arrayB[j]) );
+    }
+    printf("\n");
+    printf("\n");
+
+    fftw_destroy_plan(plan_1);
+    fftw_destroy_plan(plan_2);
+    fftw_destroy_plan(plan_3);
+
+    deallocate(arrayA);
+    deallocate(arrayB);
+    deallocate(arrayC);
+    MPI_Comm_free(&P[0]);
+    MPI_Comm_free(&P[1]);
 
 }
 
@@ -51,7 +214,11 @@ void compute_z2z_fftadvmpi( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
                   void const *in, void *out, double *timer)
-{}
+{
+    printf("Calling FFTADVMPI ++++++++++++++++\n");
+
+
+}
 
 void compute_d2z_fftadvmpi( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 

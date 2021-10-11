@@ -194,6 +194,8 @@ int fiber_get_backend(char * backend)
          return 7;
       else if (strcmp(backend,"fftw") == 0)
          return 8;
+      else if (strcmp(backend,"fftadvmpi") == 0)
+         return 9;         
       else
          printf("Invalid Backend \n" );
 }

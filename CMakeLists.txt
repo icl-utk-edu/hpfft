@@ -5,15 +5,16 @@ project("FIBER" VERSION 0.1 LANGUAGES C)
 #################
 # Default Options
 #################
-option(FIBER_ENABLE_HEFFTE    "Enable the HEFFTE backend"       OFF)
-option(FIBER_ENABLE_FFTMPI    "Enable the FFTMPI backend"       OFF)
-option(FIBER_ENABLE_ACCFFT    "Enable the ACCFFT backend"       OFF)
-option(FIBER_ENABLE_P3DFFT    "Enable the P3DFFT backend"       OFF)
-option(FIBER_ENABLE_FFTE      "Enable the FFTE backend"         OFF)
-option(FIBER_ENABLE_SWFFT     "Enable the SWFFT backend"        OFF)
-option(FIBER_ENABLE_2DECOMP   "Enable the 2DECOMP backend"      OFF)
-option(FIBER_ENABLE_NB3DFFT   "Enable the NB3DFFT backend"      OFF)
-option(FIBER_ENABLE_FFTW      "Enable the FFTW backend"         OFF)
+option(FIBER_ENABLE_HEFFTE        "Enable the HEFFTE backend"       OFF)
+option(FIBER_ENABLE_FFTMPI        "Enable the FFTMPI backend"       OFF)
+option(FIBER_ENABLE_ACCFFT        "Enable the ACCFFT backend"       OFF)
+option(FIBER_ENABLE_P3DFFT        "Enable the P3DFFT backend"       OFF)
+option(FIBER_ENABLE_FFTE          "Enable the FFTE backend"         OFF)
+option(FIBER_ENABLE_SWFFT         "Enable the SWFFT backend"        OFF)
+option(FIBER_ENABLE_2DECOMP       "Enable the 2DECOMP backend"      OFF)
+option(FIBER_ENABLE_NB3DFFT       "Enable the NB3DFFT backend"      OFF)
+option(FIBER_ENABLE_FFTW          "Enable the FFTW backend"         OFF)
+option(FIBER_ENABLE_FFTADVMPI     "Enable the FFTW backend"         OFF)
 
 option(BUILD_SHARED_LIBS      "Builds shared libraries using CMake conventions"  ON)
 
@@ -78,6 +79,10 @@ endif()
 
 if (FIBER_ENABLE_FFTW)
     add_definitions(-DFIBER_ENABLE_FFTW)
+endif()
+
+if (FIBER_ENABLE_FFTADVMPI)
+    add_definitions(-DFIBER_ENABLE_FFTADVMPI)
 endif()
 
 find_package(MPI REQUIRED)

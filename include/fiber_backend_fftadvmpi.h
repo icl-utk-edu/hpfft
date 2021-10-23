@@ -122,10 +122,33 @@ void compute_z2z_fftadvmpi( int const inbox_low[3], int const inbox_high[3],
 
     printf("Calling FFTADVMPI \n");
 
+    printf("\n");
+    printf("\n");
+    for(int i=0; i<32; i++)
+        // printf(" %g+%gi \t ", in[i].r, in[i].i);
+        printf(" %g \t ", (double* out)[i]);
+
+    printf("\n");
+    printf("\n");
+
     int N[3] = {4, 4, 4};
 
     MPI_Comm P[2];
     subcomm(comm, 2, P);
+
+    int me, me_g;
+    int num_ranks, num_ranks_g;
+
+    MPI_Comm_rank(comm, &me_g);
+    MPI_Comm_size(comm, &num_ranks_g);
+
+    for (int i=0; i<2; i++)
+    {
+        MPI_Comm_rank(P[i], &me);
+        MPI_Comm_size(P[i], &num_ranks);
+    
+        printf("---->>>> global[%d]/%d,  P[%d] ++++ %d/%d \n", me_g, num_ranks_g, i, me, num_ranks);
+    }
 
     // Define elementary MPI datatype
     MPI_Datatype T = MPI_C_DOUBLE_COMPLEX;
@@ -133,56 +156,47 @@ void compute_z2z_fftadvmpi( int const inbox_low[3], int const inbox_high[3],
     int sizesA[3] = {lsz(N[0],P[0]), lsz(N[1],P[1]), N[2]};
     int sizesB[3] = {lsz(N[0],P[0]), N[1], lsz(N[2],P[1])};
     int sizesC[3] = {N[0], lsz(N[1],P[0]), lsz(N[2],P[1])};
-    double complex *arrayA = allocate(double complex , sizesA);
-    double complex *arrayB = allocate(double complex , sizesB);
-    double complex *arrayC = allocate(double complex , sizesC);
     
-    printf("Input kia kia \n");
-    arrayA[0] = 1 + 2 * I; 
-    for (int j=1; j<32; j++){
-        arrayA[j] = j + 0 * I; // Fill array with complex values
-        printf(" %.1f%+.1fi \t", creal(arrayA[j]), cimag(arrayA[j]) );
-    }
+    printf("Input 0 ++++ %d ++++ %d \n", P[0], P[1]);
+    printf("Input kia A ++++ %d ++++ %d ++++ %d \n", sizesA[0], sizesA[1], sizesA[2]);
+    printf("Input kia B ++++ %d ++++ %d ++++ %d \n", sizesB[0], sizesB[1], sizesB[2]);
+    printf("Input kia C ++++ %d ++++ %d ++++ %d \n", sizesC[0], sizesC[1], sizesC[2]);
 
     int inembed[]= {0,N[0]}; // size of 1 horizontal pencil
     int onembed[]= {0,N[0]};
 
     void *plan_1, *plan_2, *plan_3;
-    plan_1 = fftw_plan_many_dft(1, &N[0], N[1]*2, NULL, inembed, 1, N[0],        NULL, inembed, 1, N[0], FFTW_FORWARD, FFTW_ESTIMATE);
+    plan_1 = fftw_plan_many_dft(1, &N[0], N[1]*2, NULL, inembed, 1, N[0],        NULL, onembed, 1, N[0], FFTW_FORWARD, FFTW_ESTIMATE);
     plan_2 = fftw_plan_many_dft(1, &N[1], N[1],   NULL, inembed, N[1], 1,        NULL, onembed, N[1], 1, FFTW_FORWARD, FFTW_ESTIMATE);
     plan_3 = fftw_plan_many_dft(1, &N[2], N[1]*2, NULL, inembed, N[1]*N[2]/2, 1, NULL, onembed, N[1]*N[2]/2, 1, FFTW_FORWARD, FFTW_ESTIMATE);
 
-    fftw_execute_dft(plan_1, arrayA, arrayA);
-    exchange(P[1], T, 3, sizesA , arrayA , 2, sizesB , arrayB , 1);
+    fftw_execute_dft(plan_1, in, out);
+
+    // printf("\n");
+    // printf("A-Alan kia [%d] \n", me);
+    // printf("\n");
+    // for(int i=0; i<32; i++)
+    //     printf(" %g \t ", out[i]);
+    //     // printf(" %g+%gi \t ", out[i].r, out[i].i);
+    // printf("\n");
+    // printf("\n");
+
+
+    exchange(P[1], T, 3, sizesA , out , 2, sizesB , out , 1);
 
     for(int i=0;i<N[1];++i)
-        fftw_execute_dft(plan_2, arrayB + i*N[0]*N[2] , arrayB + i*N[0]*N[2]);
-    exchange(P[0], T, 3, sizesB , arrayB , 1, sizesC , arrayC , 0);
+        fftw_execute_dft(plan_2, out + i*N[0]*N[2] , out + i*N[0]*N[2]);
+    exchange(P[0], T, 3, sizesB , out , 1, sizesC , out , 0);
 
-    fftw_execute_dft(plan_3, arrayC, arrayC);
-    exchange(P[0], T, 3, sizesC , arrayC , 0, sizesB , arrayB , 1);
-
-    printf("\n");
-    printf("\n");
-    printf("Output kia \n");
-    printf("\n");
-    // for (int j=0, n=product(sizesA); j<n; j++){
-    for (int j=0; j<32; j++){
-        printf(" %.1f%+.1fi \t", creal(arrayB[j]), cimag(arrayB[j]) );
-    }
-    printf("\n");
-    printf("\n");
+    fftw_execute_dft(plan_3, out, out);
+    exchange(P[0], T, 3, sizesC , out , 0, sizesB , out , 1);
 
     fftw_destroy_plan(plan_1);
     fftw_destroy_plan(plan_2);
     fftw_destroy_plan(plan_3);
 
-    deallocate(arrayA);
-    deallocate(arrayB);
-    deallocate(arrayC);
     MPI_Comm_free(&P[0]);
     MPI_Comm_free(&P[1]);
-
 }
 
 //=====================  Real-to-Complex transform =========================

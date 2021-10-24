@@ -14,7 +14,7 @@
 void compute_z2z_accfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, void *out, int accfft_switch, double *timer)
+                  void const *in, void *out, int *accfft_options, double *timer)
 {
 
     // Plan creation ...
@@ -50,7 +50,7 @@ void compute_z2z_accfft( int const inbox_low[3], int const inbox_high[3],
 void compute_d2z_accfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  double const *in, void *out, int accfft_switch, double *timer)
+                  double const *in, void *out, int *accfft_options, double *timer)
 {
 
     printf("R2C AccFFT CPU support \n");
@@ -93,7 +93,7 @@ void compute_d2z_accfft( int const inbox_low[3], int const inbox_high[3],
 void compute_z2d_accfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, double *out, int accfft_switch, double *timer)
+                  void const *in, double *out, int *accfft_options, double *timer)
 {
 
     // Plan creation ...
@@ -129,19 +129,19 @@ void compute_z2d_accfft( int const inbox_low[3], int const inbox_high[3],
 void compute_z2z_accfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, void *out, int accfft_switch, double *timer)
+                  void const *in, void *out, int *accfft_options, double *timer)
 {}
 
 void compute_d2z_accfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  double const *in, void *out, int accfft_switch, double *timer)
+                  double const *in, void *out, int *accfft_options, double *timer)
 {}
 
 void compute_z2d_accfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, double *out, int accfft_switch, double *timer)
+                  void const *in, double *out, int *accfft_options, double *timer)
 {}
 
 #endif

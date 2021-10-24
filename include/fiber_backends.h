@@ -25,7 +25,7 @@ enum backend{heffte, fftmpi, accfft, p3dfft, ffte, swfft, decomp2d, nb3dfft, fft
 struct fiber_map_backend_d2z
 {
     char *name;
-    void (*function)( int const * , int const *, int const * , int const * , MPI_Comm const , double const *, void *, int, double *);
+    void (*function)( int const * , int const *, int const * , int const * , MPI_Comm const , double const *, void *, int *, double *);
 };
 
 const struct fiber_map_backend_d2z fiber_execute_d2z[] = {
@@ -46,7 +46,7 @@ const struct fiber_map_backend_d2z fiber_execute_d2z[] = {
 struct fiber_map_backend_z2d
 {
     char *name;
-    void (*function)( int const * , int const *, int const * , int const * , MPI_Comm const , void const *, double *, double *);
+    void (*function)( int const * , int const *, int const * , int const * , MPI_Comm const , void const *, double *, int *, double *);
 };
 
 const struct fiber_map_backend_z2d fiber_execute_z2d[] = {
@@ -67,7 +67,7 @@ const struct fiber_map_backend_z2d fiber_execute_z2d[] = {
 struct fiber_map_backend_z2z
 {
     char *name;
-    void (*function)( int const * , int const *, int const * , int const * , MPI_Comm const , void const *, void *, int, double *);
+    void (*function)( int const * , int const *, int const * , int const * , MPI_Comm const , void const *, void *, int *, double *);
 };
 
 const struct fiber_map_backend_z2z fiber_execute_z2z[] = {

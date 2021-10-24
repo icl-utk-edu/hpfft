@@ -16,7 +16,7 @@
 void compute_z2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, void *out, int p3dfft_switch, double *timer)
+                  void const *in, void *out, int *p3dfft_options, double *timer)
 {
 
     printf("Calling P3DFFT++ Complex-to-Complex FFT \n");
@@ -56,12 +56,12 @@ void compute_z2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
     Plan3D trans_z2z;
 
     // plan create
-    if (p3dfft_switch == 0){
+    if (p3dfft_options[0] == 0){
         type_ids1[0] = P3DFFT_CFFT_FORWARD_D;
         type_ids1[1] = P3DFFT_CFFT_FORWARD_D;
         type_ids1[2] = P3DFFT_CFFT_FORWARD_D;
     }
-    else if (p3dfft_switch == 1){
+    else if (p3dfft_options[0] == 1){
         type_ids1[0] = P3DFFT_CFFT_BACKWARD_D;
         type_ids1[1] = P3DFFT_CFFT_BACKWARD_D;
         type_ids1[2] = P3DFFT_CFFT_BACKWARD_D;
@@ -93,7 +93,7 @@ void compute_z2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
 void compute_d2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  double const *in, void *out, int p3dfft_switch, double *timer)
+                  double const *in, void *out, int *p3dfft_options, double *timer)
 {
 
     printf("Calling P3DFFT++ Real-to-Complex FFT \n");
@@ -166,7 +166,7 @@ void compute_d2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
 void compute_z2d_p3dfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, double *out, int p3dfft_switch, double *timer)
+                  void const *in, double *out, int *p3dfft_options, double *timer)
 {
 
     printf("Calling P3DFFT++ Complex-to-Real FFT \n");
@@ -235,19 +235,19 @@ void compute_z2d_p3dfft( int const inbox_low[3], int const inbox_high[3],
 void compute_z2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, void *out, int p3dfft_switch, double *timer)
+                  void const *in, void *out, int *p3dfft_options, double *timer)
 {}
 
 void compute_d2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  double const *in, void *out, int p3dfft_switch, double *timer)
+                  double const *in, void *out, int *p3dfft_options, double *timer)
 {}
 
 void compute_z2d_p3dfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, double *out, int p3dfft_switch, double *timer)
+                  void const *in, double *out, int *p3dfft_options, double *timer)
 {}
 
 #endif 

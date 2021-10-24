@@ -22,9 +22,12 @@
  *  -D Heffte_ENABLE_FFTW=ON
  * \endcode
  * Flag:
- * The fftw_switch flag works as follows:
+ * The fftw_options[0] flag works as follows:
  * For C2C transforms: it chooses between FFTW_FORWARD and FFTW_BACKWARD flags
  * For R2C transforms: it chooses between FFTW_ESTIMATE and FFTW_MEASURE flags
+ * nx = fftw_options[1]
+ * ny = fftw_options[2]
+ * nz = fftw_options[3]
  */
 
 
@@ -33,7 +36,7 @@
 void compute_z2z_fftw( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, void *out, int fftw_switch, double *timer)
+                  void const *in, void *out, int *fftw_options, double *timer)
 {
     // FFTW tuning flags: 
     // FFTW_MEASURE is more time consuming than FFTW_ESTIMATE, it runs and measures the execution time of several FFTs in order to find the
@@ -59,13 +62,13 @@ void compute_z2z_fftw( int const inbox_low[3], int const inbox_high[3],
     fftw_mpi_init();
 
     printf(" flags: %d \t %d \t %d  \n" , FFTW_FORWARD, FFTW_ESTIMATE, FFTW_MEASURE);
-    printf("Tuning flag: %d \n", fftw_switch);
+    printf("Fist tuning flag: %d \n", fftw_options[0]);
 
     MPI_Barrier(comm);
     timer[0] = -MPI_Wtime();
-    if (fftw_switch==0)
+    if (fftw_options[0]==0)
         plan_z2z = fftw_mpi_plan_dft_3d(nx, ny, nz, in, out, comm, FFTW_FORWARD, FFTW_ESTIMATE);
-    if (fftw_switch==1)
+    if (fftw_options[0]==1)
         // plan_z2z = fftw_mpi_plan_dft_3d(nx, ny, nz, in, out, comm, FFTW_FORWARD, FFTW_MEASURE);
         plan_z2z = fftw_mpi_plan_dft_3d(nx, ny, nz, in, out, comm, FFTW_BACKWARD, FFTW_ESTIMATE);
     timer[0] += MPI_Wtime();
@@ -91,7 +94,7 @@ void compute_z2z_fftw( int const inbox_low[3], int const inbox_high[3],
 void compute_d2z_fftw( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  double const *in, void *out, int fftw_switch, double *timer)
+                  double const *in, void *out, int *fftw_options, double *timer)
 {
 
     int niter = 1;
@@ -109,11 +112,11 @@ void compute_d2z_fftw( int const inbox_low[3], int const inbox_high[3],
     timer[0] = -MPI_Wtime();
 
     printf(" flags: %d \t %d \t %d  \n" , FFTW_FORWARD, FFTW_ESTIMATE, FFTW_MEASURE);
-    printf("Tuning flag: %d \n", fftw_switch);
+    printf("First tuning flag: %d \n", fftw_options[0]);
 
-    if (fftw_switch==0)
+    if (fftw_options[0]==0)
         plan_d2z = fftw_mpi_plan_dft_r2c_3d(nx, ny, nz, in, out, comm, FFTW_ESTIMATE);
-    if (fftw_switch==1)
+    if (fftw_options[0]==1)
         plan_d2z = fftw_mpi_plan_dft_r2c_3d(nx, ny, nz, in, out, comm, FFTW_MEASURE);
     timer[0] += MPI_Wtime();
 
@@ -140,7 +143,7 @@ void compute_d2z_fftw( int const inbox_low[3], int const inbox_high[3],
 void compute_z2d_fftw( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, double *out, int fftw_switch, double *timer)
+                  void const *in, double *out, int *fftw_options, double *timer)
 {
 
     int niter = 1;
@@ -155,9 +158,9 @@ void compute_z2d_fftw( int const inbox_low[3], int const inbox_high[3],
 
     MPI_Barrier(comm);
     timer[0] = -MPI_Wtime();
-    if (fftw_switch==0)
+    if (fftw_options[0]==0)
         plan_z2d = fftw_mpi_plan_dft_c2r_3d(nx, ny, nz, in, out, comm, FFTW_ESTIMATE);
-    if (fftw_switch==1)
+    if (fftw_options[0]==1)
         plan_z2d = fftw_mpi_plan_dft_c2r_3d(nx, ny, nz, in, out, comm, FFTW_MEASURE);
     timer[0] += MPI_Wtime();
 
@@ -183,19 +186,19 @@ void compute_z2d_fftw( int const inbox_low[3], int const inbox_high[3],
 void compute_z2z_fftw( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, void *out, double *timer)
+                  void const *in, void *out, int *fftw_options, double *timer)
 {}
 
 void compute_d2z_fftw( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  double const *in, void *out, double *timer)
+                  double const *in, void *out, int *fftw_options, double *timer)
 {}
 
 void compute_z2d_fftw( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, double *out, double *timer)
+                  void const *in, double *out, int *fftw_options, double *timer)
 {}
 
 #endif

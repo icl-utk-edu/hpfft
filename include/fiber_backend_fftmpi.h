@@ -16,7 +16,7 @@
 void compute_z2z_fftmpi( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, void *out, int fftmpi_switch, double *timer)
+                  void const *in, void *out, int *fftmpi_options, double *timer)
 {
     printf("Complex-to-Complex with FFTMPI. \n");
     // setup
@@ -70,10 +70,10 @@ void compute_z2z_fftmpi( int const inbox_low[3], int const inbox_high[3],
     MPI_Barrier(comm);
     timer[1] = -MPI_Wtime();
 
-    if(fftmpi_switch==0)
+    if(fftmpi_options[0]==0)
         fft3d_compute(plan, (double *)in , (double *)in , -1); // -1 is for Forward
     else
-        fft3d_compute(plan, (double *)in , (double *)in , 1); // -1 is for Forward
+        fft3d_compute(plan, (double *)in , (double *)in , 1); // 1 is for Backward
 
     MPI_Barrier(comm);
     timer[1] = +MPI_Wtime();
@@ -88,7 +88,7 @@ void compute_z2z_fftmpi( int const inbox_low[3], int const inbox_high[3],
 void compute_d2z_fftmpi( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  double const *in, void *out, int fftmpi_switch, double *timer)
+                  double const *in, void *out, int *fftmpi_options, double *timer)
 {
     printf("Real-to-Complex transform is not available for FFTMPI. \n");
     timer[0] = -1;
@@ -101,7 +101,7 @@ void compute_d2z_fftmpi( int const inbox_low[3], int const inbox_high[3],
 void compute_z2d_fftmpi( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, double *out, int fftmpi_switch, double *timer)
+                  void const *in, double *out, int *fftmpi_options, double *timer)
 {
     printf("Complex-to-Real transform is not available for FFTMPI. \n");
     timer[0] = -1;
@@ -113,19 +113,19 @@ void compute_z2d_fftmpi( int const inbox_low[3], int const inbox_high[3],
 void compute_z2z_fftmpi( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, void *out, int fftmpi_switch, double *timer)
+                  void const *in, void *out, int *fftmpi_options, double *timer)
 {}
 
 void compute_d2z_fftmpi( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  double const *in, void *out, int fftmpi_switch, double *timer)
+                  double const *in, void *out, int *fftmpi_options, double *timer)
 {}
 
 void compute_z2d_fftmpi( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, double *out, int fftmpi_switch, double *timer)
+                  void const *in, double *out, int *fftmpi_options, double *timer)
 {}
 
 #endif

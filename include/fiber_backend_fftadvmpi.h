@@ -117,7 +117,7 @@ static int lsz(int N, MPI_Comm comm)
 void compute_z2z_fftadvmpi( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, void *out, int fftw_switch, double *timer)
+                  void const *in, void *out, int *fftadvmpi_options, double *timer)
 {
 
     printf("Calling FFTADVMPI \n");
@@ -204,7 +204,7 @@ void compute_z2z_fftadvmpi( int const inbox_low[3], int const inbox_high[3],
 void compute_d2z_fftadvmpi( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  double const *in, void *out, int fftw_switch, double *timer)
+                  double const *in, void *out, int *fftadvmpi_options, double *timer)
 {
 
 }
@@ -215,7 +215,7 @@ void compute_d2z_fftadvmpi( int const inbox_low[3], int const inbox_high[3],
 void compute_z2d_fftadvmpi( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, double *out, int fftw_switch, double *timer)
+                  void const *in, double *out, int *fftadvmpi_options, double *timer)
 {
 
   
@@ -227,7 +227,7 @@ void compute_z2d_fftadvmpi( int const inbox_low[3], int const inbox_high[3],
 void compute_z2z_fftadvmpi( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, void *out, double *timer)
+                  void const *in, void *out, int *fftadvmpi_options, double *timer)
 {
     printf("Calling FFTADVMPI ++++++++++++++++\n");
 
@@ -237,13 +237,13 @@ void compute_z2z_fftadvmpi( int const inbox_low[3], int const inbox_high[3],
 void compute_d2z_fftadvmpi( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  double const *in, void *out, double *timer)
+                  double const *in, void *out, int *fftadvmpi_options, double *timer)
 {}
 
 void compute_z2d_fftadvmpi( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, double *out, double *timer)
+                  void const *in, double *out, int *fftadvmpi_options, double *timer)
 {}
 
 #endif

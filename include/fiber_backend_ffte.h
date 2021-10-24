@@ -19,7 +19,7 @@ extern void pdzfft3d_(double const *in, void *out, int *nx, int *ny, int *nz,
 
 void compute_z2z_ffte(int const inbox_low[3], int const inbox_high[3],
                     int const outbox_low[3], int const outbox_high[3], MPI_Comm const comm,
-                    void const *in, void *out, int control_flag, double *timer) {
+                    void const *in, void *out, int *ffte_options, double *timer) {
 
     int comm_size, opt, nd[3];
     MPI_Fint fcomm = MPI_Comm_c2f(comm);
@@ -73,7 +73,7 @@ void compute_z2z_ffte(int const inbox_low[3], int const inbox_high[3],
 
 void compute_d2z_ffte(int const inbox_low[3], int const inbox_high[3],
     int const outbox_low[3], int const outbox_high[3], MPI_Comm const comm,
-    double const *in, void *out, int control_flag, double *timer) {
+    double const *in, void *out, int *ffte_options, double *timer) {
 
     int comm_rank, comm_size, opt, nd[3];
     MPI_Fint fcomm = MPI_Comm_c2f(comm);
@@ -127,7 +127,7 @@ void compute_d2z_ffte(int const inbox_low[3], int const inbox_high[3],
 
 void compute_z2d_ffte(int const inbox_low[3], int const inbox_high[3],
                     int const outbox_low[3], int const outbox_high[3], MPI_Comm const comm,
-                    void const *in, double *out, double *timer) 
+                    void const *in, double *out, int *ffte_options, double *timer) 
 {
 // Missing!
 
@@ -138,17 +138,17 @@ void compute_z2d_ffte(int const inbox_low[3], int const inbox_high[3],
 
 void compute_z2z_ffte(int const inbox_low[3], int const inbox_high[3],
                     int const outbox_low[3], int const outbox_high[3], MPI_Comm const comm,
-                    void const *in, void *out, int control_flag, double *timer) 
+                    void const *in, void *out, int *ffte_options, double *timer) 
 {}
 
 void compute_d2z_ffte(int const inbox_low[3], int const inbox_high[3],
                     int const outbox_low[3], int const outbox_high[3], MPI_Comm const comm,
-                    double const *in, void *out, int control_flag, double *timer) 
+                    double const *in, void *out, int *ffte_options, double *timer) 
 {}
 
 void compute_z2d_ffte(int const inbox_low[3], int const inbox_high[3],
                     int const outbox_low[3], int const outbox_high[3], MPI_Comm const comm,
-                    void const *in, double *out, double *timer) 
+                    void const *in, double *out, int *ffte_options, double *timer) 
 {}
 
 #endif

@@ -83,11 +83,13 @@ int main(int argc, char** argv){
     // fiber_copy_cpu2gpu(input, d_input, fft_size_in);
     cudaMemcpy(d_input, input, fft_size_in, cudaMemcpyHostToDevice);
     double timer[20];
+    int backend_options[20];
+    backend_options[0] = 0; // forward/backward flag
 
     // ********************************
     // Compute forward (D2Z) transform
     // ********************************
-    fiber_execute_d2z[my_backend].function(box_low, box_high, box_low, box_high, comm, d_input, d_output, 1, timer);
+    fiber_execute_d2z[my_backend].function(box_low, box_high, box_low, box_high, comm, d_input, d_output, backend_options, timer);
 
     // Moving data: GPU->CPU
     // fiber_copy_gpu2cpu(d_output, output, fft_size_out);
@@ -123,7 +125,7 @@ int main(int argc, char** argv){
     for(i=0; i<size_inbox; i++) input[i] = 0.0;
 
     // Backward execution
-    fiber_execute_z2d[my_backend].function(box_low, box_high, box_low, box_high, comm, output, input, timer);
+    fiber_execute_z2d[my_backend].function(box_low, box_high, box_low, box_high, comm, output, input, backend_options, timer);
 
     // Output after backward
     for(i=0; i<size_inbox; i++) 

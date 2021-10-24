@@ -73,7 +73,7 @@ int main(int argc, char** argv){
     printf("\n");      
 
     double timer[20];
-    double backend_options[20];
+    int backend_options[20];
     backend_options[0] = 0; // forward/backward flag
     
     // ********************************
@@ -118,6 +118,7 @@ int main(int argc, char** argv){
 
     // fiber_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, input, 1, timer);
     backend_options[0] = 1; // forward/backward flag
+    printf("fftw op 0 = %d \n", backend_options[0]);
     backend_options[1] = 4; // nx flag
     backend_options[2] = 4; // ny flag
     backend_options[3] = 4; // nz flag

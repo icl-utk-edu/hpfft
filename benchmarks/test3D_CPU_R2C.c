@@ -66,11 +66,13 @@ int main(int argc, char** argv){
     printf("\n");        
 
     double timer[20];
+    int backend_options[20];
+    backend_options[0] = 0; // forward/backward flag
 
     // ********************************
     // Compute forward (D2Z) transform
     // ********************************
-    fiber_execute_d2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, output, 0, timer);
+    fiber_execute_d2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, output, backend_options, timer);
 
     // Output after forward
     for(i=0; i<size_outbox; i++) 
@@ -104,7 +106,7 @@ int main(int argc, char** argv){
 
     if (my_backend == 0){
         // Backward execution
-        fiber_execute_z2d[my_backend].function(box_low, box_high, box_low, box_high, comm, output, input, timer);
+        fiber_execute_z2d[my_backend].function(box_low, box_high, box_low, box_high, comm, output, input, backend_options, timer);
 
         // Output after backward
         for(i=0; i<size_inbox; i++) 

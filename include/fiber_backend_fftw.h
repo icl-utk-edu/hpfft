@@ -62,7 +62,7 @@ void compute_z2z_fftw( int const inbox_low[3], int const inbox_high[3],
     fftw_mpi_init();
 
     printf(" flags: %d \t %d \t %d  \n" , FFTW_FORWARD, FFTW_ESTIMATE, FFTW_MEASURE);
-    printf("Fist tuning flag: %d \n", fftw_options[0]);
+    printf("FFTW first tuning flag: %d \n", fftw_options[0]);
 
     MPI_Barrier(comm);
     timer[0] = -MPI_Wtime();

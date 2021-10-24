@@ -16,7 +16,7 @@
 void compute_z2z_heffte( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, void *out, int heffte_switch, double *timer)
+                  void const *in, void *out, int *heffte_switch, double *timer)
 {
     // Plan definition
     heffte_plan plan;
@@ -25,7 +25,7 @@ void compute_z2z_heffte( int const inbox_low[3], int const inbox_high[3],
     timer[0] = -MPI_Wtime();
     // plan create
     int status;
-    if(heffte_switch == 1){
+    if(heffte_switch[0] == 1){
         printf("Calling GPU heffte \n");
         status = heffte_plan_create(Heffte_BACKEND_CUFFT, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
     }
@@ -63,7 +63,7 @@ void compute_z2z_heffte( int const inbox_low[3], int const inbox_high[3],
 void compute_d2z_heffte( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  double const *in, void *out, int heffte_switch, double *timer)
+                  double const *in, void *out, int *heffte_switch, double *timer)
 {
 
     // Plan definition
@@ -72,7 +72,7 @@ void compute_d2z_heffte( int const inbox_low[3], int const inbox_high[3],
     MPI_Barrier(comm);
     timer[0] = -MPI_Wtime();
     int status;
-    if(heffte_switch == 1){
+    if(heffte_switch[0] == 1){
         printf("Calling GPU heffte \n");
         // status = heffte_plan_create_r2c(Heffte_BACKEND_CUFFT, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, 0, comm, NULL, &plan);
         status = heffte_plan_create(Heffte_BACKEND_CUFFT, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
@@ -115,7 +115,7 @@ void compute_d2z_heffte( int const inbox_low[3], int const inbox_high[3],
 void compute_z2d_heffte( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, double *out, double *timer)
+                  void const *in, double *out, int *heffte_switch, double *timer)
 {
     // Plan definition
     heffte_plan plan;
@@ -153,19 +153,19 @@ void compute_z2d_heffte( int const inbox_low[3], int const inbox_high[3],
 void compute_z2z_heffte( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, void *out, int heffte_switch, double *timer)
+                  void const *in, void *out, int *heffte_switch, double *timer)
 {}
 
 void compute_d2z_heffte( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  double const *in, void *out, int heffte_switch, double *timer)
+                  double const *in, void *out, int *heffte_switch, double *timer)
 {}
 
 void compute_z2d_heffte( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, double *out, double *timer)
+                  void const *in, double *out, int *heffte_switch, double *timer)
 {}
 #endif
 

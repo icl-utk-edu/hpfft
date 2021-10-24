@@ -16,7 +16,7 @@
 void compute_z2z_swfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, void *out, int swfft_switch, double *timer)
+                  void const *in, void *out, int *swfft_options, double *timer)
 {
 
     // Plan creation ...
@@ -53,7 +53,7 @@ void compute_z2z_swfft( int const inbox_low[3], int const inbox_high[3],
 void compute_d2z_swfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  double const *in, void *out, int swfft_switch, double *timer)
+                  double const *in, void *out, int *swfft_options, double *timer)
 {
     printf("Real-to-Complex transform is not available for SWFFT. \n");
     MPI_Abort(comm, 1);
@@ -66,7 +66,7 @@ void compute_d2z_swfft( int const inbox_low[3], int const inbox_high[3],
 void compute_z2d_swfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, double *out, int swfft_switch, double *timer)
+                  void const *in, double *out, int *swfft_options, double *timer)
 {
     printf("Complex-to-Real transform is not available for SWFFT. \n");
     MPI_Abort(comm, 1);
@@ -79,19 +79,19 @@ void compute_z2d_swfft( int const inbox_low[3], int const inbox_high[3],
 void compute_z2z_swfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, void *out, int swfft_switch, double *timer)
+                  void const *in, void *out, int *swfft_options, double *timer)
 {}
 
 void compute_d2z_swfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  double const *in, void *out, int swfft_switch, double *timer)
+                  double const *in, void *out, int *swfft_options, double *timer)
 {}
 
 void compute_z2d_swfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, double *out, int swfft_switch, double *timer)
+                  void const *in, double *out, int *swfft_options, double *timer)
 {}
 
 #endif

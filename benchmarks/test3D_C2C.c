@@ -36,8 +36,9 @@ int main(int argc, char** argv){
     // select grid of processors with MPI built-in function
     int proc_grid[2] = {0,0};
     MPI_Dims_create(num_ranks, 2, proc_grid);
-    printf("MPI_Dims_create [%d] proc_grid 1x%dx%d \n",  me, proc_grid[0], proc_grid[1]);
+    printf("MPI_Dims_create [%d] proc_grid 1x%dx%d \n\n",  me, proc_grid[0], proc_grid[1]);
 
+    // For slab decomposition
     proc_grid[0] = 1;
     // proc_grid[1] = 2;
     proc_grid[1] = num_ranks;
@@ -53,7 +54,6 @@ int main(int argc, char** argv){
     MPI_Comm_rank(cart_comm, &proc_rank);
     int proc_coords[2];
     MPI_Cart_coords(cart_comm, proc_rank, 2, proc_coords);
-
 
     // Boxes
     int box_low[3]  = {0, 0, 0};
@@ -109,7 +109,8 @@ int main(int argc, char** argv){
     printf("\n");
     printf("\n");
 
-    /*
+    MPI_Barrier(MPI_COMM_WORLD);
+
     backend_options[0] = 1; // forward/backward flag
     fiber_execute_z2z[8].function(box_low, box_high, box_low, box_high, comm, input, input, backend_options, timer);
 
@@ -135,16 +136,12 @@ int main(int argc, char** argv){
     err = fmax( fabs(input[0].r - (double) 1) , err);
     err = fmax( fabs(input[0].i - (double) 2) , err);
 
-    // Print errors
-    printf("%s: rank [%d] computed error |X - ifft(fft(X)) |_{max}: %1.6le\n", backends[my_backend], me, err);
-
-    */
-
+    // Print error
+    printf("%s: rank [%d] computed error |X - ifftw(fft(X)) |_{max}: %1.6le\n", backends[my_backend], me, err);
 
     // Data deallocation 
     free(input);
     free(output);
-
 
     MPI_Finalize();
 

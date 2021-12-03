@@ -44,9 +44,10 @@ void compute_z2z_fftw( int const inbox_low[3], int const inbox_high[3],
     
     int niter = 1;
     ptrdiff_t nx, ny, nz;
-    nx = fftw_options[1];
-    ny = fftw_options[2];
-    nz = fftw_options[3];
+    // nx = fftw_options[1];
+    // ny = fftw_options[2];
+    // nz = fftw_options[3];
+    nx=ny=nz=4;
 
     // Global size, to come as input later on
     // printf("KIA------->>>>>>>> global size: %d \t %d \t %d  \n" , nx, ny, nz);

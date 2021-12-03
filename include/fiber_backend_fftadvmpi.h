@@ -121,66 +121,58 @@ void compute_z2z_fftadvmpi( int const inbox_low[3], int const inbox_high[3],
 {
 
     printf("Calling FFTADVMPI \n");
-
-    printf("\n");
-    printf("\n");
-    for(int i=0; i<32; i++)
-        // printf(" %g+%gi \t ", in[i].r, in[i].i);
-        printf(" %g \t ", (double* out)[i]);
-
-    printf("\n");
-    printf("\n");
-
-    int N[3] = {4, 4, 4};
-
-    MPI_Comm P[2];
-    subcomm(comm, 2, P);
-
-    int me, me_g;
-    int num_ranks, num_ranks_g;
-
-    MPI_Comm_rank(comm, &me_g);
-    MPI_Comm_size(comm, &num_ranks_g);
-
-    for (int i=0; i<2; i++)
-    {
-        MPI_Comm_rank(P[i], &me);
-        MPI_Comm_size(P[i], &num_ranks);
-    
-        printf("---->>>> global[%d]/%d,  P[%d] ++++ %d/%d \n", me_g, num_ranks_g, i, me, num_ranks);
-    }
-
-    // Define elementary MPI datatype
     MPI_Datatype T = MPI_C_DOUBLE_COMPLEX;
 
-    int sizesA[3] = {lsz(N[0],P[0]), lsz(N[1],P[1]), N[2]};
-    int sizesB[3] = {lsz(N[0],P[0]), N[1], lsz(N[2],P[1])};
-    int sizesC[3] = {N[0], lsz(N[1],P[0]), lsz(N[2],P[1])};
-    
-    printf("Input 0 ++++ %d ++++ %d \n", P[0], P[1]);
-    printf("Input kia A ++++ %d ++++ %d ++++ %d \n", sizesA[0], sizesA[1], sizesA[2]);
-    printf("Input kia B ++++ %d ++++ %d ++++ %d \n", sizesB[0], sizesB[1], sizesB[2]);
-    printf("Input kia C ++++ %d ++++ %d ++++ %d \n", sizesC[0], sizesC[1], sizesC[2]);
+    MPI_Comm P[2];
+    subcomm(MPI_COMM_WORLD , 2, P);
 
-    int inembed[]= {0,N[0]}; // size of 1 horizontal pencil
-    int onembed[]= {0,N[0]};
+    int N[3];
+    N[0] = fftadvmpi_options[1];
+    N[1] = fftadvmpi_options[2];
+    N[2] = fftadvmpi_options[3];
+
+    int local_nx, local_ny, local_nz;
+    local_nx = inbox_high[0]-inbox_low[0]+1;
+    local_ny = inbox_high[1]-inbox_low[1]+1;
+    local_nz = inbox_high[2]-inbox_low[2]+1;
+
+    int embed_x[]= {0,local_nx}; // size of x horizontal pencil
+    int embed_y[]= {0,local_ny}; // size of y horizontal pencil
+    int embed_z[]= {0,local_nz}; // size of z horizontal pencil
 
     void *plan_1, *plan_2, *plan_3;
-    plan_1 = fftw_plan_many_dft(1, &N[0], N[1]*2, NULL, inembed, 1, N[0],        NULL, onembed, 1, N[0], FFTW_FORWARD, FFTW_ESTIMATE);
-    plan_2 = fftw_plan_many_dft(1, &N[1], N[1],   NULL, inembed, N[1], 1,        NULL, onembed, N[1], 1, FFTW_FORWARD, FFTW_ESTIMATE);
-    plan_3 = fftw_plan_many_dft(1, &N[2], N[1]*2, NULL, inembed, N[1]*N[2]/2, 1, NULL, onembed, N[1]*N[2]/2, 1, FFTW_FORWARD, FFTW_ESTIMATE);
+    plan_1 = fftw_plan_many_dft(1, &local_nx, local_ny*local_nz, NULL, embed_x, 1, local_nx, NULL, embed_x, 1, local_nx, FFTW_FORWARD, FFTW_ESTIMATE);
+    plan_2 = fftw_plan_many_dft(1, &local_ny, local_nx, NULL, embed_y, local_nx, 1, NULL, embed_y, local_nx, 1, FFTW_FORWARD, FFTW_ESTIMATE);
+    plan_3 = fftw_plan_many_dft(1, &local_nz, local_nx*local_ny, NULL, embed_z, local_nx*local_ny, 1, NULL, embed_z, local_nx*local_ny, 1, FFTW_FORWARD, FFTW_ESTIMATE);
 
-    fftw_execute_dft(plan_1, in, out);
 
-    // printf("\n");
-    // printf("A-Alan kia [%d] \n", me);
-    // printf("\n");
-    // for(int i=0; i<32; i++)
-    //     printf(" %g \t ", out[i]);
-    //     // printf(" %g+%gi \t ", out[i].r, out[i].i);
-    // printf("\n");
-    // printf("\n");
+    void *temp  = calloc(32, 2*sizeof(double));
 
+    // fftw_execute_dft(plan_1, (fftw_complex *) in, (fftw_complex *) out);
+
+    // for(int i=0;i<local_nz;++i)
+    //     fftw_execute_dft(plan_2, (fftw_complex *) in + i*local_nx*local_ny , (fftw_complex *) out + i*local_nx*local_ny);
+
+
+    fftw_execute_dft(plan_1, (fftw_complex *) in, (fftw_complex *) temp);
+
+    for(int i=0;i<local_nz;++i)
+        fftw_execute_dft(plan_2, (fftw_complex *) temp + i*local_nx*local_ny , (fftw_complex *) temp + i*local_nx*local_ny);
+
+    
+    // int sizes_pre_remap[3]  = {local_nz, local_ny, local_nx};
+    // int sizes_post_remap[3] = {local_nx, local_ny, local_nz};
+    
+    int sizes_pre_remap[3]  = {2,4,4};
+    int sizes_post_remap[3] = {4,2,4};
+    exchange(comm, T, 3, sizes_pre_remap , temp , 1, sizes_post_remap , out , 0);
+
+    // int sizes_pre_remap[3]  = {4,4,2};
+    // int sizes_post_remap[3] = {4,2,4};
+    // // exchange(P[1], T, 3, sizes_pre_remap , temp , 2, sizes_post_remap , out , 1);
+    // exchange(comm, T, 3, sizes_pre_remap , temp , 2, sizes_post_remap , out, 1);
+
+    /*
 
     exchange(P[1], T, 3, sizesA , out , 2, sizesB , out , 1);
 
@@ -197,6 +189,9 @@ void compute_z2z_fftadvmpi( int const inbox_low[3], int const inbox_high[3],
 
     MPI_Comm_free(&P[0]);
     MPI_Comm_free(&P[1]);
+    */
+
+
 }
 
 //=====================  Real-to-Complex transform =========================

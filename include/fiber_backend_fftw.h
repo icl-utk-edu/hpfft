@@ -43,26 +43,21 @@ void compute_z2z_fftw( int const inbox_low[3], int const inbox_high[3],
     // best way to compute the transform, given the FFT size and resources.
     
     int niter = 1;
-
-    ptrdiff_t local_nx, local_x_start, nx, ny, nz;
+    ptrdiff_t nx, ny, nz;
+    nx = fftw_options[1];
+    ny = fftw_options[2];
+    nz = fftw_options[3];
 
     // Global size, to come as input later on
-    nx=ny=nz=4;
-    printf(" global size: %d \t %d \t %d  \n" , nx, ny, nz);
-
-    local_nx = inbox_high[0] - inbox_low[0] + 1;
-    local_x_start = 0;
-
-    printf("local_nx = %d \n", local_nx);
-    printf("local_nx_start = %d \n", local_x_start);
+    // printf("KIA------->>>>>>>> global size: %d \t %d \t %d  \n" , nx, ny, nz);
 
 
     // Plan creation ...
     void *plan_z2z;
     fftw_mpi_init();
 
-    printf(" flags: %d \t %d \t %d  \n" , FFTW_FORWARD, FFTW_ESTIMATE, FFTW_MEASURE);
-    printf("FFTW first tuning flag: %d \n", fftw_options[0]);
+    // printf(" flags: %d \t %d \t %d  \n" , FFTW_FORWARD, FFTW_ESTIMATE, FFTW_MEASURE);
+    // printf("FFTW first tuning flag: %d \n", fftw_options[0]);
 
     MPI_Barrier(comm);
     timer[0] = -MPI_Wtime();

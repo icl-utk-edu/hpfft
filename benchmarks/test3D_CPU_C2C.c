@@ -74,7 +74,8 @@ int main(int argc, char** argv){
 
     double timer[20];
     int backend_options[20];
-    backend_options[0] = 1; // forward/backward flag
+    backend_options[0] = 0; // forward/backward flag
+    backend_options[4] = 1; // forward/backward flag
     
     // ********************************
     // Compute forward (Z2Z) transform

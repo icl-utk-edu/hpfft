@@ -9,6 +9,14 @@
 
 #if defined(FIBER_ENABLE_ACCFFT)
 #include <accfft.h>
+
+
+//=================== Initialization (if required) ============================
+int init_accfft(int option){
+    return(0);
+}
+
+
 //=====================  Complex-to-Complex transform =========================
 
 void compute_z2z_accfft( int const inbox_low[3], int const inbox_high[3],
@@ -125,6 +133,8 @@ void compute_z2d_accfft( int const inbox_low[3], int const inbox_high[3],
 }
 
 #else
+int init_accfft(int option)
+{}
 
 void compute_z2z_accfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 

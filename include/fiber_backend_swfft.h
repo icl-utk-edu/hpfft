@@ -11,6 +11,11 @@
 #if defined(FIBER_ENABLE_SWFFT)
 #include "swfft.h"
 
+//=================== Initialization (if required) ============================
+int init_swfft(int option){
+    return(0);
+}
+
 //=====================  Complex-to-Complex transform =========================
 
 void compute_z2z_swfft( int const inbox_low[3], int const inbox_high[3],
@@ -75,6 +80,9 @@ void compute_z2d_swfft( int const inbox_low[3], int const inbox_high[3],
 }
 
 #else
+
+int init_swfft(int option)
+{}
 
 void compute_z2z_swfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 

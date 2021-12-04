@@ -30,6 +30,11 @@
  * nz = fftw_options[3]
  */
 
+//=================== Initialization (if required) ============================
+int init_fftw(int option){
+    fftw_mpi_init();
+    return(0);
+}
 
 //=====================  Complex-to-Complex transform =========================
 
@@ -44,29 +49,29 @@ void compute_z2z_fftw( int const inbox_low[3], int const inbox_high[3],
     
     int niter = 1;
     ptrdiff_t nx, ny, nz;
-    // nx = fftw_options[1];
-    // ny = fftw_options[2];
-    // nz = fftw_options[3];
+    nx = fftw_options[1];
+    ny = fftw_options[2];
+    nz = fftw_options[3];
     nx=ny=nz=4;
 
     // Global size, to come as input later on
-    // printf("KIA------->>>>>>>> global size: %d \t %d \t %d  \n" , nx, ny, nz);
-
-
     // Plan creation ...
     void *plan_z2z;
-    fftw_mpi_init();
 
     // printf(" flags: %d \t %d \t %d  \n" , FFTW_FORWARD, FFTW_ESTIMATE, FFTW_MEASURE);
     // printf("FFTW first tuning flag: %d \n", fftw_options[0]);
 
     MPI_Barrier(comm);
     timer[0] = -MPI_Wtime();
-    if (fftw_options[0]==0)
+    if (fftw_options[0]==0){
+        printf("Forward 3-D C2C transform using FFTW\n");
         plan_z2z = fftw_mpi_plan_dft_3d(nx, ny, nz, in, out, comm, FFTW_FORWARD, FFTW_ESTIMATE);
-    if (fftw_options[0]==1)
+    }        
+    if (fftw_options[0]==1){
+        printf("Backward 3-D C2C transform using FFTW\n");
         // plan_z2z = fftw_mpi_plan_dft_3d(nx, ny, nz, in, out, comm, FFTW_FORWARD, FFTW_MEASURE);
         plan_z2z = fftw_mpi_plan_dft_3d(nx, ny, nz, in, out, comm, FFTW_BACKWARD, FFTW_ESTIMATE);
+    }        
     timer[0] += MPI_Wtime();
 
     // FFT execution
@@ -178,6 +183,10 @@ void compute_z2d_fftw( int const inbox_low[3], int const inbox_high[3],
 
 
 #else
+
+int init_fftw(int option)
+{}
+
 
 void compute_z2z_fftw( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 

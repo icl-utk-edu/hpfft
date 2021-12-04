@@ -21,6 +21,26 @@ int n_backends = 10;
 
 enum backend{heffte, fftmpi, accfft, p3dfft, ffte, swfft, decomp2d, nb3dfft, fftw, fftadvmpi};
 
+// Backends initialization
+struct fiber_init
+{
+    char *name;
+    int (*function)( int );
+};
+
+const struct fiber_init fiber_initialize[] = {
+    { "heffte",     &init_heffte    },
+    { "fftmpi",     &init_fftmpi    },
+    { "accfft",     &init_accfft    },
+    { "p3dfft",     &init_p3dfft    },
+    { "ffte",       &init_ffte      },
+    { "swfft",      &init_swfft     },
+    { "decomp2d",   &init_decomp2d  },
+    { "nb3dfft",    &init_nb3dfft   },
+    { "fftw",       &init_fftw      },
+    { "fftadvmpi",  &init_fftadvmpi }
+};
+
 // Real-to-complex transform
 struct fiber_map_backend_d2z
 {

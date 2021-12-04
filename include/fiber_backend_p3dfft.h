@@ -11,6 +11,11 @@
 #if defined(FIBER_ENABLE_P3DFFT)
 #include "p3dfft.h"
 
+//=================== Initialization (if required) ============================
+int init_p3dfft(int option){
+    return(0);
+}
+
 //=====================  Complex-to-Complex transform =========================
 
 void compute_z2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
@@ -232,6 +237,10 @@ void compute_z2d_p3dfft( int const inbox_low[3], int const inbox_high[3],
 }
 
 #else
+
+int init_p3dfft(int option)
+{}
+
 void compute_z2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,

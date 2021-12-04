@@ -11,6 +11,14 @@
 #if defined(FIBER_ENABLE_FFTMPI)
 #include "fft3d_wrap.h"
 
+
+
+//=================== Initialization (if required) ============================
+int init_fftmpi(int option){
+    return(0);
+}
+
+
 //=====================  Complex-to-Complex transform =========================
 
 void compute_z2z_fftmpi( int const inbox_low[3], int const inbox_high[3],
@@ -110,6 +118,9 @@ void compute_z2d_fftmpi( int const inbox_low[3], int const inbox_high[3],
 }
 
 #else
+int init_fftmpi(int option)
+{}
+
 void compute_z2z_fftmpi( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,

@@ -10,6 +10,11 @@
 
 #if defined(FIBER_ENABLE_FFTE)
 
+//=================== Initialization (if required) ============================
+int init_ffte(int option){
+    return(0);
+}
+
 extern void pzfft3d_(void const *in, void *out, int *nx, int *ny, int *nz,
     MPI_Fint fcomm, int *comm_size, int *opt);
 extern void pdzfft3d_(double const *in, void *out, int *nx, int *ny, int *nz,
@@ -135,6 +140,8 @@ void compute_z2d_ffte(int const inbox_low[3], int const inbox_high[3],
 }
 
 #else 
+int init_ffte(int option)
+{}
 
 void compute_z2z_ffte(int const inbox_low[3], int const inbox_high[3],
                     int const outbox_low[3], int const outbox_high[3], MPI_Comm const comm,

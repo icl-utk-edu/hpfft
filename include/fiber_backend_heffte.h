@@ -13,6 +13,11 @@
 #if defined(FIBER_ENABLE_HEFFTE)
 #include "heffte.h"
 
+//=================== Initialization (if required) ============================
+int init_heffte(int option){
+    return(0);
+}
+
 void compute_z2z_heffte( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
@@ -23,15 +28,14 @@ void compute_z2z_heffte( int const inbox_low[3], int const inbox_high[3],
 
     MPI_Barrier(comm);
     timer[0] = -MPI_Wtime();
-    // plan create
     int status;
 
     switch (heffte_options[4])
     {
-      case 0:
-        printf("Forward 3-D C2C transform using heFFTe with STOCK backend \n");
-        status = heffte_plan_create(Heffte_BACKEND_STOCK, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
-        break;
+    //   case 0:
+    //     printf("Forward 3-D C2C transform using heFFTe with STOCK backend \n");
+    //     status = heffte_plan_create(Heffte_BACKEND_STOCK, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
+    //     break;
 
       case 1:
         printf("Forward 3-D C2C transform using heFFTe with FFTW backend \n");
@@ -183,6 +187,9 @@ void compute_z2d_heffte( int const inbox_low[3], int const inbox_high[3],
 // ========================================================================================
 
 #else
+int init_heffte(int option)
+{}
+
 void compute_z2z_heffte( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,

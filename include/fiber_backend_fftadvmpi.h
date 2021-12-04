@@ -15,6 +15,11 @@
 #include <math.h>
 #include <complex.h>
 
+//=================== Initialization (if required) ============================
+int init_fftadvmpi(int option){
+    return(0);
+}
+
 #define min(x, y) (((x) < (y)) ? (x) : (y))
 
 void decompose(int N, int M, int p, int *n, int *s)
@@ -218,6 +223,8 @@ void compute_z2d_fftadvmpi( int const inbox_low[3], int const inbox_high[3],
 
 
 #else
+int init_fftadvmpi(int option)
+{}
 
 void compute_z2z_fftadvmpi( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 

@@ -10,6 +10,12 @@
 // #include "nb3dfft.h"
 
 #if defined(FIBER_ENABLE_NB3DFFT)
+
+//=================== Initialization (if required) ============================
+int init_nb3dfft(int option){
+    return(0);
+}
+
 //=====================  Complex-to-Complex transform =========================
 
 void compute_z2z_nb3dfft( int const inbox_low[3], int const inbox_high[3],
@@ -72,6 +78,10 @@ void compute_z2d_nb3dfft( int const inbox_low[3], int const inbox_high[3],
 }
 
 #else
+
+int init_nb3dfft(int option)
+{}
+
 void compute_z2z_nb3dfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,

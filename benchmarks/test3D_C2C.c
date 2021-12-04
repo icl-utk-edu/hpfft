@@ -34,14 +34,14 @@ int main(int argc, char** argv){
     int fftsize = nx*ny*nz;
 
     // select grid of processors with MPI built-in function
+    // TODO: read proc_grid from CL
     int proc_grid[2] = {0,0};
     MPI_Dims_create(num_ranks, 2, proc_grid);
     printf("MPI_Dims_create [%d] proc_grid 1x%dx%d \n\n",  me, proc_grid[0], proc_grid[1]);
 
-    // For slab decomposition
-    proc_grid[0] = 1;
-    // proc_grid[1] = 2;
-    proc_grid[1] = num_ranks;
+    // For slab decomposition: 1x1xnum_ranks
+    // proc_grid[0] = 1;
+    // proc_grid[1] = num_ranks;
     
     // create cartesian grid
     int periods[2]  = {0,0};
@@ -97,11 +97,24 @@ int main(int argc, char** argv){
     backend_options[1] = nx; // nx flag
     backend_options[2] = ny; // ny flag
     backend_options[3] = nz; // nz flag
+    backend_options[4] = 1;  // 1-D FFT Backend Selection
     
+    // Initialize Library
+    int init_option = 1; // 
+    if(fiber_initialize[my_backend].function(init_option) == 0){
+        printf(" Library [%s] successfully initialized.\n", argv[1]);
+    }
+    
+
     // ********************************
     // Compute forward (Z2Z) transform
     // ********************************
     fiber_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, input, backend_options, timer);
+
+    if (me==0){
+        printf("Time for FFT plan  = %10.6e \n", timer[0]);
+        printf("Time for execution = %10.6e \n", timer[1]);
+    }
 
     // Output after forward
     for(i=0; i<local_fft_size; i++) 
@@ -112,7 +125,8 @@ int main(int argc, char** argv){
     MPI_Barrier(MPI_COMM_WORLD);
 
     backend_options[0] = 1; // forward/backward flag
-    fiber_execute_z2z[8].function(box_low, box_high, box_low, box_high, comm, input, input, backend_options, timer);
+    // fiber_execute_z2z[8].function(box_low, box_high, box_low, box_high, comm, input, input, backend_options, timer);
+    fiber_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, input, backend_options, timer);
 
     // Output after backward
     for(i=0; i<local_fft_size; i++) {

@@ -102,7 +102,7 @@ int main(int argc, char** argv){
     // Initialize Library
     int init_option = 1; // 
     if(fiber_initialize[my_backend].function(init_option) == 0){
-        printf(" Library [%s] successfully initialized.\n", argv[1]);
+        printf("Library [%s] successfully initialized.\n", argv[1]);
     }
     
 

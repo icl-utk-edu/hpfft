@@ -38,20 +38,20 @@ void compute_z2z_heffte( int const inbox_low[3], int const inbox_high[3],
         status = heffte_plan_create(Heffte_BACKEND_FFTW, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
         break;
         
-      case 2:
-        printf("Forward 3-D C2C transform using heFFTe with MKL backend \n");
-        status = heffte_plan_create(Heffte_BACKEND_MKL, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
-        break;
+    //   case 2:
+    //     printf("Forward 3-D C2C transform using heFFTe with MKL backend \n");
+    //     status = heffte_plan_create(Heffte_BACKEND_MKL, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
+    //     break;
 
       case 3:
         printf("Forward 3-D C2C transform using heFFTe with CUFFT backend \n");
         status = heffte_plan_create(Heffte_BACKEND_CUFFT, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
         break;        
 
-      case 4:
-        printf("Forward 3-D C2C transform using heFFTe with ROCFFT backend \n");
-        status = heffte_plan_create(Heffte_BACKEND_ROCFFT, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
-        break;    
+    //   case 4:
+    //     printf("Forward 3-D C2C transform using heFFTe with ROCFFT backend \n");
+    //     status = heffte_plan_create(Heffte_BACKEND_ROCFFT, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
+    //     break;    
 
       default:
         printf("ERROR: Invalid heFFTe backend!\n");
@@ -74,7 +74,7 @@ void compute_z2z_heffte( int const inbox_low[3], int const inbox_high[3],
     if(heffte_options[0] == 0){
         heffte_forward_z2z(plan, in, out, Heffte_SCALE_NONE);
     }
-    else if if(heffte_options[0] == 1){
+    else if(heffte_options[0] == 1){
         heffte_backward_z2z(plan, in, out, Heffte_SCALE_NONE);
     }
 

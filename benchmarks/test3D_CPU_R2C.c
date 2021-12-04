@@ -68,6 +68,7 @@ int main(int argc, char** argv){
     double timer[20];
     int backend_options[20];
     backend_options[0] = 0; // forward/backward flag
+    backend_options[4] = 1; // 1-D FFT backend
 
     // ********************************
     // Compute forward (D2Z) transform

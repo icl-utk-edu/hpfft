@@ -25,14 +25,39 @@ void compute_z2z_heffte( int const inbox_low[3], int const inbox_high[3],
     timer[0] = -MPI_Wtime();
     // plan create
     int status;
-    if(heffte_options[0] == 1){
-        printf("Calling GPU heffte \n");
-        status = heffte_plan_create(Heffte_BACKEND_CUFFT, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
-    }
-    else{        
-        printf("Calling CPU heffte \n");
+
+    switch (heffte_options[4])
+    {
+      case 0:
+        printf("Forward 3-D C2C transform using heFFTe with STOCK backend \n");
+        status = heffte_plan_create(Heffte_BACKEND_STOCK, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
+        break;
+
+      case 1:
+        printf("Forward 3-D C2C transform using heFFTe with FFTW backend \n");
         status = heffte_plan_create(Heffte_BACKEND_FFTW, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
-    }                
+        break;
+        
+      case 2:
+        printf("Forward 3-D C2C transform using heFFTe with MKL backend \n");
+        status = heffte_plan_create(Heffte_BACKEND_MKL, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
+        break;
+
+      case 3:
+        printf("Forward 3-D C2C transform using heFFTe with CUFFT backend \n");
+        status = heffte_plan_create(Heffte_BACKEND_CUFFT, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
+        break;        
+
+      case 4:
+        printf("Forward 3-D C2C transform using heFFTe with ROCFFT backend \n");
+        status = heffte_plan_create(Heffte_BACKEND_ROCFFT, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
+        break;    
+
+      default:
+        printf("ERROR: Invalid heFFTe backend!\n");
+        break;
+    }
+
     MPI_Barrier(comm);
     timer[0] = +MPI_Wtime();
 
@@ -45,7 +70,16 @@ void compute_z2z_heffte( int const inbox_low[3], int const inbox_high[3],
     MPI_Barrier(comm);
     timer[1] = -MPI_Wtime();
     // compute
-    heffte_forward_z2z(plan, in, out, Heffte_SCALE_NONE);
+
+    if(heffte_options[0] == 0){
+        heffte_forward_z2z(plan, in, out, Heffte_SCALE_NONE);
+    }
+    else if if(heffte_options[0] == 1){
+        heffte_backward_z2z(plan, in, out, Heffte_SCALE_NONE);
+    }
+
+
+
     MPI_Barrier(comm);
     timer[1] = +MPI_Wtime();
 
@@ -73,12 +107,12 @@ void compute_d2z_heffte( int const inbox_low[3], int const inbox_high[3],
     timer[0] = -MPI_Wtime();
     int status;
     if(heffte_options[0] == 1){
-        printf("Calling GPU heffte \n");
+        printf("Forward 3-D R2C transform using heFFTe with CUFFT backend \n");
         // status = heffte_plan_create_r2c(Heffte_BACKEND_CUFFT, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, 0, comm, NULL, &plan);
         status = heffte_plan_create(Heffte_BACKEND_CUFFT, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
     }        
     else{        
-        printf("Calling CPU heffte \n");
+        printf("Forward 3-D R2C transform using heFFTe with FFTW backend \n");
         // status = heffte_plan_create_r2c(Heffte_BACKEND_FFTW, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, 0, comm, NULL, &plan);
         status = heffte_plan_create(Heffte_BACKEND_FFTW, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
     }        
@@ -95,7 +129,6 @@ void compute_d2z_heffte( int const inbox_low[3], int const inbox_high[3],
     printf("size wr = %d \n" , heffte_size_workspace(plan) );
     printf("backend = %d \n" , heffte_get_backend(plan)  );
     printf("r2c = %d \n" , heffte_is_r2c(plan)  );
-
 
     // FFT execution
     MPI_Barrier(comm);

@@ -56,4 +56,4 @@ jobs:
           cd build/benchmarks          
           mpirun -n 2 ./test3D_CPU_C2C ${{ matrix.library }}
           mpirun -n 2 ./test3D_CPU_R2C ${{ matrix.library }}
-          
+          mpirun -n 2 ./test3D_C2C ${{ matrix.library }} 4 4 4 

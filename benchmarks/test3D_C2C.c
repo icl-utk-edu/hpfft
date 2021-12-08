@@ -3,7 +3,8 @@
 * Benchmark: C2C 3-D transform, double precision
 * Autor: Alan Ayala - ICL, UTK.
 ! USAGE:
-    make clean; make -j; mpirun -n $NUM_RANKS ./test3D_CPU_C2C <library>
+As input, give the library you want to benchmark, the FFT size (nx,ny,nz), and the processor partition pxq.
+    make clean; make -j; mpirun -n $NUM_RANKS ./test3D_CPU_C2C <library> <nx> <ny> <nz> <p> <q>
 */
 
 #include "fiber_backends.h"
@@ -36,10 +37,16 @@ int main(int argc, char** argv){
     // select grid of processors with MPI built-in function
     // TODO: read proc_grid from CL
     int proc_grid[2] = {0,0};
-    MPI_Dims_create(num_ranks, 2, proc_grid);
-    printf("MPI_Dims_create [%d] proc_grid 1x%dx%d \n\n",  me, proc_grid[0], proc_grid[1]);
 
-    // For slab decomposition: 1x1xnum_ranks
+    if(argc==7){
+        proc_grid[0] = atoi(argv[5]);
+        proc_grid[1] = atoi(argv[6]);
+    }
+    else{
+        MPI_Dims_create(num_ranks, 2, proc_grid);
+    }
+
+    // For slab decomposition use 1x1xnum_ranks
     // proc_grid[0] = 1;
     // proc_grid[1] = num_ranks;
     
@@ -102,10 +109,13 @@ int main(int argc, char** argv){
     // Initialize Library
     int init_option = 1; // 
     if(fiber_initialize[my_backend].function(init_option) == 0){
-        printf("Library [%s] successfully initialized.\n", argv[1]);
+        if(me==0)
+            printf("Library [%s] successfully initialized.\n", argv[1]);
     }
-    
-
+    else {
+        if(me==0)
+            printf("Library [%s] failed to initialize.\n", argv[1]);
+    }
     // ********************************
     // Compute forward (Z2Z) transform
     // ********************************

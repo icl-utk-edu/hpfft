@@ -4,7 +4,8 @@
 * Autor: Alan Ayala - ICL, UTK.
 ! USAGE:
 As input, give the library you want to benchmark, the FFT size (nx,ny,nz), and the processor partition pxq.
-    make clean; make -j; mpirun -n $NUM_RANKS ./test3D_CPU_C2C <library> <nx> <ny> <nz> <p> <q>
+    make clean; make -j;
+    mpirun -n $NUM_RANKS ./test3D_C2C -lib <library> -backend <1D_backend> -size <nx> <ny> <nz> -pgrid <p> <q>
 */
 
 #include "fiber_backends.h"

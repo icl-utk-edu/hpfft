@@ -66,8 +66,8 @@ make -j
 
 List the `lib` and `include` folders of libraries to test, respectively, in `FIBER_FFT_LIB_DIRS` and `FIBER_FFT_INCLUDE_DIRS`.
 
-First experiments
-=================
+Testing integration
+===================
 
 Run tests as follows:
 ~~~
@@ -82,6 +82,14 @@ cd build/benchmarks
 mpirun -n 2 ./test3D_GPU_C2C <gpu_library>
 mpirun -n 2 ./test3D_GPU_R2C <gpu_library>
 ~~~
+
+Running benchmarks
+===================
+~~~
+cd build/benchmarks
+mpirun -n $NUM_RANKS ./test3D_C2C -lib <library> -backend <1D_backend> -size <nx> <ny> <nz> -pgrid <p> <q>
+~~~
+
 
 where `library` has to be replaced by one of the nine available libraries, provided user has it installed.
 Once a parallel FFT library has been correctly integrated to heFFTe, running these benchmarks should report a correct validation output.

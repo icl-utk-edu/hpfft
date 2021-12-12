@@ -33,22 +33,22 @@ void compute_z2z_heffte( int const inbox_low[3], int const inbox_high[3],
     switch (heffte_options[4])
     {
     //   case 0:
-    //     printf("Forward 3-D C2C transform using heFFTe with STOCK backend \n");
+        // Forward 3-D C2C transform using heFFTe with STOCK backend
     //     status = heffte_plan_create(Heffte_BACKEND_STOCK, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
     //     break;
 
       case 1:
-        printf("Forward 3-D C2C transform using heFFTe with FFTW backend \n");
+        // Forward 3-D C2C transform using heFFTe with FFTW backend
         status = heffte_plan_create(Heffte_BACKEND_FFTW, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
         break;
         
     //   case 2:
-    //     printf("Forward 3-D C2C transform using heFFTe with MKL backend \n");
+        // Forward 3-D C2C transform using heFFTe with MKL backend
     //     status = heffte_plan_create(Heffte_BACKEND_MKL, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
     //     break;
 
       case 3:
-        printf("Forward 3-D C2C transform using heFFTe with CUFFT backend \n");
+        // Forward 3-D C2C transform using heFFTe with CUFFT backend
         status = heffte_plan_create(Heffte_BACKEND_CUFFT, inbox_low, inbox_high, NULL, outbox_low, outbox_high, NULL, comm, NULL, &plan);
         break;        
 
@@ -76,7 +76,8 @@ void compute_z2z_heffte( int const inbox_low[3], int const inbox_high[3],
     // compute
 
     if(heffte_options[0] == 0){
-        heffte_forward_z2z(plan, in, out, Heffte_SCALE_NONE);
+        for (int i=0; i<heffte_options[8]; ++i)
+            heffte_forward_z2z(plan, in, out, Heffte_SCALE_NONE);
     }
     else if(heffte_options[0] == 1){
         heffte_backward_z2z(plan, in, out, Heffte_SCALE_NONE);

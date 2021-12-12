@@ -25,8 +25,8 @@ void compute_z2z_p3dfft( int const inbox_low[3], int const inbox_high[3],
 {
 
     printf("Calling P3DFFT++ Complex-to-Complex FFT \n");
-    int pgrid_in[3]  = {1,1,2};
-    int pgrid_out[3] = {1,1,2};    
+    int pgrid_in[3]  = {1, p3dfft_options[5], p3dfft_options[6]};
+    int pgrid_out[3] = {1, p3dfft_options[5], p3dfft_options[6]}; 
 
     // Plan creation
     MPI_Barrier(comm);

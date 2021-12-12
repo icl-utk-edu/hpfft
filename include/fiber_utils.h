@@ -6,6 +6,93 @@
 #include <stdlib.h>
 #include <string.h>
 
+typedef struct{
+    double r;
+    double i;
+} fiber_complex;
+
+// constants
+  const char *syntax =
+    "Example of correct syntax: test3D_C2C -lib heffte   -backend fftw    -size nx ny nz      -pgrid P Q    -iter Niter \n"
+    "                                      -comm a2a/a2av/a2aw/p2p    -reshape pencil/slabs/bricks   -trace   \n";
+
+#define BIG 1.0e20
+int factors[60];
+int n_iterations = 10;
+
+// MPI error handling
+void error_all(const char *str)
+{
+  MPI_Barrier(MPI_COMM_WORLD);
+  int me;
+  MPI_Comm_rank(MPI_COMM_WORLD,&me);
+  if (me == 0) printf("ERROR: %s\n",str);
+  MPI_Finalize();
+  exit(1);
+}
+
+void error_one(const char *str)
+{
+  int me;
+  MPI_Comm_rank(MPI_COMM_WORLD,&me);
+  printf("ERROR on proc %d: %s\n",me,str);
+  MPI_Abort(MPI_COMM_WORLD,1);
+}
+
+
+// Command line parsing
+void fiber_parse_options(int argc, char** argv, int * backend_options, char * lib_name){
+  int iarg = 1;
+  while (iarg < argc) {
+    if (strcmp(argv[iarg],"-h") == 0) {
+      error_all(syntax);
+    } else if (strcmp(argv[iarg],"-lib") == 0) {
+      if (iarg+2 > argc) error_all(syntax);
+      strcpy (lib_name, argv[iarg+1]);
+      iarg += 2;
+    } else if (strcmp(argv[iarg],"-backend") == 0) {
+      if (iarg+2 > argc) error_all(syntax);
+      backend_options[4] = fiber_get_1d_backend(argv[iarg+1]);
+      iarg += 2;
+    } else if (strcmp(argv[iarg],"-size") == 0) {
+      if (iarg+4 > argc) error_all(syntax);
+      backend_options[1] = atoi(argv[iarg+1]);
+      backend_options[2] = atoi(argv[iarg+2]);
+      backend_options[3] = atoi(argv[iarg+3]);
+      iarg += 4;
+    } else if (strcmp(argv[iarg],"-pgrid") == 0) {
+      if (iarg+3 > argc) error_all(syntax);
+      backend_options[5] = atoi(argv[iarg+1]);
+      backend_options[6] = atoi(argv[iarg+2]);
+      iarg += 3;
+    } else if (strcmp(argv[iarg],"-iter") == 0) {
+      if (iarg+2 > argc) error_all(syntax);
+      backend_options[8] = atoi(argv[iarg+1]);
+      iarg += 2;
+    } else if (strcmp(argv[iarg],"-comm") == 0) {
+      if (iarg+2 > argc) error_all(syntax);
+      if (strcmp(argv[iarg+1],"a2a") == 0) backend_options[10] = 0; 
+      else if (strcmp(argv[iarg+1],"a2av") == 0) backend_options[10] = 1;
+      else if (strcmp(argv[iarg+1],"a2aw") == 0) backend_options[10] = 2;
+      else if (strcmp(argv[iarg+1],"p2p")  == 0) backend_options[10] = 3;
+      else if (strcmp(argv[iarg+1],"p2p_pl")  == 0) backend_options[10] = 4;
+      else error_all(syntax);
+      iarg += 2;
+    } else if (strcmp(argv[iarg],"-reshape") == 0) {
+      if (iarg+2 > argc) error_all(syntax);
+      if (strcmp(argv[iarg+1],"slabs") == 0) backend_options[11] = 1; 
+      else if (strcmp(argv[iarg+1],"pencils") == 0) backend_options[11] = 2; 
+      else if (strcmp(argv[iarg+1],"bricks") == 0) backend_options[11] = 3; 
+      else error_all(syntax);
+      iarg += 2;
+    } else if (strcmp(argv[iarg],"-trace") == 0) {
+      backend_options[15] = 1;
+      iarg += 1;
+    } else error_all(syntax);
+  }
+}
+
+
 #if defined(FIBER_ENABLE_CUDA)
   #include <cufft.h>
   #define fiber_copy_cpu2gpu(h_, g_, size_)  cudaMemcpy((g_), (h_), (size_), cudaMemcpyHostToDevice)
@@ -14,16 +101,6 @@
   #define fiber_copy_cpu2gpu(h_, g_, size_)
   #define fiber_copy_gpu2cpu(h_, g_, size_)
 #endif    
-
-typedef struct{
-    double r;
-    double i;
-} fiber_complex;
-
-
-#define BIG 1.0e20
-int factors[60];
-int n_iterations = 10;
 
 double surfarea(int i, int j, int k, int nx, int ny, int nz)
 {
@@ -201,24 +278,24 @@ int fiber_get_backend(char * backend)
 }
 
 
-// MPI error handling
-void error_all(const char *str)
+int fiber_get_1d_backend(char * backend)
 {
-  MPI_Barrier(MPI_COMM_WORLD);
-  int me;
-  MPI_Comm_rank(MPI_COMM_WORLD,&me);
-  if (me == 0) printf("ERROR: %s\n",str);
-  MPI_Finalize();
-  exit(1);
+      if (strcmp(backend,"stock") == 0)
+         return 0;
+      else if (strcmp(backend,"fftw") == 0)
+         return 1;
+      else if (strcmp(backend,"mkl") == 0)
+         return 2;
+      else if (strcmp(backend,"cufft") == 0)
+         return 3;
+      else if (strcmp(backend,"rocfft") == 0)
+         return 4;
+      else if (strcmp(backend,"onemkl") == 0)
+         return 5;
+      else
+         printf("Invalid 1-D Backend \n" );
 }
 
-void error_one(const char *str)
-{
-  int me;
-  MPI_Comm_rank(MPI_COMM_WORLD,&me);
-  printf("ERROR on proc %d: %s\n",me,str);
-  MPI_Abort(MPI_COMM_WORLD,1);
-}
 
 
 #endif//! FIBER_UTILS_H

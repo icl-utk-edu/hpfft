@@ -41,7 +41,7 @@ void error_one(const char *str)
 
 
 // Command line parsing
-void fiber_parse_options(int argc, char** argv, int * backend_options, char * lib_name){
+void fiber_parse_options(int argc, char** argv, int * backend_options, char * lib_name, char * lib_1d_backend){
   int iarg = 1;
   while (iarg < argc) {
     if (strcmp(argv[iarg],"-h") == 0) {
@@ -52,7 +52,7 @@ void fiber_parse_options(int argc, char** argv, int * backend_options, char * li
       iarg += 2;
     } else if (strcmp(argv[iarg],"-backend") == 0) {
       if (iarg+2 > argc) error_all(syntax);
-      backend_options[4] = fiber_get_1d_backend(argv[iarg+1]);
+      strcpy (lib_1d_backend, argv[iarg+1]);
       iarg += 2;
     } else if (strcmp(argv[iarg],"-size") == 0) {
       if (iarg+4 > argc) error_all(syntax);

@@ -13,9 +13,7 @@ As input, give the library you want to benchmark, the FFT size (nx,ny,nz), and t
 
 int main(int argc, char** argv){
    
-    // Get backend type from user
-    int my_backend  = fiber_get_backend(argv[1]);
-
+   // MPI initialization
     MPI_Init(&argc, &argv);
     MPI_Comm comm = MPI_COMM_WORLD;
 
@@ -25,26 +23,33 @@ int main(int argc, char** argv){
     int num_ranks;
     MPI_Comm_size(comm, &num_ranks);
 
+    // Parameters
+    double timer[20];    
+    int backend_options[20];
+    char lib_name[30];
+
+    fiber_parse_options(argc, argv, backend_options, lib_name);
+    backend_options[0] = 0;  // Fixed to benchmark a forward FFT computation
+    if(me==0)
+        printf("Benchmarking library [%s] \n", lib_name);
+    int my_backend  = fiber_get_backend(lib_name);
 
     // Global grid
     int nx, ny, nz ;
-    nx = atoi(argv[2]);
-    ny = atoi(argv[3]);
-    nz = atoi(argv[4]);
+    nx = backend_options[1];
+    ny = backend_options[2];
+    nz = backend_options[3];
 
     int fftsize = nx*ny*nz;
 
     // select grid of processors with MPI built-in function
     // TODO: read proc_grid from CL
     int proc_grid[2] = {0,0};
+    proc_grid[0] = backend_options[5];
+    proc_grid[1] = backend_options[6];
 
-    if(argc==7){
-        proc_grid[0] = atoi(argv[5]);
-        proc_grid[1] = atoi(argv[6]);
-    }
-    else{
+    if (proc_grid[0]==0 || proc_grid[1]==0)
         MPI_Dims_create(num_ranks, 2, proc_grid);
-    }
 
     // For slab decomposition use 1x1xnum_ranks
     // proc_grid[0] = 1;
@@ -98,23 +103,16 @@ int main(int argc, char** argv){
     // printf("\n");        
     // printf("\n");      
 
-    double timer[20];    
-    int backend_options[20];
-    backend_options[0] = 0; // forward/backward flag
-    backend_options[1] = nx; // nx flag
-    backend_options[2] = ny; // ny flag
-    backend_options[3] = nz; // nz flag
-    backend_options[4] = 1;  // 1-D FFT Backend Selection
     
     // Initialize Library
     int init_option = 1; // 
     if(fiber_initialize[my_backend].function(init_option) == 0){
         if(me==0)
-            printf("Library [%s] successfully initialized.\n", argv[1]);
+            printf("Library [%s] successfully initialized.\n", lib_name);
     }
     else {
         if(me==0)
-            printf("Library [%s] failed to initialize.\n", argv[1]);
+            printf("Library [%s] failed to initialize.\n", lib_name);
     }
     // ********************************
     // Compute forward (Z2Z) transform
@@ -134,7 +132,7 @@ int main(int argc, char** argv){
 
     MPI_Barrier(MPI_COMM_WORLD);
 
-    backend_options[0] = 1; // forward/backward flag
+    backend_options[0] = 1; // Setting to backward for error validation
     // fiber_execute_z2z[8].function(box_low, box_high, box_low, box_high, comm, input, input, backend_options, timer);
     fiber_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, input, backend_options, timer);
 

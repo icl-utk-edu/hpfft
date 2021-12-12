@@ -201,5 +201,24 @@ int fiber_get_backend(char * backend)
 }
 
 
+// MPI error handling
+void error_all(const char *str)
+{
+  MPI_Barrier(MPI_COMM_WORLD);
+  int me;
+  MPI_Comm_rank(MPI_COMM_WORLD,&me);
+  if (me == 0) printf("ERROR: %s\n",str);
+  MPI_Finalize();
+  exit(1);
+}
+
+void error_one(const char *str)
+{
+  int me;
+  MPI_Comm_rank(MPI_COMM_WORLD,&me);
+  printf("ERROR on proc %d: %s\n",me,str);
+  MPI_Abort(MPI_COMM_WORLD,1);
+}
+
 
 #endif//! FIBER_UTILS_H

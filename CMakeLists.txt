@@ -14,7 +14,8 @@ option(FIBER_ENABLE_SWFFT         "Enable the SWFFT backend"        OFF)
 option(FIBER_ENABLE_2DECOMP       "Enable the 2DECOMP backend"      OFF)
 option(FIBER_ENABLE_NB3DFFT       "Enable the NB3DFFT backend"      OFF)
 option(FIBER_ENABLE_FFTW          "Enable the FFTW backend"         OFF)
-option(FIBER_ENABLE_FFTADVMPI     "Enable the FFTW backend"         OFF)
+option(FIBER_ENABLE_FFTWPP        "Enable the FFTWPP backend"       OFF)
+option(FIBER_ENABLE_FFTADVMPI     "Enable the FFTADVAMPI backend"   OFF)
 
 option(BUILD_SHARED_LIBS      "Builds shared libraries using CMake conventions"  ON)
 
@@ -81,6 +82,10 @@ if (FIBER_ENABLE_FFTW)
     add_definitions(-DFIBER_ENABLE_FFTW)
 endif()
 
+if (FIBER_ENABLE_FFTWPP)
+    add_definitions(-DFIBER_ENABLE_FFTWPP)
+endif()
+
 if (FIBER_ENABLE_FFTADVMPI)
     add_definitions(-DFIBER_ENABLE_FFTADVMPI)
 endif()
@@ -104,6 +109,7 @@ link_directories(${MPI_DIR}/lib)
 set(fiber_common_sources
 include/fiber_backend_accfft.h   
 include/fiber_backend_fftw.h     
+include/fiber_backend_fftwpp.h
 include/fiber_backend_swfft.h
 include/fiber_backend_decomp2d.h 
 include/fiber_backend_heffte.h   

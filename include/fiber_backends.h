@@ -13,13 +13,14 @@
 #include "fiber_backend_nb3dfft.h"
 #include "fiber_backend_fftw.h"
 #include "fiber_backend_fftadvmpi.h"
+#include "fiber_backend_fftwpp.h"
 
 
 // Available backends
-char backends[][20] = {"heFFTe", "FFTMPI", "AccFFT", "P3DFFT", "FFTE", "SWFFT", "2DECOMP&FFT", "nb3dFFT", "FFTW", "fftadvmpi"};
+char backends[][20] = {"heFFTe", "FFTMPI", "AccFFT", "P3DFFT", "FFTE", "SWFFT", "2DECOMP&FFT", "nb3dFFT", "FFTW", "fftadvmpi", "FFTW++"};
 int n_backends = 10;
 
-enum backend{heffte, fftmpi, accfft, p3dfft, ffte, swfft, decomp2d, nb3dfft, fftw, fftadvmpi};
+enum backend{heffte, fftmpi, accfft, p3dfft, ffte, swfft, decomp2d, nb3dfft, fftw, fftadvmpi, fftwpp};
 
 // Backends initialization
 struct fiber_init
@@ -38,7 +39,8 @@ const struct fiber_init fiber_initialize[] = {
     { "decomp2d",   &init_decomp2d  },
     { "nb3dfft",    &init_nb3dfft   },
     { "fftw",       &init_fftw      },
-    { "fftadvmpi",  &init_fftadvmpi }
+    { "fftadvmpi",  &init_fftadvmpi },
+    { "fftwpp",     &init_fftwpp }
 };
 
 // Real-to-complex transform
@@ -58,7 +60,8 @@ const struct fiber_map_backend_d2z fiber_execute_d2z[] = {
     { "decomp2d",   &compute_d2z_decomp2d  },
     { "nb3dfft",    &compute_d2z_nb3dfft   },
     { "fftw",       &compute_d2z_fftw      },
-    { "fftadvmpi",  &compute_d2z_fftadvmpi }
+    { "fftadvmpi",  &compute_d2z_fftadvmpi },
+    { "fftwpp",     &compute_d2z_fftwpp }
 };
 
 
@@ -79,7 +82,8 @@ const struct fiber_map_backend_z2d fiber_execute_z2d[] = {
     { "decomp2d",   &compute_z2d_decomp2d  },
     { "nb3dfft",    &compute_z2d_nb3dfft   },
     { "fftw",       &compute_z2d_fftw      },
-    { "fftadvmpi",  &compute_z2d_fftadvmpi }
+    { "fftadvmpi",  &compute_z2d_fftadvmpi },
+    { "fftwpp",     &compute_z2d_fftwpp }
 };
 
 
@@ -100,7 +104,8 @@ const struct fiber_map_backend_z2z fiber_execute_z2z[] = {
     { "decomp2d",   &compute_z2z_decomp2d  },
     { "nb3dfft",    &compute_z2z_nb3dfft   },
     { "fftw",       &compute_z2z_fftw      },
-    { "fftadvmpi",  &compute_z2z_fftadvmpi }
+    { "fftadvmpi",  &compute_z2z_fftadvmpi },
+    { "fftwpp",     &compute_z2z_fftwpp }
 };
 
 #endif  //! FIBER_BACKENDS_H_ 

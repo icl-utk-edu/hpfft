@@ -39,7 +39,7 @@ const struct fiber_init fiber_initialize[] = {
     { "decomp2d",   &init_decomp2d  },
     { "nb3dfft",    &init_nb3dfft   },
     { "fftw",       &init_fftw      },
-    { "fftadvmpi",  &init_fftadvmpi }
+    { "fftadvmpi",  &init_fftadvmpi },
     { "fftwpp",     &init_fftwpp }
 };
 
@@ -60,7 +60,7 @@ const struct fiber_map_backend_d2z fiber_execute_d2z[] = {
     { "decomp2d",   &compute_d2z_decomp2d  },
     { "nb3dfft",    &compute_d2z_nb3dfft   },
     { "fftw",       &compute_d2z_fftw      },
-    { "fftadvmpi",  &compute_d2z_fftadvmpi }
+    { "fftadvmpi",  &compute_d2z_fftadvmpi },
     { "fftwpp",     &compute_d2z_fftwpp }
 };
 
@@ -82,7 +82,7 @@ const struct fiber_map_backend_z2d fiber_execute_z2d[] = {
     { "decomp2d",   &compute_z2d_decomp2d  },
     { "nb3dfft",    &compute_z2d_nb3dfft   },
     { "fftw",       &compute_z2d_fftw      },
-    { "fftadvmpi",  &compute_z2d_fftadvmpi }
+    { "fftadvmpi",  &compute_z2d_fftadvmpi },
     { "fftwpp",     &compute_z2d_fftwpp }
 };
 
@@ -104,7 +104,7 @@ const struct fiber_map_backend_z2z fiber_execute_z2z[] = {
     { "decomp2d",   &compute_z2z_decomp2d  },
     { "nb3dfft",    &compute_z2z_nb3dfft   },
     { "fftw",       &compute_z2z_fftw      },
-    { "fftadvmpi",  &compute_z2z_fftadvmpi }
+    { "fftadvmpi",  &compute_z2z_fftadvmpi },
     { "fftwpp",     &compute_z2z_fftwpp }
 };
 

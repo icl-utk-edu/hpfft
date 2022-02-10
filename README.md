@@ -37,13 +37,14 @@ Create a folder; e.g., `Benchmarks_FFT`, and install the FFT libraries to benchm
         |-- 2DECOMP&FFT
         |-- nb3dFFT
         |-- FFTW
+        |-- FFTW++
 ~~~
 
 Current libraries targeted by FIBER:
 - CPU support: [fftMPI](https://lammps.github.io/fftmpi/), [SWFFT](https://xgitlab.cels.anl.gov/hacc/SWFFT), 
 [P3DFFT](https://github.com/sdsc/p3dfft.3),
 [nb3dFFT](https://gitlab.jsc.fz-juelich.de/goebbert/nb3dfft),
-[2DECOMP&FFT](http://www.2decomp.org/download.html)
+[2DECOMP&FFT](http://www.2decomp.org/download.html), [FFTW](http://www.fftw.org/), [FFTW++](fftwpp.sourceforge.net/)
 
 - CPU-GPU support: [heFFTe](https://bitbucket.org/icl/heffte), [AccFFT](https://github.com/amirgholami/accfft),   [FFTE](http://www.ffte.jp/)
 

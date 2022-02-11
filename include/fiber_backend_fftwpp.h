@@ -9,7 +9,7 @@
 #include <stdio.h>
 
 #if defined(FIBER_ENABLE_FFTWPP)
-#include <fftw++.h>
+#include <cfftw++.h>
 
 
 /*!
@@ -27,7 +27,9 @@
 
 //=================== Initialization (if required) ============================
 int init_fftwpp(int option){
-    fftw_mpi_init();
+
+    unsigned int nthreads = 1;
+    set_fftwpp_maxthreads(nthreads);
     return(0);
 }
 
@@ -38,21 +40,36 @@ void compute_z2z_fftwpp( int const inbox_low[3], int const inbox_high[3],
                   MPI_Comm const comm,
                   void const *in, void *out, int *fftwpp_options, double *timer)
 {
-   
+    int nx, ny, nz;
+    nx = fftwpp_options[1];
+    ny = fftwpp_options[2];
+    nz = fftwpp_options[3];
+
+    int niter = fftwpp_options[5];
+
     // FFT plan
-    MPI_Barrier(comm);
-    timer[1] = -MPI_Wtime();
+    void *plan_z2z;
 
     MPI_Barrier(comm);
-    timer[1] = +MPI_Wtime();
+    timer[0] = -MPI_Wtime();
+        printf("FFTW++ plan creation \n");
+        plan_z2z = fftwpp_plan_3d(nx, ny, nz, comm);
+    MPI_Barrier(comm);
+    timer[0] = +MPI_Wtime();
 
     // FFT Z2Z execution
     MPI_Barrier(comm);
     timer[1] = -MPI_Wtime();
-
+	for(int i = 0; i < niter; i++){
+        if (fftwpp_options[0]==0)
+	    	fftwpp_execute(plan_z2z, in, out, -1);  // Execute forward
+        if (fftwpp_options[0]==1)
+	    	fftwpp_execute(plan_z2z, in, out, 1);   // Execute backward
+	}
     MPI_Barrier(comm);
     timer[1] = +MPI_Wtime();
 
+	fftwpp_destroy_plan(plan_z2z);
 }
 
 //=====================  Real-to-Complex transform =========================

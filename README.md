@@ -129,7 +129,7 @@ This research was supported by the United States Exascale Computing Project.
 License
 =======
 
-    Copyright (c) 2021, University of Tennessee
+    Copyright (c) 2022, University of Tennessee
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without

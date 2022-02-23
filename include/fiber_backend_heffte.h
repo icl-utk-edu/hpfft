@@ -70,20 +70,24 @@ void compute_z2z_heffte( int const inbox_low[3], int const inbox_high[3],
         MPI_Abort(comm, 1);
     }
 
+    // Warmup
+    MPI_Barrier(comm);
+    heffte_forward_z2z(plan, in, out, Heffte_SCALE_NONE);
+
     // FFT execution
     MPI_Barrier(comm);
     timer[1] = -MPI_Wtime();
     // compute
 
     if(heffte_options[0] == 0){
-        for (int i=0; i<heffte_options[8]; ++i)
-            heffte_forward_z2z(plan, in, out, Heffte_SCALE_NONE);
+        for (int i=0; i<heffte_options[8]; ++i){
+            heffte_forward_z2z(plan, in, in, Heffte_SCALE_NONE);
+            printf("iteration %d \n", i);
+             }
     }
     else if(heffte_options[0] == 1){
         heffte_backward_z2z(plan, in, out, Heffte_SCALE_NONE);
     }
-
-
 
     MPI_Barrier(comm);
     timer[1] = +MPI_Wtime();

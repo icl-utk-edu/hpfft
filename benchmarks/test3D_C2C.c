@@ -35,8 +35,11 @@ int main(int argc, char** argv){
     backend_options[0] = 0;  // Fixed to benchmark a forward FFT computation
     backend_options[4] = fiber_get_1d_backend(lib_1d_backend);
 
-    if(me==0)
+    if(me==0){
+        printf("----------------------------------------------- \n", lib_name, lib_1d_backend);
         printf("Benchmarking %s library using %s backend \n", lib_name, lib_1d_backend);
+        printf("----------------------------------------------- \n", lib_name, lib_1d_backend);
+    }        
     int my_backend  = fiber_get_backend(lib_name);
 
     // Global grid
@@ -74,7 +77,7 @@ int main(int argc, char** argv){
     int proc_coords[2];
     MPI_Cart_coords(cart_comm, proc_rank, 2, proc_coords);
 
-    // Boxes
+    // definition of local FFT grid (box)
     int box_low[3]  = {0, 0, 0};
     int box_high[3] = {0, 0, 0};
 
@@ -127,8 +130,8 @@ int main(int argc, char** argv){
     fiber_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, output, backend_options, timer);
 
     if (me==0){
-        printf("Time for FFT plan  = %10.6e \n", timer[0]);
-        printf("Time for execution = %10.6e \n", timer[1]);
+        printf("Time for FFT plan  = %10.6g \n", timer[0]);
+        printf("Time for execution = %10.6g \n", timer[1]/backend_options[8]);
     }
 
     // Output after forward
@@ -141,8 +144,8 @@ int main(int argc, char** argv){
 
     backend_options[0] = 1; // Setting to backward for error validation
     // Using heffte for backward FFT:
-    fiber_execute_z2z[0].function(box_low, box_high, box_low, box_high, comm, output, input, backend_options, timer);
-    // fiber_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, input, backend_options, timer);
+    // fiber_execute_z2z[0].function(box_low, box_high, box_low, box_high, comm, output, input, backend_options, timer);
+    fiber_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, output, input, backend_options, timer);
 
     // Output after backward
     for(i=0; i<local_fft_size; i++) {

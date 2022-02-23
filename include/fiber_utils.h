@@ -272,7 +272,9 @@ int fiber_get_backend(char * backend)
       else if (strcmp(backend,"fftw") == 0)
          return 8;
       else if (strcmp(backend,"fftadvmpi") == 0)
-         return 9;         
+         return 9;    
+      else if (strcmp(backend,"fftwpp") == 0)
+         return 10;                  
       else
          printf("Invalid Backend \n" );
 }
@@ -292,6 +294,8 @@ int fiber_get_1d_backend(char * backend)
          return 4;
       else if (strcmp(backend,"onemkl") == 0)
          return 5;
+      else if (strcmp(backend,"kiss") == 0)
+         return 6;         
       else
          printf("Invalid 1-D Backend \n" );
 }

@@ -91,6 +91,15 @@ if (FIBER_ENABLE_FFTADVMPI)
 endif()
 
 find_package(MPI REQUIRED)
+if (NOT MPI_FOUND OR (MPI_FOUND AND NOT MPI_ROOT))
+  message(WARNING "MPI package not properly found")
+  if (DEFINED ENV{MPI_ROOT})
+    message(STATUS "Set MPI_DIR using env var MPI_ROOT=$ENV{MPI_ROOT}")
+    set(MPI_DIR $ENV{MPI_ROOT})
+  else()
+    message(FATAL_ERROR "Cannot find env var MPI_ROOT")
+  endif()
+endif()
 
 # Location of the FFT library
 include_directories(${FIBER_FFT_INCLUDE_DIRS})
@@ -102,6 +111,8 @@ include_directories(include)
 # Location of MPI
 include_directories(${MPI_DIR}/include)
 link_directories(${MPI_DIR}/lib)
+message(STATUS "MPI include dir: ${MPI_DIR}/include")
+message(STATUS "MPI lib dir: ${MPI_DIR}/lib")
 
 #######################
 # libfiber source files

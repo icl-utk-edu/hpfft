@@ -11,7 +11,11 @@
 #if defined(FIBER_ENABLE_FFTE)
 
 //=================== Initialization (if required) ============================
-int init_ffte(int option){
+int init_ffte(int physical, int nx, int ny, int nz, int p_row, int p_col){
+    return(0);
+}
+
+int finalize_ffte(){
     return(0);
 }
 
@@ -140,7 +144,10 @@ void compute_z2d_ffte(int const inbox_low[3], int const inbox_high[3],
 }
 
 #else 
-int init_ffte(int option)
+int init_ffte(int physical, int nx, int ny, int nz, int p_row, int p_col)
+{}
+
+int finalize_ffte()
 {}
 
 void compute_z2z_ffte(int const inbox_low[3], int const inbox_high[3],

@@ -14,7 +14,11 @@
 #include "heffte.h"
 
 //=================== Initialization (if required) ============================
-int init_heffte(int option){
+int init_heffte(int physical, int nx, int ny, int nz, int p_row, int p_col){
+    return(0);
+}
+
+int finalize_heffte(){
     return(0);
 }
 
@@ -192,7 +196,10 @@ void compute_z2d_heffte( int const inbox_low[3], int const inbox_high[3],
 // ========================================================================================
 
 #else
-int init_heffte(int option)
+int init_heffte(int physical, int nx, int ny, int nz, int p_row, int p_col)
+{}
+
+int finalize_heffte()
 {}
 
 void compute_z2z_heffte( int const inbox_low[3], int const inbox_high[3],

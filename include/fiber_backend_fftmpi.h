@@ -14,7 +14,11 @@
 
 
 //=================== Initialization (if required) ============================
-int init_fftmpi(int option){
+int init_fftmpi(int nx, int ny, int nz, int p_row, int p_col, int physical){
+    return(0);
+}
+
+int finalize_fftmpi(){
     return(0);
 }
 
@@ -118,7 +122,10 @@ void compute_z2d_fftmpi( int const inbox_low[3], int const inbox_high[3],
 }
 
 #else
-int init_fftmpi(int option)
+int init_fftmpi(int nx, int ny, int nz, int p_row, int p_col, int physical)
+{}
+
+int finalize_fftmpi()
 {}
 
 void compute_z2z_fftmpi( int const inbox_low[3], int const inbox_high[3],

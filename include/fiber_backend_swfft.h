@@ -12,7 +12,11 @@
 #include "swfft.h"
 
 //=================== Initialization (if required) ============================
-int init_swfft(int option){
+int init_swfft(int physical, int nx, int ny, int nz, int p_row, int p_col){
+    return(0);
+}
+
+int finalize_swfft(){
     return(0);
 }
 
@@ -80,8 +84,10 @@ void compute_z2d_swfft( int const inbox_low[3], int const inbox_high[3],
 }
 
 #else
+int init_swfft(int physical, int nx, int ny, int nz, int p_row, int p_col)
+{}
 
-int init_swfft(int option)
+int finalize_swfft()
 {}
 
 void compute_z2z_swfft( int const inbox_low[3], int const inbox_high[3],

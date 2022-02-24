@@ -9,7 +9,7 @@
 #include <stdio.h>
 
 #if defined(FIBER_ENABLE_2DECOMP)
-#include <decomp_2d.h>
+#include <decomp_2d_iface.h>
 
 //=================== Initialization (if required) ============================
 int init_decomp2d(int option){

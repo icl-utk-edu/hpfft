@@ -16,7 +16,11 @@
 #include <complex.h>
 
 //=================== Initialization (if required) ============================
-int init_fftadvmpi(int option){
+int init_fftadvmpi(int physical, int nx, int ny, int nz, int p_row, int p_col){
+    return(0);
+}
+
+int finalize_fftadvmpi(){
     return(0);
 }
 
@@ -223,7 +227,10 @@ void compute_z2d_fftadvmpi( int const inbox_low[3], int const inbox_high[3],
 
 
 #else
-int init_fftadvmpi(int option)
+int init_fftadvmpi(int physical, int nx, int ny, int nz, int p_row, int p_col)
+{}
+
+int finalize_fftadvmpi()
 {}
 
 void compute_z2z_fftadvmpi( int const inbox_low[3], int const inbox_high[3],

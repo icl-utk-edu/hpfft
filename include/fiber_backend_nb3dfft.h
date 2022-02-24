@@ -12,7 +12,11 @@
 #if defined(FIBER_ENABLE_NB3DFFT)
 
 //=================== Initialization (if required) ============================
-int init_nb3dfft(int option){
+int init_nb3dfft(int physical, int nx, int ny, int nz, int p_row, int p_col){
+    return(0);
+}
+
+int finalize_nb3dfft(){
     return(0);
 }
 
@@ -78,8 +82,10 @@ void compute_z2d_nb3dfft( int const inbox_low[3], int const inbox_high[3],
 }
 
 #else
+int init_nb3dfft(int physical, int nx, int ny, int nz, int p_row, int p_col)
+{}
 
-int init_nb3dfft(int option)
+int finalize_nb3dfft()
 {}
 
 void compute_z2z_nb3dfft( int const inbox_low[3], int const inbox_high[3],

@@ -18,7 +18,7 @@
 
 // Available backends
 char backends[][20] = {"heFFTe", "FFTMPI", "AccFFT", "P3DFFT", "FFTE", "SWFFT", "2DECOMP&FFT", "nb3dFFT", "FFTW", "fftadvmpi", "FFTW++"};
-int n_backends = 10;
+int n_backends = 11;
 
 enum backend{heffte, fftmpi, accfft, p3dfft, ffte, swfft, decomp2d, nb3dfft, fftw, fftadvmpi, fftwpp};
 
@@ -26,7 +26,7 @@ enum backend{heffte, fftmpi, accfft, p3dfft, ffte, swfft, decomp2d, nb3dfft, fft
 struct fiber_init
 {
     char *name;
-    int (*function)( int );
+    int (*function)( int, int, int, int, int, int );
 };
 
 const struct fiber_init fiber_initialize[] = {
@@ -42,6 +42,27 @@ const struct fiber_init fiber_initialize[] = {
     { "fftadvmpi",  &init_fftadvmpi },
     { "fftwpp",     &init_fftwpp }
 };
+
+// Backends finalization
+struct fiber_finalize
+{
+    char *name;
+    int (*function)( void );
+};
+//*
+const struct fiber_finalize fiber_finalize[] = {
+    { "heffte",     &finalize_heffte    },
+    { "fftmpi",     &finalize_fftmpi    },
+    { "accfft",     &finalize_accfft    },
+    { "p3dfft",     &finalize_p3dfft    },
+    { "ffte",       &finalize_ffte      },
+    { "swfft",      &finalize_swfft     },
+    { "decomp2d",   &finalize_decomp2d  },
+    { "nb3dfft",    &finalize_nb3dfft   },
+    { "fftw",       &finalize_fftw      },
+    { "fftadvmpi",  &finalize_fftadvmpi },
+    { "fftw",       &finalize_fftwpp }
+};//*/
 
 // Real-to-complex transform
 struct fiber_map_backend_d2z

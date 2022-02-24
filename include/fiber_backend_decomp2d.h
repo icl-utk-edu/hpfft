@@ -12,7 +12,11 @@
 #include <decomp_2d.h>
 
 //=================== Initialization (if required) ============================
-int init_decomp2d(int option){
+int init_decomp2d(int physical, int nx, int ny, int nz, int p_row, int p_col){
+    return(0);
+}
+
+int finalize_decomp2d(){
     return(0);
 }
 
@@ -103,7 +107,10 @@ void compute_z2d_decomp2d( int const inbox_low[3], int const inbox_high[3],
 
 
 #else
-int init_decomp2d(int option)
+int init_decomp2d(int physical, int nx, int ny, int nz, int p_row, int p_col)
+{}
+
+int finalize_decomp2d()
 {}
 
 void compute_z2z_decomp2d( int const inbox_low[3], int const inbox_high[3],

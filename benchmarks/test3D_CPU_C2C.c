@@ -76,6 +76,19 @@ int main(int argc, char** argv){
     int backend_options[20];
     backend_options[0] = 0; // forward/backward flag
     backend_options[4] = 1; // 1-D FFT backend
+
+    // The variable is used in the 2decomp&FFT library which may not be linked.
+    // So we hard code the value that must similar to the one in the library itself:
+    // PHYSICAL_IN_X = 0
+    // PHYSICAL_IN_Z = 1
+    // See decomp_2d_iface.h
+    int physical_direction = 0;
+    int p_row     = 1;
+    int p_col     = 2;
+    int nx        = box_high[0] - box_low[0] + 1;
+    int ny        = box_high[1] - box_low[1] + 1;
+    int nz        = box_high[2] - box_low[2] + 1;
+    fiber_initialize[my_backend].function(physical_direction, nx, ny, nz, p_row, p_col);
     
     // ********************************
     // Compute forward (Z2Z) transform
@@ -155,6 +168,9 @@ int main(int argc, char** argv){
 
     // Print errors
     printf("%s: rank [%d] computed error |X - ifft(fft(X)) |_{max}: %1.6le\n", backends[my_backend], me, err);
+
+    // finalization of the backend                                               
+    fiber_finalize[my_backend].function();
 
     // Data deallocation 
     free(input);

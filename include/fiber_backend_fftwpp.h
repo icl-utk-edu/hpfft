@@ -26,10 +26,14 @@
  */
 
 //=================== Initialization (if required) ============================
-int init_fftwpp(int option){
+int init_fftwpp(int physical, int nx, int ny, int nz, int p_row, int p_col){
 
     unsigned int nthreads = 1;
     set_fftwpp_maxthreads(nthreads);
+    return(0);
+}
+
+int finalize_fftwpp(){
     return(0);
 }
 
@@ -124,10 +128,11 @@ void compute_z2d_fftwpp( int const inbox_low[3], int const inbox_high[3],
 
 #else
 
-int init_fftwpp(int option)
-{
-    return(0);
-}
+int init_fftwpp(int physical, int nx, int ny, int nz, int p_row, int p_col)
+{}
+
+int finalize_fftwpp()
+{}
 
 
 void compute_z2z_fftwpp( int const inbox_low[3], int const inbox_high[3],

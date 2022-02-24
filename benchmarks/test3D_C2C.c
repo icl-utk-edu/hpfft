@@ -116,7 +116,13 @@ int main(int argc, char** argv){
     
     // Initialize Library
     int init_option = 1; // 
-    if(fiber_initialize[my_backend].function(init_option) == 0){
+    // The variable is used in the 2decomp&FFT library which may not be linked.
+    // So we hard code the value that must similar to the one in the library itself:
+    // PHYSICAL_IN_X = 0
+    // PHYSICAL_IN_Z = 1
+    // See decomp_2d_iface.h
+    int physical_direction = 0;
+    if(fiber_initialize[my_backend].function(physical_direction, nx, ny, nz, proc_grid[0], proc_grid[1]) == 0){ 
         if(me==0)
             printf("[%s] successfully initialized.\n", lib_name);
     }
@@ -181,6 +187,15 @@ int main(int argc, char** argv){
     // Data deallocation 
     free(input);
     free(output);
+
+    if(fiber_finalize[my_backend].function() == 0){ 
+        if(me==0)
+            printf("[%s] successfully finalized.\n", lib_name);
+    }
+    else {
+        if(me==0)
+            printf("[%s] failed to finalize.\n", lib_name);
+    }
 
     MPI_Finalize();
 

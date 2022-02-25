@@ -22,18 +22,30 @@ void compute_z2z_decomp2d( int const inbox_low[3], int const inbox_high[3],
                   MPI_Comm const comm,
                   void const *in, void *out, int *decomp2d_options, double *timer)
 {
-
     // Plan creation ...
-    // void *plan;
+    int lxsize    = 0;
+    int lysize    = 0;
+    int lzsize    = 0;
+    int physical  = decomp2d_options[backend_option_physical];
+    int nx        = decomp2d_options[backend_option_nx];
+    int ny        = decomp2d_options[backend_option_ny];
+    int nz        = decomp2d_options[backend_option_nz];
+    int p_row     = decomp2d_options[backend_option_p];
+    int p_col     = decomp2d_options[backend_option_q];
+    int direction = ( decomp2d_options[backend_option_fft_op] == 0 ?
+                      FORWARD : BACKWARD );
 
     MPI_Barrier(comm);
     timer[0] = -MPI_Wtime();
 
     // plan create
+    decomp_2d_init(nx, ny, nz*2, p_row, p_col);
+    decomp_2d_fft_init(physical);
+
+    decomp_2d_get_local_sizes(physical, &lxsize, &lysize, &lzsize);
 
     MPI_Barrier(comm);
     timer[0] += MPI_Wtime();
-
 
 
     // FFT execution ...
@@ -41,14 +53,14 @@ void compute_z2z_decomp2d( int const inbox_low[3], int const inbox_high[3],
     timer[1] = -MPI_Wtime();
 
     // compute FFT 
+    decomp_2d_fft_3d_c2c(lxsize, lysize, lzsize, (double complex*)in, 
+        lxsize, lysize, lzsize, (double complex*)out, direction);
 
     MPI_Barrier(comm);
     timer[1] = +MPI_Wtime();
 
     // Delete plan ...
-
-    printf("DECOM2D: Get Complex-to-Complex using a wrapper to functions in fft_test_c2c folder \n");
-    MPI_Abort(comm, 1);
+    decomp_2d_finalize();
 }
 
 //=====================  Real-to-Complex transform =========================

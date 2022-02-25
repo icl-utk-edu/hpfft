@@ -16,6 +16,20 @@ typedef struct{
     "Example of correct syntax: test3D_C2C -lib heffte   -backend fftw    -size nx ny nz      -pgrid P Q    -iter Niter \n"
     "                                      -comm a2a/a2av/a2aw/p2p    -reshape pencil/slabs/bricks   -trace   \n";
 
+enum {
+ backend_option_fft_op = 0, // 0
+ backend_option_nx,         // 1
+ backend_option_ny,         // 2
+ backend_option_nz,         // 3
+ backend_option_backend,    // 4
+ backend_option_grid_p,     // 5
+ backend_option_grid_q,     // 6
+ backend_option_physical,   // 7
+ backend_option_niter,      // 8
+};
+
+const int n_backend_options = 9;
+
 #define BIG 1.0e20
 int factors[60];
 int n_iterations = 10;

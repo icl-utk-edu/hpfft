@@ -15,20 +15,6 @@
 #include "fiber_backend_fftadvmpi.h"
 #include "fiber_backend_fftwpp.h"
 
-enum {
- backend_option_fft_op = 0, // 0
- backend_option_nx,         // 1
- backend_option_ny,         // 2
- backend_option_nz,         // 3
- backend_option_backend,    // 4
- backend_option_grid_p,     // 5
- backend_option_grid_q,     // 6
- backend_option_physical,   // 7
- backend_option_niter,      // 8
-};
-
-const int n_backend_options = 9;
-
 // Available backends
 char backends[][20] = {"heFFTe", "FFTMPI", "AccFFT", "P3DFFT", "FFTE", "SWFFT", "2DECOMP&FFT", "nb3dFFT", "FFTW", "fftadvmpi", "FFTW++"};
 int n_backends = 11;

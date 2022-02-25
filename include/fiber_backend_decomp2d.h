@@ -7,6 +7,7 @@
 #define FIBER_BACKEND_DECOM2D_H
 
 #include <stdio.h>
+#include <fiber_utils.h>
 
 #if defined(FIBER_ENABLE_2DECOMP)
 #include <decomp_2d_iface.h>
@@ -30,23 +31,24 @@ void compute_z2z_decomp2d( int const inbox_low[3], int const inbox_high[3],
     int nx        = decomp2d_options[backend_option_nx];
     int ny        = decomp2d_options[backend_option_ny];
     int nz        = decomp2d_options[backend_option_nz];
-    int p_row     = decomp2d_options[backend_option_p];
-    int p_col     = decomp2d_options[backend_option_q];
+    int p_row     = decomp2d_options[backend_option_grid_p];
+    int p_col     = decomp2d_options[backend_option_grid_q];
     int direction = ( decomp2d_options[backend_option_fft_op] == 0 ?
                       FORWARD : BACKWARD );
 
     MPI_Barrier(comm);
     timer[0] = -MPI_Wtime();
 
-    // plan create
-    decomp_2d_init(nx, ny, nz*2, p_row, p_col);
-    decomp_2d_fft_init(physical);
-
-    decomp_2d_get_local_sizes(physical, &lxsize, &lysize, &lzsize);
+    if ( direction == FORWARD ) {
+      // plan create
+      decomp_2d_init(nx, ny, nz*2, p_row, p_col);
+      decomp_2d_fft_init(physical);
+    }
 
     MPI_Barrier(comm);
     timer[0] += MPI_Wtime();
 
+    decomp_2d_get_local_sizes(physical, &lxsize, &lysize, &lzsize);
 
     // FFT execution ...
     MPI_Barrier(comm);
@@ -59,8 +61,10 @@ void compute_z2z_decomp2d( int const inbox_low[3], int const inbox_high[3],
     MPI_Barrier(comm);
     timer[1] = +MPI_Wtime();
 
-    // Delete plan ...
-    decomp_2d_finalize();
+    if ( direction == BACKWARD ) {
+      // Delete plan ...
+      decomp_2d_finalize();
+    }
 }
 
 //=====================  Real-to-Complex transform =========================

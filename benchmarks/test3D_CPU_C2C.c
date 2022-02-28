@@ -73,15 +73,15 @@ int main(int argc, char** argv){
     printf("\n");      
 
     double timer[20];
-    int backend_options[n_backend_options];
-    backend_options[backend_option_fft_op]    = 0; // forward/backward flag
-    backend_options[backend_option_backend]   = 1; // 1-D FFT backend
-    backend_options[backend_option_grid_p]    = 2; // grid.x
-    backend_options[backend_option_grid_q]    = 1; // grid.y
-    backend_options[backend_option_physical]  = 0;
-    backend_options[backend_option_nx]        = box_high[0] - box_low[0] + 1; // nx flag
-    backend_options[backend_option_ny]        = box_high[1] - box_low[1] + 1; // ny flag
-    backend_options[backend_option_nz]        = box_high[2] - box_low[2] + 1; // nz flag
+    int backend_options[n_options];
+    backend_options[option_fft_op]    = 0; // forward/backward flag
+    backend_options[option_backend]   = 1; // 1-D FFT backend
+    backend_options[option_grid_p]    = 2; // grid.x
+    backend_options[option_grid_q]    = 1; // grid.y
+    backend_options[option_physical]  = 0;
+    backend_options[option_nx]        = box_high[0] - box_low[0] + 1; // nx flag
+    backend_options[option_ny]        = box_high[1] - box_low[1] + 1; // ny flag
+    backend_options[option_nz]        = box_high[2] - box_low[2] + 1; // nz flag
     
     // ********************************
     // Compute forward (Z2Z) transform
@@ -124,11 +124,11 @@ int main(int argc, char** argv){
     // }        
 
     // fiber_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, input, 1, timer);
-    backend_options[backend_option_fft_op] = 1; // forward/backward flag
-    printf("fftw op 0 = %d \n", backend_options[backend_option_fft_op]);
-    backend_options[backend_option_nx] = 4; // nx flag
-    backend_options[backend_option_ny] = 4; // ny flag
-    backend_options[backend_option_nz] = 4; // nz flag
+    backend_options[option_fft_op] = 1; // forward/backward flag
+    printf("fftw op 0 = %d \n", backend_options[option_fft_op]);
+    backend_options[option_nx] = 4; // nx flag
+    backend_options[option_ny] = 4; // ny flag
+    backend_options[option_nz] = 4; // nz flag
     fiber_execute_z2z[8].function(box_low, box_high, box_low, box_high, comm, input, input, backend_options, timer);
 
     // Output after backward

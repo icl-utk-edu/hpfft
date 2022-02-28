@@ -73,9 +73,9 @@ int main(int argc, char** argv){
     printf("\n");      
 
     double timer[20];
-    int backend_options[n_backend_options];
-    backend_options[backend_option_fft_op]  = 0; // forward/backward flag
-    backend_options[backend_option_backend] = 1; // 1-D FFT backend
+    int backend_options[n_options];
+    backend_options[option_fft_op]  = 0; // forward/backward flag
+    backend_options[option_backend] = 1; // 1-D FFT backend
     
     // ********************************
     // Compute forward (Z2Z) transform
@@ -118,11 +118,11 @@ int main(int argc, char** argv){
     // }        
 
     // fiber_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, input, 1, timer);
-    backend_options[backend_option_fft_op] = 1; // forward/backward flag
-    printf("fftw op 0 = %d \n", backend_options[backend_option_fft_op]);
-    backend_options[backend_option_nx] = 4; // nx flag
-    backend_options[backend_option_ny] = 4; // ny flag
-    backend_options[backend_option_nz] = 4; // nz flag
+    backend_options[option_fft_op] = 1; // forward/backward flag
+    printf("fftw op 0 = %d \n", backend_options[option_fft_op]);
+    backend_options[option_nx] = 4; // nx flag
+    backend_options[option_ny] = 4; // ny flag
+    backend_options[option_nz] = 4; // nz flag
     fiber_execute_z2z[8].function(box_low, box_high, box_low, box_high, comm, input, input, backend_options, timer);
 
     // Output after backward

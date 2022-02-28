@@ -27,13 +27,13 @@ void compute_z2z_decomp2d( int const inbox_low[3], int const inbox_high[3],
     int lxsize    = 0;
     int lysize    = 0;
     int lzsize    = 0;
-    int physical  = decomp2d_options[backend_option_physical];
-    int nx        = decomp2d_options[backend_option_nx];
-    int ny        = decomp2d_options[backend_option_ny];
-    int nz        = decomp2d_options[backend_option_nz];
-    int p_row     = decomp2d_options[backend_option_grid_p];
-    int p_col     = decomp2d_options[backend_option_grid_q];
-    int direction = ( decomp2d_options[backend_option_fft_op] == 0 ?
+    int physical  = decomp2d_options[option_physical];
+    int nx        = decomp2d_options[option_nx];
+    int ny        = decomp2d_options[option_ny];
+    int nz        = decomp2d_options[option_nz];
+    int p_row     = decomp2d_options[option_grid_p];
+    int p_col     = decomp2d_options[option_grid_q];
+    int direction = ( decomp2d_options[option_fft_op] == 0 ?
                       FORWARD : BACKWARD );
 
     MPI_Barrier(comm);

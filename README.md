@@ -21,6 +21,15 @@ The current harness software puts together FFT libraries supporting distributed 
 
 * * *
 
+Publications
+============
+
+* [Interim Report on Benchmarking FFT Libraries on High Performance Systems](http://www.icl.utk.edu/publications/interim-report-benchmarking-fft-libraries-high-performance-systems)
+* [FFT Benchmark Performance Experiments on Systems Targeting Exascale](http://www.icl.utk.edu/publications/fft-benchmark-performance-experiments-systems-targeting-exascale)
+
+
+* * *
+
 Setting up
 ==========
 

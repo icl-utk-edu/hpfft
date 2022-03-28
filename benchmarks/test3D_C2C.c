@@ -36,9 +36,9 @@ int main(int argc, char** argv){
     backend_options[4] = fiber_get_1d_backend(lib_1d_backend);
 
     if(me==0){
-        printf("----------------------------------------------- \n", lib_name, lib_1d_backend);
+        printf("----------------------------------------------- \n");
         printf("Benchmarking %s library using %s backend \n", lib_name, lib_1d_backend);
-        printf("----------------------------------------------- \n", lib_name, lib_1d_backend);
+        printf("----------------------------------------------- \n");
     }        
     int my_backend  = fiber_get_backend(lib_name);
 

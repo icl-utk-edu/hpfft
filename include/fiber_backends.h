@@ -15,10 +15,9 @@
 #include "fiber_backend_fftadvmpi.h"
 #include "fiber_backend_fftwpp.h"
 
-
 // Available backends
 char backends[][20] = {"heFFTe", "FFTMPI", "AccFFT", "P3DFFT", "FFTE", "SWFFT", "2DECOMP&FFT", "nb3dFFT", "FFTW", "fftadvmpi", "FFTW++"};
-int n_backends = 10;
+int n_backends = 11;
 
 enum backend{heffte, fftmpi, accfft, p3dfft, ffte, swfft, decomp2d, nb3dfft, fftw, fftadvmpi, fftwpp};
 

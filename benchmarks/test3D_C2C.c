@@ -26,14 +26,14 @@ int main(int argc, char** argv){
 
     // Parameters
     double timer[20];    
-    int backend_options[20];
+    int backend_options[n_options];
     char lib_name[30];
     char lib_1d_backend[30] = {"fftw"}; // FFTW is the default backend for most parallel FFT libraries
-    backend_options[8] = 10; // default number of iterations
+    backend_options[option_niter] = 10; // default number of iterations
 
     fiber_parse_options(argc, argv, backend_options, lib_name, lib_1d_backend);
-    backend_options[0] = 0;  // Fixed to benchmark a forward FFT computation
-    backend_options[4] = fiber_get_1d_backend(lib_1d_backend);
+    backend_options[option_fft_op] = 0;  // Fixed to benchmark a forward FFT computation
+    backend_options[option_backend] = fiber_get_1d_backend(lib_1d_backend);
 
     if(me==0){
         printf("----------------------------------------------- \n");
@@ -44,22 +44,22 @@ int main(int argc, char** argv){
 
     // Global grid
     int nx, ny, nz ;
-    nx = backend_options[1];
-    ny = backend_options[2];
-    nz = backend_options[3];
+    nx = backend_options[option_nx];
+    ny = backend_options[option_ny];
+    nz = backend_options[option_nz];
 
     int fftsize = nx*ny*nz;
 
     // select grid of processors with MPI built-in function
     // TODO: read proc_grid from CL
     int proc_grid[2] = {0,0};
-    proc_grid[0] = backend_options[5];
-    proc_grid[1] = backend_options[6];
+    proc_grid[0] = backend_options[option_grid_p];
+    proc_grid[1] = backend_options[option_grid_q];
 
     if (proc_grid[0]==0 || proc_grid[1]==0){
         MPI_Dims_create(num_ranks, 2, proc_grid);
-        backend_options[5] = proc_grid[0];
-        backend_options[6] = proc_grid[1];
+        backend_options[option_grid_p] = proc_grid[0];
+        backend_options[option_grid_q] = proc_grid[1];
     }
     // For slab decomposition use 1x1xnum_ranks
     // proc_grid[0] = 1;
@@ -131,7 +131,7 @@ int main(int argc, char** argv){
 
     if (me==0){
         printf("Time for FFT plan  = %10.6g \n", timer[0]);
-        printf("Time for execution = %10.6g \n", timer[1]/backend_options[8]);
+        printf("Time for execution = %10.6g \n", timer[1]/backend_options[option_niter]);
     }
 
     // Output after forward
@@ -142,7 +142,7 @@ int main(int argc, char** argv){
 
     MPI_Barrier(MPI_COMM_WORLD);
 
-    backend_options[0] = 1; // Setting to backward for error validation
+    backend_options[option_fft_op] = 1; // Setting to backward for error validation
     // Using heffte for backward FFT:
     // fiber_execute_z2z[0].function(box_low, box_high, box_low, box_high, comm, output, input, backend_options, timer);
     fiber_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, output, input, backend_options, timer);

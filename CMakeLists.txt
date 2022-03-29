@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project("FIBER" VERSION 0.1 LANGUAGES C)
+project("FIBER" VERSION 0.1 LANGUAGES C CXX)
 
 #################
 # Default Options
@@ -21,6 +21,8 @@ option(BUILD_SHARED_LIBS      "Builds shared libraries using CMake conventions" 
 
 set(FIBER_FFT_INCLUDE_DIRS "" CACHE FILEPATH "Path to FFT library headers")
 set(FIBER_FFT_LIB_DIRS "" CACHE FILEPATH "Path to FFT library files")
+
+set(FIBER_SWFFT_REPO "$ENV{HOME}/SWFFT" CACHE FILEPATH "Path to SWFFT Git repository")
 
 # Set default install path to build folder
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -68,6 +70,7 @@ endif()
 
 if (FIBER_ENABLE_SWFFT)
     add_definitions(-DFIBER_ENABLE_SWFFT)
+    add_library(fiber_swfft benchmarks/fiber_swfft.cpp ${FIBER_SWFFT_REPO}/DistributionC.cpp ${FIBER_SWFFT_REPO}/DfftC.cpp ${FIBER_SWFFT_REPO}/distribution.c)
 endif()
 
 if (FIBER_ENABLE_2DECOMP)

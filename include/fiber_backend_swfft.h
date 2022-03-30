@@ -9,7 +9,9 @@
 #include <stdio.h>
 
 #if defined(FIBER_ENABLE_SWFFT)
-#include "swfft.h"
+#include "fiber_swfft.h"
+
+#include <fftw3.h>
 
 //=================== Initialization (if required) ============================
 int init_swfft(int option){
@@ -21,32 +23,43 @@ int init_swfft(int option){
 void compute_z2z_swfft( int const inbox_low[3], int const inbox_high[3],
                   int const outbox_low[3], int const outbox_high[3], 
                   MPI_Comm const comm,
-                  void const *in, void *out, int *swfft_options, double *timer)
-{
+                  void const *in, void *out, int *swfft_options, double *timer) {
 
-    // Plan creation ...
+    // Plan creation
     // void *plan;
+    void *dfft, *dist;
+    int i, dim3d[3];
 
     MPI_Barrier(comm);
     timer[0] = -MPI_Wtime();
 
     // plan create
+    for (i = 0; i < 3; ++i)
+        dim3d[i] = inbox_high[i] - inbox_low[i];
+
+    SWFFT_Distribution_new(comm, dim3d, 0);
+    dfft = SWFFT_Dfft_new(dist);
+
+    SWFFT_makePlans(dfft, in, out, in, out, FFTW_MEASURE);
 
     MPI_Barrier(comm);
     timer[0] += MPI_Wtime();
 
-
-
-    // FFT execution ...
+    // FFT execution
     MPI_Barrier(comm);
     timer[1] = -MPI_Wtime();
 
     // compute FFT 
 
+    SWFFT_forward(dfft, in);
+    SWFFT_backward(dfft, in);
+
     MPI_Barrier(comm);
     timer[1] = +MPI_Wtime();
 
-    // Delete plan ...
+    // Delete plan
+    SWFFT_Dfft_delete(dfft);
+    SWFFT_Distribution_delete(dist);
 
     printf("SWFFT: Get Complex-to-Complex using TestDfft.cpp or TestFDfft.f90  \n");
     MPI_Abort(comm, 1);

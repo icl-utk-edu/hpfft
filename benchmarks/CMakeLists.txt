@@ -3,12 +3,12 @@
 #
 
 macro(fiber_add_benchmark fiber_benchmark)
-    
+
     add_executable(${fiber_benchmark} "${fiber_benchmark}.c")
     target_link_libraries(${fiber_benchmark} mpi)
     if (FIBER_ENABLE_CUDA)
         target_link_libraries(${fiber_benchmark} ${CUDA_LIBRARIES})
-    endif()        
+    endif()
     target_include_directories(${fiber_benchmark} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include/>)
 
     if (FIBER_ENABLE_HEFFTE)
@@ -27,7 +27,7 @@ macro(fiber_add_benchmark fiber_benchmark)
         target_link_libraries(${fiber_benchmark} ffte)
     endif()
     if (FIBER_ENABLE_SWFFT)
-        target_link_libraries(${fiber_benchmark} swfft)
+        target_link_libraries(${fiber_benchmark} fiber_swfft)
     endif()
     if (FIBER_ENABLE_2DECOMP)
         target_link_libraries(${fiber_benchmark} mpi_usempif08 mpi_usempi_ignore_tkr mpi_mpifh 2decomp_fft_iface 2decomp_fft fftw3f fftw3 gfortran)

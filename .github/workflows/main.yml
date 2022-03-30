@@ -34,7 +34,7 @@ jobs:
           sload gcc@7.3.0%gcc@4.8.5
           spack compiler find
           spack unload -a
-          spack repo add `pwd`/spack/ || true
+          #spack repo add `pwd`/spack/ || true
           cp .github/CI/spack.yaml .
           spack env activate -d .
           spack install
@@ -42,6 +42,7 @@ jobs:
       - name: Build with ${{ matrix.library }}
         run: |
           source .github/CI/spack_setup.sh
+          echo Spack setup done
           spack env activate -d .
           spack load --first gcc cmake cuda openmpi ${{ matrix.library }}
           mkdir build && cd build

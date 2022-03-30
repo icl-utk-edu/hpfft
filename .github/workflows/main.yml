@@ -29,6 +29,7 @@ jobs:
         
       - name: Set up dependencies
         run: |
+          rm -rf ~/.spack
           source .github/CI/spack_setup.sh
           sload gcc@7.3.0%gcc@4.8.5
           spack compiler find

@@ -3,13 +3,12 @@ spack:
   - pkgs:
     - gcc@7.3.0
     - cmake
-    - fftw+mpi
-    - heffte+fftw+cuda cuda_arch=70
-    - accfft
+    - fftw+mpi ^openmpi
+    - heffte+fftw+cuda cuda_arch=70 ^openmpi
+    - accfft ^openmpi
     - openmpi
 
   view: true
-  #concretization: together
   specs:
   - matrix:
     - [$pkgs]

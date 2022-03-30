@@ -5,6 +5,7 @@ spack:
     - cmake
     - fftw
     - heffte+fftw+cuda cuda_arch=70
+    - accfft
     - openmpi
 
   view: true

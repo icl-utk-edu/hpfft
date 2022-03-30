@@ -4,7 +4,7 @@ name: CI
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ master ]
+    branches: [ master, gragghia/ci ]
   pull_request:
     branches: [ master ]
 
@@ -19,7 +19,7 @@ jobs:
     # Add an element in this strategy matrix for each FFT library we want to test
     strategy:
       matrix:
-        library: [heffte, fftw]
+        library: [heffte, fftw, accfft]
         # library: [heffte, fftw, ffte, 2decomp]
       fail-fast: false
     # Steps represent a sequence of tasks that will be executed as part of the job

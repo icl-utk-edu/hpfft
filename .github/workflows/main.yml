@@ -33,6 +33,7 @@ jobs:
           sload gcc@7.3.0%gcc@4.8.5
           spack compiler find
           spack unload -a
+          spack repo add spack/
           cp .github/CI/spack.yaml .
           spack env activate -d .
           spack install
@@ -43,7 +44,7 @@ jobs:
           spack env activate -d .
           spack load --first gcc cmake cuda openmpi ${{ matrix.library }}
           mkdir build && cd build
-          LIBRARY_DIR=`spack location -i ${{ matrix.library }}`
+          LIBRARY_DIR=`slocation ${{ matrix.library }}`
           MPI_DIR=`slocation openmpi`
           LIBNAME=${{ matrix.library }}
           cmake -DFIBER_ENABLE_${LIBNAME^^}=ON -DFIBER_FFT_INCLUDE_DIRS="$LIBRARY_DIR/include" -DFIBER_FFT_LIB_DIRS="$LIBRARY_DIR/lib" -DMPI_DIR=$MPI_DIR ..

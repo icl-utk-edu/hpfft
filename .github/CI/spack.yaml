@@ -3,9 +3,9 @@ spack:
   - pkgs:
     - gcc@7.3.0
     - cmake
-    - fftw+mpi ^openmpi
-    - heffte+fftw+cuda cuda_arch=70 ^openmpi
-    - accfft ^openmpi
+    - fftw+mpi
+    - heffte+fftw+cuda cuda_arch=70
+    - accfft
     - openmpi
 
   view: false

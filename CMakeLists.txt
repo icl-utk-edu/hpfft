@@ -45,6 +45,9 @@ else ()
     set ( CMAKE_C_STANDARD 99 )
 endif ()
 
+# To add backend flags and paths use CMake flags such as:
+# CMAKE_EXE_LINKER_FLAGS
+
 #####################
 # Library definitions
 #####################

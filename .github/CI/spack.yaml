@@ -9,7 +9,7 @@ spack:
     - openmpi
 
   view: true
-  concretization: together
+  #concretization: together
   specs:
   - matrix:
     - [$pkgs]

@@ -8,7 +8,7 @@ spack:
     - accfft ^openmpi
     - openmpi
 
-  view: true
+  view: false
   specs:
   - matrix:
     - [$pkgs]

@@ -10,6 +10,7 @@ FFT_LIBS = (
     'heffte',
     'fftw',
     'ffte',
+    'accfft',
 )
 
 

@@ -40,8 +40,7 @@ jobs:
           spack env activate -d .
           spack uninstall -a -y fiber ${{ matrix.library }} || true
           spack add fiber fft=${{ matrix.library }} %gcc@7.3.0
-          spack install
-          slocation fiber
+          spack install fiber
         
       - name: Test with ${{ matrix.library }}
         run: |

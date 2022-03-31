@@ -19,7 +19,7 @@ jobs:
     # Add an element in this strategy matrix for each FFT library we want to test
     strategy:
       matrix:
-        library: [heffte, fftw, accfft]
+        library: [heffte, fftw, accfft, ffte, swfft]
         # library: [heffte, fftw, ffte, 2decomp]
       fail-fast: false
     # Steps represent a sequence of tasks that will be executed as part of the job

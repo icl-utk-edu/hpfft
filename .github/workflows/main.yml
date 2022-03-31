@@ -35,10 +35,12 @@ jobs:
           spack compiler find
           spack unload -a
           spack repo add `pwd`/spack/ || true
-          spack env create -d .
+          #spack env create -d .
+          cp .github/CI/spack.yaml .
           spack env activate -d .
           spack uninstall -a -y fiber ${{ matrix.library }} || true
-          spack install fiber fft=${{ matrix.library }} cuda_arch=70 %gcc@7.3.0
+          spack install
+          spack install fiber fft=${{ matrix.library }} %gcc@7.3.0
           find `spack location -i fiber`
         
       - name: Test with ${{ matrix.library }}

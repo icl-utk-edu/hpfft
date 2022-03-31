@@ -6,7 +6,7 @@ spack:
     - fftw+mpi
     - heffte+fftw+cuda cuda_arch=70
     - accfft
-    - ffte
+    - ffte+mpi
     #- openmpi
 
   concretization: together

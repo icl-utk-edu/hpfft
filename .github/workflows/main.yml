@@ -39,9 +39,9 @@ jobs:
           cp .github/CI/spack.yaml .
           spack env activate -d .
           spack uninstall -a -y fiber ${{ matrix.library }} || true
+          spack add fiber fft=${{ matrix.library }} %gcc@7.3.0
           spack install
-          spack install fiber fft=${{ matrix.library }} %gcc@7.3.0
-          find `spack location -i fiber`
+          slocation fiber
         
       - name: Test with ${{ matrix.library }}
         run: |

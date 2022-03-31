@@ -16,7 +16,7 @@ FFT_LIBS = (
 )
 
 
-class Fiber(CMakePackage, CudaPackage):
+class Fiber(CMakePackage):
     """High Performance Fast Fourier Transform benchmark."""
 
     homepage = "https://fiber.icl.utk.edu/"

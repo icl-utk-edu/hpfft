@@ -31,11 +31,12 @@ class Fiber(CMakePackage):
 
     depends_on('mpi')
 
-    # Iterate over the fftlib variant for simple dependencies
-    for fft in FFT_LIBS:
-        depends_on(fft, when='fft={0}'.format(fft))
-
     depends_on('heffte+fftw+cuda', when='fft=heffte')
+    depends_on('fftw',             when='fft=fftw')
+    depends_on('ffte',             when='fft=ffte')
+    depends_on('accfft',           when='fft=accfft')
+    depends_on('2decomp-fft',      when='fft=2decomp')
+    depends_on('swfft',            when='fft=swfft')
 
     def cmake_args(self):
         args = []

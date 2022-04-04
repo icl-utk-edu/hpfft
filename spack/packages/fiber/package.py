@@ -11,6 +11,7 @@ FFT_LIBS = (
     'fftw',
     'ffte',
     'accfft',
+    '2decomp',
     'swfft',
 )
 

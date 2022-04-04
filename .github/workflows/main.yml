@@ -34,7 +34,6 @@ jobs:
           spack compiler find
           spack unload -a
           spack repo add `pwd`/spack/ || true
-          #spack env create -d .
           cp .github/CI/spack.yaml .
           spack env activate -d .
           spack add fiber fft=${{ matrix.library }} %gcc@7.3.0

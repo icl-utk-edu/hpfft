@@ -8,7 +8,7 @@
 
 
 #if defined(FIBER_ENABLE_ACCFFT)
-#include <accfft.h>
+#include <accfft_c.h>
 
 
 //=================== Initialization (if required) ============================
@@ -25,32 +25,38 @@ void compute_z2z_accfft( int const inbox_low[3], int const inbox_high[3],
                   void const *in, void *out, int *accfft_options, double *timer)
 {
 
-    // Plan creation ...
-    // void *plan;
+    int n[3] = {accfft_options[1], accfft_options[2], accfft_options[3]};
 
+    // Plan creation ...
+    void *plan;
+
+    // -------- Create plan for FORWARD transform ----------
     MPI_Barrier(comm);
     timer[0] = -MPI_Wtime();
 
-    // plan create
+    accfft_create_plan(n, in, out, comm, 2, &plan); // Using flag: ACCFFT_MEASURE=2
 
     MPI_Barrier(comm);
     timer[0] += MPI_Wtime();
+    // --------------------------------------------------------
 
 
+    // ------------- Execute FORWARD transform ----------------
+    heffte_forward_z2z(plan, in, out, Heffte_SCALE_NONE);
 
-    // FFT execution ...
     MPI_Barrier(comm);
     timer[1] = -MPI_Wtime();
 
-    // compute FFT 
+    for (int i=0; i<accfft_options[8]; ++i)
+        accfft_compute(plan, in, out, -1);
 
     MPI_Barrier(comm);
     timer[1] = +MPI_Wtime();
+    // --------------------------------------------------------
+
 
     // Delete plan ...
-
-    printf("Benchmarking AccFFT: Get Complex-to-Complex creating a wrapper within AccFFT \n");
-
+    accfft_destroy_plan_c(plan);
 }    
 
 
@@ -60,6 +66,8 @@ void compute_d2z_accfft( int const inbox_low[3], int const inbox_high[3],
                   MPI_Comm const comm,
                   double const *in, void *out, int *accfft_options, double *timer)
 {
+
+    /*
 
     printf("R2C AccFFT CPU support \n");
 
@@ -95,6 +103,7 @@ void compute_d2z_accfft( int const inbox_low[3], int const inbox_high[3],
     // Delete plan ...
     status = accfft_plan_destroy(plan);
 	accfft_cleanup();
+    */
 }
 
 
@@ -155,5 +164,3 @@ void compute_z2d_accfft( int const inbox_low[3], int const inbox_high[3],
 {}
 
 #endif
-
-#endif  //! FIBER_BACKEND_ACCFFT_H

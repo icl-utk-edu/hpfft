@@ -8,12 +8,39 @@
 
 
 #if defined(FIBER_ENABLE_ACCFFT)
-#include <accfft.h>
+#include <accfft_c.h>
 
 
 //=================== Initialization (if required) ============================
 int init_accfft(int option){
     return(0);
+}
+
+
+void accfft_create_comm_cc(MPI_Comm in_comm, int * c_dims, MPI_Comm *c_comm) {
+
+	int nprocs, procid;
+	MPI_Comm_rank(in_comm, &procid);
+	MPI_Comm_size(in_comm, &nprocs);
+
+    printf("procs %d , procid %d \n", nprocs, procid);
+    printf("%d x %d \n", c_dims[0], c_dims[1]);  
+
+	if (c_dims[0] * c_dims[1] != nprocs) {
+		c_dims[0] = 0;
+		c_dims[1] = 0;
+		MPI_Dims_create(nprocs, 2, c_dims);
+	}
+
+	/* Create Cartesian Communicator */
+	int period[2], reorder;
+	int coord[2];
+	period[0] = 0;
+	period[1] = 0;
+	reorder = 1;
+
+	MPI_Cart_create(in_comm, 2, c_dims, period, reorder, c_comm);
+
 }
 
 
@@ -25,32 +52,76 @@ void compute_z2z_accfft( int const inbox_low[3], int const inbox_high[3],
                   void const *in, void *out, int *accfft_options, double *timer)
 {
 
-    // Plan creation ...
-    // void *plan;
+    int n[3] = {accfft_options[1], accfft_options[2], accfft_options[3]};
+    int c_dims[2] = {accfft_options[5], accfft_options[6]};
 
+
+    // Plan creation ...
+    int status;
+    void *plan;
+
+    // -------- Create plan for FORWARD transform ----------
     MPI_Barrier(comm);
     timer[0] = -MPI_Wtime();
 
-    // plan create
+    accfft_init_c();
+
+	MPI_Comm c_comm;
+    // status = accfft_create_comm_c(comm, c_dims, &c_comm);
+    accfft_create_comm_cc(comm, c_dims, &c_comm);
+
+    switch (accfft_options[4])
+    {
+      case 1:
+        accfft_create_plan(n, in, out, c_comm, 2, &plan); // Using flag: ACCFFT_MEASURE=2
+        break;
+        
+    //   case 2:
+        // accfft_create_plan_gpu(n, in, out, c_comm, 2, &plan); // Using flag: ACCFFT_MEASURE=2
+        // break;
+
+
+    // Add more 1-D backends if they become available
+
+      default:
+        printf("ERROR: Invalid heFFTe backend!\n");
+        break;
+    }
+
 
     MPI_Barrier(comm);
     timer[0] += MPI_Wtime();
+    // --------------------------------------------------------
 
 
+    // ------------- Execute FORWARD transform ----------------
+    if(accfft_options[4] == 1)
+        accfft_compute(plan, (Complex *) in, (Complex *) out, -1);
+    // if(accfft_options[4] == 2)
+        // accfft_compute_gpu(plan, (Complex *) in, (Complex *) out, -1);
 
-    // FFT execution ...
     MPI_Barrier(comm);
     timer[1] = -MPI_Wtime();
 
-    // compute FFT 
+
+    for (int i=0; i<accfft_options[8]; ++i)
+        if(accfft_options[4] == 1)
+            accfft_compute(plan, (Complex *) in, (Complex *) out, -1);
+        // if(accfft_options[4] == 2)
+            // accfft_compute_gpu(plan, (Complex *) in, (Complex *) out, -1);
 
     MPI_Barrier(comm);
     timer[1] = +MPI_Wtime();
+    // --------------------------------------------------------
 
-    // Delete plan ...
 
-    printf("Benchmarking AccFFT: Get Complex-to-Complex creating a wrapper within AccFFT \n");
+    // Delete AccFFT plan
+    if(accfft_options[4] == 1)
+        accfft_destroy_plan_c(plan);
+    // if(accfft_options[4] == 2)
+    //     accfft_destroy_plan_gpu_c(plan);
 
+    printf("done kia \n");
 }    
 
 
@@ -60,6 +131,8 @@ void compute_d2z_accfft( int const inbox_low[3], int const inbox_high[3],
                   MPI_Comm const comm,
                   double const *in, void *out, int *accfft_options, double *timer)
 {
+
+    /*
 
     printf("R2C AccFFT CPU support \n");
 
@@ -95,6 +168,7 @@ void compute_d2z_accfft( int const inbox_low[3], int const inbox_high[3],
     // Delete plan ...
     status = accfft_plan_destroy(plan);
 	accfft_cleanup();
+    */
 }
 
 
@@ -155,5 +229,4 @@ void compute_z2d_accfft( int const inbox_low[3], int const inbox_high[3],
 {}
 
 #endif
-
-#endif  //! FIBER_BACKEND_ACCFFT_H
+#endif

@@ -5,7 +5,7 @@
 macro(fiber_add_benchmark fiber_benchmark)
 
     add_executable(${fiber_benchmark} "${fiber_benchmark}.c")
-    target_link_libraries(${fiber_benchmark} mpi)
+    target_link_libraries(${fiber_benchmark} ${MPI_C_LIBRARIES})
     if (FIBER_ENABLE_CUDA)
         target_link_libraries(${fiber_benchmark} ${CUDA_LIBRARIES})
     endif()

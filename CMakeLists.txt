@@ -106,7 +106,7 @@ link_directories(${FIBER_FFT_LIB_DIRS})
 include_directories(include)
 
 # Location of MPI
-include_directories(${MPI_C_INCLUDE_DIRS}))
+include_directories(${MPI_C_INCLUDE_DIRS})
 link_directories(${MPI_C_LIBRARIES})
 
 #######################

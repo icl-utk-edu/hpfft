@@ -1,3 +1,3 @@
 [submodule "extra/2decompFFT_c_iface"]
-	path = extra/2decompFFT_c_iface
+	path = external/2decompFFT_c_iface
 	url = https://github.com/cayrols/2decompFFT_c_iface.git

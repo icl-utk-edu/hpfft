@@ -29,15 +29,9 @@ algorithms."""
     depends_on('mkl', when='backend=mkl')
     depends_on('fftw', when='backend=fftw3')
 
-    #@property
-    #def build_targets(self):
-    #    return ['-j1']
-
     def edit(self, spec, prefix):
         makefile = FileFilter('src/Makefile')
         makefile.filter('include Makefile.inc', '')
-        #with working_dir('src'):
-        #    touch('Makefile.inc')
 
     def build(self, spec, prefix):
         make_args = ['-j1', # This avoids a race condition in the Makefile

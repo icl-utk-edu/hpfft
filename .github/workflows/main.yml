@@ -20,7 +20,6 @@ jobs:
     strategy:
       matrix:
         library: [heffte, fftw, accfft, ffte, swfft, 2decomp]
-        # library: [heffte, fftw, ffte, 2decomp]
       fail-fast: false
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -46,6 +45,4 @@ jobs:
           source .github/CI/spack_setup.sh
           spack env activate -d .
           spack load fiber fft=${{ matrix.library }}
-          #FIBER_DIR=`spack location -i fiber`
-          #cd build/benchmarks          
           mpirun -n 2 test3D_C2C -lib ${{ matrix.library }} -backend fftw -size 4 4 4 -pgrid 1 2 

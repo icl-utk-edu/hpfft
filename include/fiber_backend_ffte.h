@@ -10,14 +10,16 @@
 
 #if defined(FIBER_ENABLE_FFTE)
 
+#include <fiber_fortran.h>
+
 //=================== Initialization (if required) ============================
 int init_ffte(int option){
     return(0);
 }
 
-extern void pzfft3d_(void const *in, void *out, int *nx, int *ny, int *nz,
+extern void fiber_pzfft3d(void const *in, void *out, int *nx, int *ny, int *nz,
     MPI_Fint fcomm, int *comm_size, int *opt);
-extern void pdzfft3d_(double const *in, void *out, int *nx, int *ny, int *nz,
+extern void fiber_pdzfft3d(double const *in, void *out, int *nx, int *ny, int *nz,
     MPI_Fint fcomm, int *comm_rank, int *comm_size, int *opt);
 
 /* =====================  Complex-to-Complex transform ========================= */
@@ -46,7 +48,7 @@ void compute_z2z_ffte(int const inbox_low[3], int const inbox_high[3],
 
     MPI_Comm_size(comm, &comm_size);
     opt = 0;
-    pzfft3d_(in, out, nd+0, nd+1, nd+2, fcomm, &comm_size, &opt);
+    fiber_pzfft3d(in, out, nd+0, nd+1, nd+2, fcomm, &comm_size, &opt);
 
     MPI_Barrier(comm);
     timer[0] += MPI_Wtime();
@@ -61,7 +63,7 @@ void compute_z2z_ffte(int const inbox_low[3], int const inbox_high[3],
     compute FFT
     */
     opt = 1;
-    pzfft3d_(in, out, nd+0, nd+1, nd+2, fcomm, &comm_size, &opt);
+    fiber_pzfft3d(in, out, nd+0, nd+1, nd+2, fcomm, &comm_size, &opt);
 
     MPI_Barrier(comm);
     timer[1] = +MPI_Wtime();
@@ -101,7 +103,7 @@ void compute_d2z_ffte(int const inbox_low[3], int const inbox_high[3],
     MPI_Comm_rank(comm, &comm_rank);
     MPI_Comm_size(comm, &comm_size);
     opt = 0;
-    pdzfft3d_(in, out, nd+0, nd+1, nd+2, fcomm, &comm_rank, &comm_size, &opt);
+    fiber_pdzfft3d(in, out, nd+0, nd+1, nd+2, fcomm, &comm_rank, &comm_size, &opt);
 
     MPI_Barrier(comm);
     timer[0] += MPI_Wtime();
@@ -116,7 +118,7 @@ void compute_d2z_ffte(int const inbox_low[3], int const inbox_high[3],
     compute FFT
     */
     opt = 1;
-    pdzfft3d_(in, out, nd+0, nd+1, nd+2, fcomm, &comm_rank, &comm_size, &opt);
+    fiber_pdzfft3d(in, out, nd+0, nd+1, nd+2, fcomm, &comm_rank, &comm_size, &opt);
 
     MPI_Barrier(comm);
     timer[1] = +MPI_Wtime();

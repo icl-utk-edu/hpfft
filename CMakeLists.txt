@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
-project("FIBER" VERSION 0.1 LANGUAGES C CXX)
+# Most project code is in C. SWFFT needs C++. 2DECOMP&FFT and FFTE need Fortran
+project("FIBER" VERSION 0.1 LANGUAGES C CXX Fortran)
 
 #################
 # Default Options

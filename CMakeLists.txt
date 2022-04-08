@@ -70,6 +70,8 @@ endif()
 
 if (FIBER_ENABLE_FFTE)
     add_definitions(-DFIBER_ENABLE_FFTE)
+    include(FortranCInterface)
+    FortranCInterface_HEADER(${CMAKE_CURRENT_LIST_DIR}/include/fiber_fortran.h MACRO_NAMESPACE FIBER_FORTRAN_ SYMBOL_NAMESPACE fiber_ SYMBOLS pzfft3d pdzfft3d)
 endif()
 
 if (FIBER_ENABLE_SWFFT)

@@ -1,14 +1,15 @@
 spack:
   definitions:
   - pkgs:
-    - gcc@7.3.0
-    - cmake
-    - fftw
+    - fftw+mpi
     - heffte+fftw+cuda cuda_arch=70
-    - openmpi
+    - accfft
+    - ffte+mpi
+    - swfft
+    - 2decomp-fft
 
-  view: true
   concretization: together
+  view: true
   specs:
   - matrix:
     - [$pkgs]

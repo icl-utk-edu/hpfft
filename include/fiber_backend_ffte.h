@@ -18,9 +18,9 @@ int init_ffte(int option){
 }
 
 extern void fiber_pzfft3d(void const *in, void *out, int *nx, int *ny, int *nz,
-    MPI_Fint fcomm, int *comm_size, int *opt);
+    MPI_Fint *fcomm, int *comm_size, int *opt);
 extern void fiber_pdzfft3d(double const *in, void *out, int *nx, int *ny, int *nz,
-    MPI_Fint fcomm, int *comm_rank, int *comm_size, int *opt);
+    MPI_Fint *fcomm, int *comm_rank, int *comm_size, int *opt);
 
 /* =====================  Complex-to-Complex transform ========================= */
 
@@ -48,7 +48,7 @@ void compute_z2z_ffte(int const inbox_low[3], int const inbox_high[3],
 
     MPI_Comm_size(comm, &comm_size);
     opt = 0;
-    fiber_pzfft3d(in, out, nd+0, nd+1, nd+2, fcomm, &comm_size, &opt);
+    fiber_pzfft3d(in, out, nd+0, nd+1, nd+2, &fcomm, &comm_size, &opt);
 
     MPI_Barrier(comm);
     timer[0] += MPI_Wtime();
@@ -63,7 +63,7 @@ void compute_z2z_ffte(int const inbox_low[3], int const inbox_high[3],
     compute FFT
     */
     opt = 1;
-    fiber_pzfft3d(in, out, nd+0, nd+1, nd+2, fcomm, &comm_size, &opt);
+    fiber_pzfft3d(in, out, nd+0, nd+1, nd+2, &fcomm, &comm_size, &opt);
 
     MPI_Barrier(comm);
     timer[1] = +MPI_Wtime();
@@ -103,7 +103,7 @@ void compute_d2z_ffte(int const inbox_low[3], int const inbox_high[3],
     MPI_Comm_rank(comm, &comm_rank);
     MPI_Comm_size(comm, &comm_size);
     opt = 0;
-    fiber_pdzfft3d(in, out, nd+0, nd+1, nd+2, fcomm, &comm_rank, &comm_size, &opt);
+    fiber_pdzfft3d(in, out, nd+0, nd+1, nd+2, &fcomm, &comm_rank, &comm_size, &opt);
 
     MPI_Barrier(comm);
     timer[0] += MPI_Wtime();
@@ -118,7 +118,7 @@ void compute_d2z_ffte(int const inbox_low[3], int const inbox_high[3],
     compute FFT
     */
     opt = 1;
-    fiber_pdzfft3d(in, out, nd+0, nd+1, nd+2, fcomm, &comm_rank, &comm_size, &opt);
+    fiber_pdzfft3d(in, out, nd+0, nd+1, nd+2, &fcomm, &comm_rank, &comm_size, &opt);
 
     MPI_Barrier(comm);
     timer[1] = +MPI_Wtime();

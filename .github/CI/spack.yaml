@@ -1,6 +1,7 @@
 spack:
   definitions:
   - pkgs:
+    - openmpi
     - fftw+mpi
     - heffte+fftw+cuda cuda_arch=70
     - accfft

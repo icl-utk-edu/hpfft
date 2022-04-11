@@ -17,16 +17,20 @@ typedef struct{
     "                                      -comm a2a/a2av/a2aw/p2p    -reshape pencil/slabs/bricks   -trace   \n";
 
 enum {
- option_fft_op = 0,     // 0
+ option_fft_op,         // 0
  option_nx,             // 1
  option_ny,             // 2
  option_nz,             // 3
  option_backend,        // 4
  option_grid_p,         // 5
  option_grid_q,         // 6
- // No 7 for now, reserved for third grid dimension
+ option_grid_r,         // 7
  option_niter,          // 8
- option_physical = 13,  // 13
+ option_A,              // 9,  unasigned
+ option_B,              // 10, unasigned
+ option_C,              // 11, unasigned
+ option_D,              // 12, unasigned
+ option_physical,       // 13
 };
 
 const int n_options = 14;

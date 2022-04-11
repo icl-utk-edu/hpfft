@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.10)
 
 project("FFTE" VERSION 7.0 LANGUAGES Fortran)
 

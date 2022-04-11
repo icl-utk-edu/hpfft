@@ -122,6 +122,7 @@ void compute_z2z_accfft( int const inbox_low[3], int const inbox_high[3],
     //     accfft_destroy_plan_gpu_c(plan);
 
     printf("done kia \n");
+
 }    
 
 

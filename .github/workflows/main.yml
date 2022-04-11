@@ -37,7 +37,7 @@ jobs:
           cp .github/CI/spack.yaml .
           spack env activate -d .
           echo Begin uninstall
-          spack uninstall -a -y fiber ${{ matrix.library }} || true
+          spack uninstall -a -y --dependents ${{ matrix.library }} || true
           echo Finished uninstall
           spack add fiber fft=${{ matrix.library }} %gcc@7.3.0
           spack install

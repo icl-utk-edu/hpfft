@@ -39,6 +39,7 @@ jobs:
           spack add fiber fft=${{ matrix.library }} %gcc@7.3.0
           spack concretize
           spack uninstall -a -y --dependents ${{ matrix.library }} || true
+          spack add fiber fft=${{ matrix.library }} %gcc@7.3.0
           spack install
           spack load fiber fft=${{ matrix.library }}
           mpirun -n 2 test3D_C2C -lib ${{ matrix.library }} -backend fftw -size 4 4 4 -pgrid 1 2 

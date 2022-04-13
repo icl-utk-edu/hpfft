@@ -49,10 +49,10 @@ class Fiber(CMakePackage):
         return args
 
     @run_after('install')
-    def install_benchmarks(self, spec, prefix):
-        mkdirp(prefix.bin)
+    def install_benchmarks(self):
+        mkdirp(self.prefix.bin)
         # Copy the generated binaries to the installation prefix
         with working_dir(os.path.join(self.build_directory, 'benchmarks')):
             for f in os.listdir('.'):
                 if os.path.isfile(f) and os.access(f, os.X_OK):
-                    install(f, prefix.bin)
+                    install(f, self.prefix.bin)

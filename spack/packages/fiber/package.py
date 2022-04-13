@@ -48,12 +48,11 @@ class Fiber(CMakePackage):
             #args.extend("-DFIBER_FFT_LIB_DIRS={0}".format(self.spec[fft].prefix.lib))
         return args
 
-    def install(self, spec, prefix):
-        mkdirp(prefix.lib)
-        mkdirp(prefix.bin)
+    @run_after('install')
+    def install_benchmarks(self):
+        mkdirp(self.prefix.bin)
         # Copy the generated binaries to the installation prefix
         with working_dir(os.path.join(self.build_directory, 'benchmarks')):
-            install('../libfiber.so', prefix.lib)
             for f in os.listdir('.'):
                 if os.path.isfile(f) and os.access(f, os.X_OK):
-                    install(f, prefix.bin)
+                    install(f, self.prefix.bin)

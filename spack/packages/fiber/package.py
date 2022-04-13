@@ -49,6 +49,7 @@ class Fiber(CMakePackage):
         return args
 
     def install(self, spec, prefix):
+        make('install')
         mkdirp(prefix.lib)
         mkdirp(prefix.bin)
         # Copy the generated binaries to the installation prefix

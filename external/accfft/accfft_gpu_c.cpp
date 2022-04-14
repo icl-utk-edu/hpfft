@@ -19,10 +19,10 @@
     Create AccFFT plan GPU-case
 ------------------------------------------------------------------------- */
 
-void accfft_create_plan_gpu(int * n, Complex * data, Complex * data_out,
+void accfft_create_plan_gpu(int * n, double * data, double * data_out,
 		MPI_Comm c_comm, unsigned flags, void ** plan)
 {
-    accfft_plan_gpu * ptr = accfft_plan_dft_3d_c2c_gpu(n, data, data_out, c_comm, ACCFFT_MEASURE);
+    accfft_plan_gpu * ptr = accfft_plan_dft_3d_c2c_gpu(n, (Complex *) data, (Complex *) data_out, c_comm, ACCFFT_MEASURE);
     *plan = (void *) ptr;
 }
 
@@ -30,10 +30,10 @@ void accfft_create_plan_gpu(int * n, Complex * data, Complex * data_out,
     Execute AccFFT plan GPU-case
 ------------------------------------------------------------------------- */
 
-void accfft_compute_gpu(void * ptr, Complex * data, Complex * data_out, int flag)
+void accfft_compute_gpu(void * ptr, double * data, double * data_out, int flag)
 {
     accfft_plan_gpu * plan = (accfft_plan_gpu *) ptr;
-    accfft_execute_c2c_gpu(plan, flag, data, data_out);
+    accfft_execute_c2c_gpu(plan, flag, (Complex *) data, (Complex *) data_out);
 }
 
 

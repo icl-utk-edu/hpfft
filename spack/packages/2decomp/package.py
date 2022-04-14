@@ -7,7 +7,7 @@ import os
 from spack import *
 
 
-class _2decompFft(MakefilePackage):
+class _2decomp(MakefilePackage):
     """The 2DECOMP&FFT library is a software framework in Fortran to build
 large-scale parallel applications. It is designed for applications using
 three-dimensional structured mesh and spatially implicit numerical

@@ -43,8 +43,9 @@ jobs:
           spack add $SPEC
           spack stage $SPEC
           STAGE=`spack location -s $SPEC`
-          rm -vrf $STAGE/*
-          cp -va * $STAGE/
+          rm -vrf $STAGE/spack-src
+          mkdir $STAGE/spack-src
+          cp -va . $STAGE/spack-src
           spack install --dont-restage
           spack load $SPEC
           grep -ir pzfft `spack location -i fiber`

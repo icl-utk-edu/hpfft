@@ -27,9 +27,11 @@ void compute_z2z_heffte( int const inbox_low[3], int const inbox_high[3],
     heffte_plan plan;
 
     MPI_Barrier(comm);
-    timer[0] = -MPI_Wtime();
+    double t;
     int status;
 
+    t = -MPI_Wtime();
+    
     switch (heffte_options[4])
     {
     //   case 0:
@@ -61,36 +63,46 @@ void compute_z2z_heffte( int const inbox_low[3], int const inbox_high[3],
         printf("ERROR: Invalid heFFTe backend!\n");
         break;
     }
+    t += MPI_Wtime();
 
     MPI_Barrier(comm);
-    timer[0] = +MPI_Wtime();
+    MPI_Reduce(&t, &timer[0], 1, MPI_DOUBLE, MPI_MAX, 0, comm);
+
+    int workspace_size = heffte_size_workspace(plan);
+    // printf("Workspace size = %d \n", heffte_size_workspace(plan));
+    double *workspace = malloc(2 * workspace_size * sizeof(double));
 
     if (status != Heffte_SUCCESS){
         printf("Failed at heffte_plan_create() with error code: %d\n", status);
         MPI_Abort(comm, 1);
     }
 
-    // Warmup
     MPI_Barrier(comm);
-    heffte_forward_z2z(plan, in, out, Heffte_SCALE_NONE);
+    // heffte_forward_z2z(plan, in, out, Heffte_SCALE_NONE);
+    heffte_forward_z2z_buffered(plan, in, out, workspace, Heffte_SCALE_NONE);
 
     // FFT execution
-    MPI_Barrier(comm);
-    timer[1] = -MPI_Wtime();
-    // compute
-
+    t = -MPI_Wtime();
+    
     if(heffte_options[0] == 0){
+        // printf("heFFTe Forward Transform \n");
         for (int i=0; i<heffte_options[8]; ++i){
-            heffte_forward_z2z(plan, in, in, Heffte_SCALE_NONE);
-            printf("iteration %d \n", i);
-             }
-    }
-    else if(heffte_options[0] == 1){
-        heffte_backward_z2z(plan, in, out, Heffte_SCALE_NONE);
+            // heffte_forward_z2z(plan, in, in, Heffte_SCALE_NONE);
+            heffte_forward_z2z_buffered(plan, in, out, workspace, Heffte_SCALE_NONE);
+            // printf("Iteration %d, timing %g \n", i, MPI_Wtime()+t);
+        }
+        t += MPI_Wtime();
+
+        MPI_Barrier(comm);
+        MPI_Reduce(&t, &timer[1], 1, MPI_DOUBLE, MPI_MAX, 0, comm);
+        // out = in;
     }
 
-    MPI_Barrier(comm);
-    timer[1] = +MPI_Wtime();
+    if(heffte_options[0] == 1){
+        // printf("heFFTe Backward Transform \n");
+        // heffte_backward_z2z(plan, in, out, Heffte_SCALE_NONE);
+        heffte_backward_z2z_buffered(plan, in, out, workspace, Heffte_SCALE_NONE);
+    }    
 
     status = heffte_plan_destroy(plan);
     if (status != Heffte_SUCCESS){

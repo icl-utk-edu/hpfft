@@ -28,6 +28,7 @@ jobs:
         
       - name: Build with ${{ matrix.library }}
         run: |
+          SPEC=fiber fft=${{ matrix.library }} %gcc@7.3.0
           rm -rf ~/.spack
           source .github/CI/spack_setup.sh
           sload gcc@7.3.0%gcc@4.8.5
@@ -36,12 +37,16 @@ jobs:
           spack repo add `pwd`/spack/ || true
           cp .github/CI/spack.yaml .
           spack env activate -d .
-          spack add fiber fft=${{ matrix.library }} %gcc@7.3.0
+          spack add $SPEC
           spack concretize
           spack uninstall -a -y --dependents ${{ matrix.library }} || true
-          spack add fiber fft=${{ matrix.library }} %gcc@7.3.0
-          spack install
-          spack load fiber fft=${{ matrix.library }}
+          spack add $SPEC
+          spack stage $SPEC
+          STAGE=`spack location -s $SPEC`
+          rm -rf $STAGE/*
+          cp -a * $STAGE/
+          spack install --dont-restage
+          spack load $SPEC
           grep -ir pzfft `spack location -i fiber`
           mpirun -n 2 test3D_C2C -lib ${{ matrix.library }} -backend fftw -size 4 4 4 -pgrid 1 2 
         

@@ -30,10 +30,16 @@ extern "C" {
 int accfft_init_c();
 
 /* ----------------------------------------------------------------------
+    Create AccFFT Communicator
+------------------------------------------------------------------------- */
+
+int accfft_create_comm_c(MPI_Comm in_comm, int * c_dims, MPI_Comm *c_comm);
+
+/* ----------------------------------------------------------------------
     Create AccFFT plan CPU-case
 ------------------------------------------------------------------------- */
 
-void accfft_create_plan(int * n, Complex * data, Complex * data_out,
+void accfft_create_plan(int * n, double * data, double * data_out,
 		MPI_Comm c_comm, unsigned flags, void ** plan);
 
 
@@ -41,7 +47,7 @@ void accfft_create_plan(int * n, Complex * data, Complex * data_out,
     Create AccFFT plan GPU-case
 ------------------------------------------------------------------------- */
 
-void accfft_plan_dft_3d_c2c_gpu(int * n, Complex * data, Complex * data_out,
+void accfft_create_plan_gpu(int * n, double * data, double * data_out,
 		MPI_Comm c_comm, unsigned flags, void ** plan);
 
 
@@ -50,14 +56,14 @@ void accfft_plan_dft_3d_c2c_gpu(int * n, Complex * data, Complex * data_out,
     Execute AccFFT plan CPU-case
 ------------------------------------------------------------------------- */
 
-void accfft_compute(void * ptr, Complex * data, Complex * data_out, int flag);
+void accfft_compute(void * ptr, double * data, double * data_out, int flag);
 
 
 /* ----------------------------------------------------------------------
     Execute AccFFT plan GPU-case
 ------------------------------------------------------------------------- */
 
-void accfft_compute_gpu(void * ptr, Complex * data, Complex * data_out, int flag);
+void accfft_compute_gpu(void * ptr, double * data, double * data_out, int flag);
 
 
 

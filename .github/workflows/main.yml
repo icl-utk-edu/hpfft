@@ -28,7 +28,7 @@ jobs:
         
       - name: Build with ${{ matrix.library }}
         run: |
-          SPEC=fiber fft=${{ matrix.library }} %gcc@7.3.0
+          SPEC="fiber fft=${{ matrix.library }} %gcc@7.3.0"
           rm -rf ~/.spack
           source .github/CI/spack_setup.sh
           sload gcc@7.3.0%gcc@4.8.5

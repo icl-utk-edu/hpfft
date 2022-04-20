@@ -46,7 +46,7 @@ jobs:
           FFT_DIR=`spack location -i ${{ matrix.library }}`
           FFTW_DIR=`spack location -i fftw`
           export CPATH=$FFT_DIR/include:$FFTW_DIR/include
-          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$FFT_DIR/lib:$FFTW_DIR/lib
+          export LIBRARY_PATH=$FFT_DIR/lib:$FFTW_DIR/lib
           MPI_DIR=`spack location -i openmpi`
           LIBNAME=${{ matrix.library }}
           cmake -DFIBER_ENABLE_${LIBNAME^^}=ON -DMPI_DIR=$MPI_DIR ..

@@ -4,7 +4,7 @@ name: CI
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ master, gragghia/ci ]
+    branches: [ 'master', 'gragghia/*' ]
   pull_request:
     branches: [ master ]
 

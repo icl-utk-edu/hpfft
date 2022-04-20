@@ -41,7 +41,7 @@ jobs:
           spack install
           spack load
           # Now build fiber
-          spack load --first gcc cmake cuda openmpi ${{ matrix.library }}
+          spack load --first gcc cmake cuda openmpi fftw ${{ matrix.library }}
           mkdir build && cd build
           LIBRARY_DIR=`spack location -i ${{ matrix.library }}`
           MPI_DIR=`spack location -i openmpi`

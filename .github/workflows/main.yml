@@ -45,11 +45,11 @@ jobs:
           mkdir build && cd build
           FFT_DIR=`spack location -i ${{ matrix.library }}`
           FFTW_DIR=`spack location -i fftw`
-          INC_DIR=$FFT_DIR/include:$FFTW_DIR/include
-          LIB_DIR=$FFT_DIR/lib:$FFTW_DIR/lib
+          export CPATH=$FFT_DIR/include:$FFTW_DIR/include
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$FFT_DIR/lib:$FFTW_DIR/lib
           MPI_DIR=`spack location -i openmpi`
           LIBNAME=${{ matrix.library }}
-          cmake -DFIBER_ENABLE_${LIBNAME^^}=ON -DFIBER_FFT_INCLUDE_DIRS=$INC_DIR -DFIBER_FFT_LIB_DIRS=$LIB_DIR -DMPI_DIR=$MPI_DIR ..
+          cmake -DFIBER_ENABLE_${LIBNAME^^}=ON -DMPI_DIR=$MPI_DIR ..
           make VERBOSE=1
           # Run the tests
           cd benchmarks

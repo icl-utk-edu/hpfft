@@ -27,6 +27,9 @@ class Accfft(CMakePackage, CudaPackage):
     # fix error [-Wc++11-narrowing]
     patch('fix_narrowing_error.patch')
 
+    # Add C interface
+    patch('c_interface.patch')
+
     parallel = False
 
     def cmake_args(self):

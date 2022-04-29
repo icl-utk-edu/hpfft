@@ -4,7 +4,7 @@ name: CI
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ master, gragghia/ci ]
+    branches: [ 'master', 'gragghia/*' ]
   pull_request:
     branches: [ master ]
 
@@ -41,12 +41,15 @@ jobs:
           spack install
           spack load
           # Now build fiber
-          spack load --first gcc cmake cuda openmpi ${{ matrix.library }}
+          spack load --first gcc cmake cuda openmpi fftw ${{ matrix.library }}
           mkdir build && cd build
-          LIBRARY_DIR=`spack location -i ${{ matrix.library }}`
+          FFT_DIR=`spack location -i ${{ matrix.library }}`
+          FFTW_DIR=`spack location -i fftw`
+          export CPATH=$FFT_DIR/include:$FFTW_DIR/include
+          export LIBRARY_PATH=$FFT_DIR/lib:$FFTW_DIR/lib
           MPI_DIR=`spack location -i openmpi`
           LIBNAME=${{ matrix.library }}
-          cmake -DFIBER_ENABLE_${LIBNAME^^}=ON -DFIBER_FFT_INCLUDE_DIRS="$LIBRARY_DIR/include" -DFIBER_FFT_LIB_DIRS="$LIBRARY_DIR/lib" -DMPI_DIR=$MPI_DIR ..
+          cmake -DFIBER_ENABLE_${LIBNAME^^}=ON -DMPI_DIR=$MPI_DIR ..
           make VERBOSE=1
           # Run the tests
           cd benchmarks

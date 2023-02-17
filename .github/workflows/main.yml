@@ -20,6 +20,7 @@ jobs:
     strategy:
       matrix:
         library: [heffte, fftw, accfft, ffte, swfft, 2decomp]
+        mpi: [openmpi, intel-oneapi-mpi]
       fail-fast: false
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -41,13 +42,13 @@ jobs:
           spack install
           spack load
           # Now build fiber
-          spack load --first gcc cmake cuda openmpi fftw ${{ matrix.library }}
+          spack load --first gcc cmake cuda ${{ matrix.mpi }} fftw ${{ matrix.library }}
           mkdir build && cd build
           FFT_DIR=`spack location -i ${{ matrix.library }}`
           FFTW_DIR=`spack location -i fftw`
           export CPATH=$FFT_DIR/include:$FFTW_DIR/include
           export LIBRARY_PATH=$FFT_DIR/lib:$FFTW_DIR/lib
-          MPI_DIR=`spack location -i openmpi`
+          MPI_DIR=`spack location -i ${{ matrix.mpi }}`
           LIBNAME=${{ matrix.library }}
           cmake -DFIBER_ENABLE_${LIBNAME^^}=ON -DMPI_DIR=$MPI_DIR ..
           make VERBOSE=1

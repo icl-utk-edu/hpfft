@@ -29,9 +29,10 @@ jobs:
         
       - name: Build with ${{ matrix.library }}
         run: |
+          export HOME=`pwd`
           rm -rf ~/.spack
           source .github/CI/spack_setup.sh
-          sload gcc@7.3.0%gcc@4.8.5
+          sload gcc@7.3.0
           spack compiler find
           spack unload -a
           spack repo add `pwd`/spack/ || true

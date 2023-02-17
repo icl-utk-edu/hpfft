@@ -11,7 +11,8 @@ spack:
     - swfft
     - 2decomp
 
-  concretization: together
+  concretizer:
+    unify: true
   view: true
   specs:
   - matrix:

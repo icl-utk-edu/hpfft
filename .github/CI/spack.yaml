@@ -4,6 +4,7 @@ spack:
     - gcc@7.3.0
     - cmake
     - openmpi
+    - intel-oneapi-mpi
     - fftw+mpi
     - heffte+fftw+cuda cuda_arch=70
     - accfft

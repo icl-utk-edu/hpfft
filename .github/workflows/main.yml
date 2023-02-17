@@ -29,7 +29,7 @@ jobs:
         
       - name: Build with ${{ matrix.library }}
         run: |
-          set -e
+          set +x
           export HOME=`pwd`
           git clone https://github.com/spack/spack spack_upstream || true
           source spack_upstream/share/spack/setup-env.sh

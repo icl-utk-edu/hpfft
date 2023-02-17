@@ -13,12 +13,12 @@ large-scale parallel applications. It is designed for applications using
 three-dimensional structured mesh and spatially implicit numerical
 algorithms."""
 
-    homepage = "http://www.2decomp.org/"
-    url      = "http://www.2decomp.org/download/2decomp_fft-1.5.847.tar.gz"
+    #homepage = "http://www.2decomp.org/"
+    homepage = "https://github.com/certik/2decomp_fft"
 
     maintainers = ['G-Ragghianti']
 
-    version('1.5.847', sha256='b137d7cf9b771de0a174d1e6c4ff0e48b4a84b51ff6c62140b4f522092e6784f')
+    version('1.5.847', git="https://github.com/certik/2decomp_fft")
 
     variant(
         'backend', default='generic', description='FFT backend',

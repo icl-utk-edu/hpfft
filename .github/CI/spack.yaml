@@ -18,4 +18,3 @@ spack:
   - matrix:
     - [$pkgs]
     - ['%gcc@7.3.0']
-    - [arch=x86_64 os=centos7]

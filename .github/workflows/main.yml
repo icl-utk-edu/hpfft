@@ -29,6 +29,8 @@ jobs:
         
       - name: Build with ${{ matrix.library }}
         run: |
+          source /etc/profile
+          shopt -s expand_aliases
           set +x
           export HOME=`pwd`
           git clone https://github.com/spack/spack spack_upstream || true

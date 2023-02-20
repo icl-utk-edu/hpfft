@@ -10,9 +10,10 @@ trap 'echo "# $BASH_COMMAND"' DEBUG
 shopt -s expand_aliases
 
 # Set up dependencies with spack
+OLDHOME=$HOME
 export HOME=`pwd`
-git clone https://github.com/spack/spack ~/spack || true
-source ~/spack/share/spack/setup-env.sh
+git clone https://github.com/spack/spack $OLDHOME/spack || true
+source $OLDHOME/spack/share/spack/setup-env.sh
 module load gcc@7
 spack compiler find
 spack repo add `pwd`/spack/ || true

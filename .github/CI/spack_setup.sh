@@ -1,7 +1,7 @@
 # This file should be "sourced" into your environment
 # to set up the spack repository
 
-DIR=/home/github/spack
+DIR=$HOME/spack
 
 git clone https://github.com/spack/spack $DIR || true
 

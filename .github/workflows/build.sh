@@ -16,8 +16,8 @@ module load gcc@7.3.0
 spack compiler find
 spack repo add `pwd`/spack/ || true
 spack uninstall -a -y --dependents $FFT || true
-spack install --fail-fast gcc cmake cuda $MPI fftw $FFT
-spack load --first gcc cmake cuda $MPI fftw $FFT
+spack install --fail-fast cmake cuda $MPI fftw $FFT
+spack load --first cmake cuda $MPI fftw $FFT
 mkdir build && cd build
 FFT_DIR=`spack location -i $MPI`
 FFTW_DIR=`spack location -i fftw`

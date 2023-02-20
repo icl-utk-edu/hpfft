@@ -18,36 +18,5 @@ jobs:
     runs-on: gpu_nvidia
     steps:
       - uses: actions/checkout@v3
-        
-      - name: Build with ${{ matrix.library }}
-        run: |
-          source /etc/profile
-          shopt -s expand_aliases
-          set +x
-          export HOME=`pwd`
-          git clone https://github.com/spack/spack spack_upstream || true
-          source spack_upstream/share/spack/setup-env.sh
-          module load gcc@7.3.0
-          spack compiler find
-          spack repo add `pwd`/spack/ || true
-          cp .github/CI/spack.yaml .
-          spack env activate -d .
-          spack concretize
-          spack uninstall -a -y --dependents ${{ matrix.library }} || true
-          spack install
-          #spack load
-          # Now build fiber
-          spack load --first gcc cmake cuda ${{ matrix.mpi }} fftw ${{ matrix.library }}
-          mkdir build && cd build
-          FFT_DIR=`spack location -i ${{ matrix.library }}`
-          FFTW_DIR=`spack location -i fftw`
-          export CPATH=$FFT_DIR/include:$FFTW_DIR/include
-          export LIBRARY_PATH=$FFT_DIR/lib:$FFTW_DIR/lib
-          MPI_DIR=`spack location -i ${{ matrix.mpi }}`
-          LIBNAME=${{ matrix.library }}
-          cmake -DFIBER_ENABLE_${LIBNAME^^}=ON -DMPI_DIR=$MPI_DIR ..
-          make VERBOSE=1
-          # Run the tests
-          cd benchmarks
-          mpirun -n 2 test3D_C2C -lib ${{ matrix.library }} -backend fftw -size 4 4 4 -pgrid 1 2 
-        
+      - name: Build with ${{ matrix.library }} ${{matrix.mpi}}
+        run: .github/workflows/configure.sh ${{matrix.mpi}} ${{matrix.library}}

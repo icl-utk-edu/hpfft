@@ -9,17 +9,20 @@ set -e
 trap 'echo "# $BASH_COMMAND"' DEBUG
 shopt -s expand_aliases
 
+# Set up dependencies with spack
 export HOME=`pwd`
-git clone https://github.com/spack/spack spack_upstream || true
-source spack_upstream/share/spack/setup-env.sh
-module load gcc@7.3.0
+git clone https://github.com/spack/spack ~/spack || true
+source ~/spack/share/spack/setup-env.sh
+module load gcc@7
 spack compiler find
 spack repo add `pwd`/spack/ || true
 spack uninstall -a -y --dependents $FFT || true
 spack env activate --temp
-spack add cmake cuda $MPI fftw $FFT
+spack add cmake cuda fftw $MPI $FFT
 spack install --fail-fast
-spack load --first cmake cuda $MPI fftw $FFT
+spack load --first cmake cuda fftw $MPI $FFT
+
+# Build the project
 mkdir build && cd build
 FFT_DIR=`spack location -i $MPI`
 FFTW_DIR=`spack location -i fftw`
@@ -29,6 +32,8 @@ MPI_DIR=`spack location -i $MPI`
 LIBNAME=$FFT
 cmake -DFIBER_ENABLE_${LIBNAME^^}=ON -DMPI_DIR=$MPI_DIR ..
 make VERBOSE=1
+
 # Run the tests
 cd benchmarks
 mpirun -n 2 test3D_C2C -lib $FFT -backend fftw -size 4 4 4 -pgrid 1 2
+

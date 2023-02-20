@@ -12,7 +12,7 @@ shopt -s expand_aliases
 export HOME=`pwd`
 git clone https://github.com/spack/spack spack_upstream || true
 source spack_upstream/share/spack/setup-env.sh
-module load gcc@7.3.0
+module load gcc@7
 spack compiler find
 spack repo add `pwd`/spack/ || true
 spack uninstall -a -y --dependents $FFT || true

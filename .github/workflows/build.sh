@@ -1,5 +1,8 @@
 #!/bin/bash --login
 
+env
+exit
+
 MPI=$1
 FFT=$2
 

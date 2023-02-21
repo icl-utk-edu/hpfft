@@ -13,7 +13,8 @@ jobs:
     strategy:
       matrix:
         library: [heffte, fftw, accfft, ffte, swfft, 2decomp]
-        mpi: [openmpi, intel-oneapi-mpi]
+        mpi: [openmpi]
+#        mpi: [openmpi, intel-oneapi-mpi]
       fail-fast: false
     runs-on: gpu_nvidia
     steps:

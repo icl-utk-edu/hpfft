@@ -1,15 +1,15 @@
 spack:
   specs:
-    - gcc@7.3.0
-    - cmake
-    - openmpi
-    - intel-oneapi-mpi
-    - fftw+mpi
-    - heffte+fftw+cuda cuda_arch=70
-    - accfft
-    - ffte+mpi
-    - swfft
-    - 2decomp
+  - gcc@7.3.0
+  - cmake
+  - openmpi
+  - intel-oneapi-mpi
+  - fftw+mpi
+  - heffte+fftw+cuda cuda_arch=70
+  - accfft
+  - ffte+mpi
+  - swfft
+  - 2decomp
   concretizer:
     unify: when_possible
   view: false

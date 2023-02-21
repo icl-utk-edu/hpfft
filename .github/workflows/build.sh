@@ -13,15 +13,14 @@ shopt -s expand_aliases
 OLDHOME=$HOME
 export HOME=`pwd`
 git clone https://github.com/spack/spack $OLDHOME/spack || true
-#cp spack/packages.yaml $OLDHOME/spack/etc/spack/
+cp spack/packages.yaml $OLDHOME/spack/etc/spack/
 source $OLDHOME/spack/share/spack/setup-env.sh
 module load gcc@7
 spack compiler find
 spack repo add `pwd`/spack/ || true
 spack uninstall -a -y --dependents $FFT || true
-spack env activate -d .github/CI
-#spack add cmake cuda fftw $MPI $FFT
-spack install --fail-fast cmake cuda fftw $MPI $FFT
+spack env activate --temp
+spack install --add --fail-fast cmake cuda fftw $MPI $FFT
 spack load --first cmake cuda fftw $MPI $FFT
 
 # Build the project

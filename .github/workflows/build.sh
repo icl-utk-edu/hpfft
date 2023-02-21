@@ -21,7 +21,7 @@ spack repo add `pwd`/spack/ || true
 spack uninstall -a -y --dependents $FFT || true
 spack env activate --temp
 spack add cmake cuda fftw $MPI $FFT
-spack install --fail-fast
+spack install --fail-fast --fresh
 spack find -v
 spack load
 

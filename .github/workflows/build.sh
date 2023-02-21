@@ -38,5 +38,5 @@ make VERBOSE=1
 # Run the tests
 cd benchmarks
 ldd test3D_C2C
-mpirun -n 2 test3D_C2C -lib $FFT -backend fftw -size 4 4 4 -pgrid 1 2
+mpirun -n 2 ./test3D_C2C -lib $FFT -backend fftw -size 4 4 4 -pgrid 1 2
 

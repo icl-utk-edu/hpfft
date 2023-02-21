@@ -20,8 +20,9 @@ spack compiler find
 spack repo add `pwd`/spack/ || true
 spack uninstall -a -y --dependents $FFT || true
 spack env activate --temp
-spack install --add --fail-fast cmake cuda fftw $MPI $FFT
-spack load --first cmake cuda fftw $MPI $FFT
+spack add cmake cuda fftw $MPI $FFT
+spack install --fail-fast
+spack load
 
 # Build the project
 mkdir -p build && cd build

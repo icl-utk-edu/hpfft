@@ -22,6 +22,7 @@ spack uninstall -a -y --dependents $FFT || true
 spack env activate --temp
 spack add cmake cuda fftw $MPI $FFT
 spack install --fail-fast
+spack find -v
 spack load
 
 # Build the project

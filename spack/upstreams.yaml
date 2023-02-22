@@ -1,0 +1,4 @@
+upstreams:
+  system-spack-instance:
+    install_tree: /spack/opt/spack
+

@@ -19,13 +19,9 @@ env
 
 # Build the project
 mkdir -p build && cd build
-varname=${FFT^^}_ROOT
-echo varname=$varname
-FFT_DIR=${!varname}
-echo FFT_DIR=$FFT_DIR
-FFTW_DIR=$FFTW_ROOT
-varname=${MPI^^}_ROOT
-MPI_DIR=${!varname}
+FFT_DIR=`spack location -i $FFT`
+FFTW_DIR=`spack location -i fftw`
+MPI_DIR=`spack location -i $MPI`
 export CPATH=$FFT_DIR/include:$FFTW_DIR/include:$MPI_DIR/include
 echo CPATH=$FFT_DIR/include:$FFTW_DIR/include:$MPI_DIR/include
 export LIBRARY_PATH=$FFT_DIR/lib:$FFTW_DIR/lib:$MPI_DIR/lib

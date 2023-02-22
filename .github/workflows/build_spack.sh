@@ -17,8 +17,8 @@ module load gcc@7
 spack compiler find
 spack repo add `pwd`/spack/ || true
 spack uninstall -a -y --dependents $FFT fiber || true
-spack install --fresh cmake fftw
-spack dev-build --fresh fiber@master fft=$FFT ^$MPI
+spack install --fresh cmake fftw %gcc@7
+spack dev-build --fresh fiber@master fft=$FFT ^$MPI %gcc@7
 
 # Run the tests
 spack load fiber

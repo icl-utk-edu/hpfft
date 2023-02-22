@@ -9,6 +9,10 @@ set -e
 trap 'echo "# $BASH_COMMAND"' DEBUG
 shopt -s expand_aliases
 
+source spack0/share/spack/setup-env.sh
+module avail
+exit
+
 # Set up dependencies with spack
 OLDHOME=$HOME
 export HOME=`pwd`

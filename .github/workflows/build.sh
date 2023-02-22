@@ -19,9 +19,9 @@ env
 
 # Build the project
 mkdir -p build && cd build
-FFT_DIR=`spack location -i $FFT`
-#FFTW_DIR=`spack location -i fftw`
-MPI_DIR=`spack location -i $MPI`
+FFT_DIR=`spack location -i $FFT %$COMPILER`
+#FFTW_DIR=`spack location -i fftw %$COMPILER`
+MPI_DIR=`spack location -i $MPI %$COMPILER`
 export CPATH=$FFT_DIR/include:$FFTW_DIR/include:$MPI_DIR/include
 echo CPATH=$FFT_DIR/include:$FFTW_DIR/include:$MPI_DIR/include
 export LIBRARY_PATH=$FFT_DIR/lib:$FFTW_DIR/lib:$MPI_DIR/lib

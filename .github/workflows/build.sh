@@ -11,8 +11,7 @@ shopt -s expand_aliases
 
 source ../spack/share/spack/setup-env.sh
 module avail
-module load --first cmake fftw $MPI gcc@7
-module load --first $FFT
+module load cmake fftw $MPI gcc@7 $FFT
 
 # Build the project
 mkdir -p build && cd build

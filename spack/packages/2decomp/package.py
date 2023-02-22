@@ -49,7 +49,7 @@ algorithms."""
             f90flags += ' -I{0}'.format(spec['mkl'].prefix.include)
             make_args.append('MKL_PATH={0}/mkl'.format(spec['mkl'].prefix))
         make_args.append(f90flags)
-        mkdir('include')
+        mkdir('-p', 'include')
         make('lib', *make_args)
 
     def install(self, spec, prefix):

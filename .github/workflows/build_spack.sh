@@ -11,7 +11,7 @@ shopt -s expand_aliases
 
 export HOME=`pwd`
 git clone https://github.com/spack/spack spack0 || true
-cp spack/packages.yaml spack0/spack/etc/spack/
+cp spack/packages.yaml spack0/etc/spack/
 source spack0/share/spack/setup-env.sh
 module load gcc@7
 spack compiler find

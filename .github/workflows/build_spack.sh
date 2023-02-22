@@ -19,7 +19,7 @@ spack compiler find
 spack repo add `pwd`/spack/ || true
 spack uninstall -a -y --dependents $FFT || true
 spack uninstall -a -y --dependents fiber || true
-spack install --fresh cmake fftw %$COMPILER
+spack install --fresh cmake %$COMPILER
 spack dev-build --fresh fiber@master fft=$FFT ^$MPI %$COMPILER
 
 # Run the tests

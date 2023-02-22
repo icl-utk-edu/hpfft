@@ -1,0 +1,14 @@
+modules:
+  default:
+    enable:
+    - tcl
+    tcl:
+      hash_length: 6
+      naming_scheme: ${PACKAGE}/${VERSION}/${COMPILERNAME}-${COMPILERVER}
+      all:
+        conflict:
+          - '${PACKAGE}'
+        environment:
+          set:
+            '${PACKAGE}_ROOT': '${PREFIX}'
+

@@ -11,13 +11,13 @@ shopt -s expand_aliases
 
 export HOME=`pwd`
 git clone https://github.com/spack/spack ../spack || true
-cp spack/packages.yaml spack/upstreams.yaml ../spack/etc/spack/
+cp spack/modules.yaml spack/packages.yaml spack/upstreams.yaml ../spack/etc/spack/
 source ../spack/share/spack/setup-env.sh
 module load gcc@7
 spack compiler find
 spack repo add `pwd`/spack/ || true
-spack uninstall -a -y --dependents $FFT || true
-spack install --fresh cmake cuda fftw $MPI
+spack uninstall -a -y --dependents $FFT fiber || true
+spack install --fresh cmake fftw
 spack dev-build --fresh fiber@master fft=$FFT ^$MPI
 
 # Run the tests

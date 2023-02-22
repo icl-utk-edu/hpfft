@@ -16,12 +16,12 @@ module load cmake fftw $MPI $FFT $COMPILER
 
 # Build the project
 mkdir -p build && cd build
-#FFT_DIR=${FFT^^}_ROOT
-#FFTW_DIR=${FFTW^^}_ROOT
-#MPI_DIR=${MPI^^}_ROOT
-#export CPATH=$FFT_DIR/include:$FFTW_DIR/include:$MPI_DIR/include
-#export LIBRARY_PATH=$FFT_DIR/lib:$FFTW_DIR/lib:$MPI_DIR/lib
-#export LD_LIBRARY_PATH=$LIBRARY_PATH
+FFT_DIR=${FFT^^}_ROOT
+FFTW_DIR=${FFTW^^}_ROOT
+MPI_DIR=${MPI^^}_ROOT
+export CPATH=$FFT_DIR/include:$FFTW_DIR/include:$MPI_DIR/include
+export LIBRARY_PATH=$FFT_DIR/lib:$FFTW_DIR/lib:$MPI_DIR/lib
+export LD_LIBRARY_PATH=$LIBRARY_PATH
 LIBNAME=${FFT^^}
 cmake -DFIBER_ENABLE_$LIBNAME=ON ..
 make VERBOSE=1

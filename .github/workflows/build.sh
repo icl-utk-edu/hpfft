@@ -10,6 +10,7 @@ set -e
 trap 'echo "# $BASH_COMMAND"' DEBUG
 shopt -s expand_aliases
 
+export HOME=`pwd`
 source ../spack/share/spack/setup-env.sh
 spack load --first cmake fftw $MPI $FFT %$COMPILER
 spack load --first $COMPILER

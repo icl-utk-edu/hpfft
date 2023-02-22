@@ -12,7 +12,7 @@ shopt -s expand_aliases
 
 export HOME=`pwd`
 source ../spack/share/spack/setup-env.sh
-spack load --first cmake $MPI $FFT %$COMPILER
+spack load --first cmake fftw $MPI $FFT %$COMPILER
 spack load --first $COMPILER
 
 env
@@ -20,7 +20,7 @@ env
 # Build the project
 mkdir -p build && cd build
 FFT_DIR=`spack location -i $FFT %$COMPILER`
-#FFTW_DIR=`spack location -i fftw %$COMPILER`
+FFTW_DIR=`spack location -i fftw %$COMPILER`
 MPI_DIR=`spack location -i $MPI %$COMPILER`
 export CPATH=$FFT_DIR/include:$FFTW_DIR/include:$MPI_DIR/include
 echo CPATH=$FFT_DIR/include:$FFTW_DIR/include:$MPI_DIR/include

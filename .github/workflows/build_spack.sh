@@ -10,15 +10,15 @@ trap 'echo "# $BASH_COMMAND"' DEBUG
 shopt -s expand_aliases
 
 export HOME=`pwd`
-git clone https://github.com/spack/spack spack0 || true
-cp spack/packages.yaml spack0/etc/spack/
-source spack0/share/spack/setup-env.sh
+git clone https://github.com/spack/spack ../spack || true
+cp spack/packages.yaml spack/upstreams.yaml ../spack/etc/spack/
+source ../spack/share/spack/setup-env.sh
 module load gcc@7
 spack compiler find
 spack repo add `pwd`/spack/ || true
 spack uninstall -a -y --dependents $FFT || true
 spack install --fresh cmake cuda fftw $MPI
-spack dev-build --fresh fiber fft=$FFT ^$MPI
+spack dev-build --fresh fiber@master fft=$FFT ^$MPI
 
 # Run the tests
 spack load fiber

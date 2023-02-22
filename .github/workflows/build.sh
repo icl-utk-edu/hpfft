@@ -9,7 +9,7 @@ set -e
 trap 'echo "# $BASH_COMMAND"' DEBUG
 shopt -s expand_aliases
 
-source spack0/share/spack/setup-env.sh
+source ../spack/share/spack/setup-env.sh
 module avail
 exit
 

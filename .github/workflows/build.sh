@@ -11,8 +11,8 @@ trap 'echo "# $BASH_COMMAND"' DEBUG
 shopt -s expand_aliases
 
 source ../spack/share/spack/setup-env.sh
-module avail
-module load cmake fftw $MPI $FFT $COMPILER
+spack load --first cmake fftw $MPI $FFT %$COMPILER
+spack load --first $COMPILER
 
 # Build the project
 mkdir -p build && cd build

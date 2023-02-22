@@ -15,6 +15,8 @@ source ../spack/share/spack/setup-env.sh
 spack load --first cmake fftw $MPI $FFT %$COMPILER
 spack load --first $COMPILER
 
+env
+
 # Build the project
 mkdir -p build && cd build
 varname=${FFT^^}_ROOT

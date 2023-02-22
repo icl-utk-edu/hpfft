@@ -22,3 +22,8 @@ jobs:
         run: .github/workflows/build_spack.sh ${{matrix.mpi}} ${{matrix.library}} gcc@7.3.0
       - name: Build with cmake - ${{ matrix.library }} ${{matrix.mpi}}
         run: .github/workflows/build.sh ${{matrix.mpi}} ${{matrix.library}} gcc@7.3.0
+      - uses: actions/upload-artifact@v3
+        with:
+          name: CMakeError.log
+          path: build/CMakeFiles/CMakeError.log
+

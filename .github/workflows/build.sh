@@ -18,7 +18,9 @@ spack load --first $COMPILER
 # Build the project
 mkdir -p build && cd build
 varname=${FFT^^}_ROOT
+echo varname=$varname
 FFT_DIR=${!varname}
+echo FFT_DIR=$FFT_DIR
 FFTW_DIR=$FFTW_ROOT
 varname=${MPI^^}_ROOT
 MPI_DIR=${!varname}

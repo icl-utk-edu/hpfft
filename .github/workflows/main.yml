@@ -12,14 +12,14 @@ jobs:
   build:
     strategy:
       matrix:
-        library: [heffte, fftw, accfft, ffte, swfft, 2decomp]
         mpi: [openmpi]
-#        mpi: [openmpi, intel-oneapi-mpi]
+        compiler: [gcc@7.3.0]
+        library: [heffte, fftw, accfft, ffte, swfft, 2decomp]
       fail-fast: false
     runs-on: gpu_nvidia
     steps:
       - uses: actions/checkout@v3
-      - name: Build with spack - ${{ matrix.library }} ${{matrix.mpi}}
-        run: .github/workflows/build_spack.sh ${{matrix.mpi}} ${{matrix.library}}
-      - name: Build with cmake - ${{ matrix.library }} ${{matrix.mpi}}
-        run: .github/workflows/build.sh ${{matrix.mpi}} ${{matrix.library}}
+      - name: Build with spack - ${{ matrix.library }} ${{matrix.mpi}} ${{matrix.compiler}}
+        run: .github/workflows/build_spack.sh ${{matrix.mpi}} ${{matrix.library}} ${{matrix.compiler}}
+      - name: Build with cmake - ${{ matrix.library }} ${{matrix.mpi}} ${{matrix.compiler}}
+        run: .github/workflows/build.sh ${{matrix.mpi}} ${{matrix.library}} ${{matrix.compiler}}

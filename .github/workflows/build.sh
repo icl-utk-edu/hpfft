@@ -2,6 +2,7 @@
 
 MPI=$1
 FFT=$2
+COMPILER=$3
 
 source /etc/profile
 set +x
@@ -11,7 +12,7 @@ shopt -s expand_aliases
 
 source ../spack/share/spack/setup-env.sh
 module avail
-module load cmake fftw $MPI gcc@7 $FFT
+module load cmake fftw $MPI $FFT $COMPILER
 
 # Build the project
 mkdir -p build && cd build

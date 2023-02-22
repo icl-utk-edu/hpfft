@@ -2,6 +2,7 @@
 
 MPI=$1
 FFT=$2
+COMPILER=$3
 
 source /etc/profile
 set +x
@@ -13,12 +14,12 @@ export HOME=`pwd`
 git clone https://github.com/spack/spack ../spack || true
 cp spack/modules.yaml spack/packages.yaml spack/upstreams.yaml ../spack/etc/spack/
 source ../spack/share/spack/setup-env.sh
-module load gcc@7
+module load $COMPILER
 spack compiler find
 spack repo add `pwd`/spack/ || true
 spack uninstall -a -y --dependents $FFT fiber || true
-spack install --fresh cmake fftw %gcc@7
-spack dev-build --fresh fiber@master fft=$FFT ^$MPI %gcc@7
+spack install --fresh cmake fftw %$COMPILER
+spack dev-build --fresh fiber@master fft=$FFT ^$MPI %$COMPILER
 
 # Run the tests
 spack load fiber

@@ -12,10 +12,11 @@ shopt -s expand_aliases
 
 export HOME=`pwd`
 source ../spack/share/spack/setup-env.sh
-spack load --first cmake fftw $MPI $FFT %$COMPILER
-spack load --first $COMPILER
-
-env
+spack env activate --temp
+spack add cmake fftw $MPI $FFT %$COMPILER
+spack add $COMPILER
+spack install
+spack load
 
 # Build the project
 mkdir -p build && cd build

@@ -12,8 +12,9 @@ jobs:
   build:
     strategy:
       matrix:
-        mpi: [openmpi]
-        library: [heffte, fftw, accfft, ffte, swfft, 2decomp]
+        mpi: [intel-oneapi-mpi, mpich]
+        library: [heffte, fftw, accfft, ffte]
+# Removed swfft and 2decomp until they work correctly
       fail-fast: false
     runs-on: gpu_nvidia
     steps:

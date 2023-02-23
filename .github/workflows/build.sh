@@ -15,7 +15,7 @@ source ../spack/share/spack/setup-env.sh
 spack env activate --temp
 spack add cmake fftw $MPI $FFT %$COMPILER
 spack add $COMPILER
-spack install
+spack install --fresh
 spack load
 
 # Build the project

@@ -12,7 +12,7 @@ jobs:
   build:
     strategy:
       matrix:
-        mpi: [intel-oneapi-mpi, mpich]
+        mpi: [openmpi, intel-oneapi-mpi, mpich]
         library: [heffte, fftw, accfft, ffte]
 # Removed swfft and 2decomp until they work correctly
       fail-fast: false
@@ -21,11 +21,11 @@ jobs:
       - uses: actions/checkout@v3
       - name: Build with spack - ${{ matrix.library }} ${{matrix.mpi}}
         run: .github/workflows/build_spack.sh ${{matrix.mpi}} ${{matrix.library}} gcc@7.3.0
-      - name: Build with cmake - ${{ matrix.library }} ${{matrix.mpi}}
-        run: .github/workflows/build.sh ${{matrix.mpi}} ${{matrix.library}} gcc@7.3.0
-      - uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: CMakeError.log ${{matrix.mpi}} ${{matrix.library}}
-          path: build/CMakeFiles/CMakeError.log
+      #- name: Build with cmake - ${{ matrix.library }} ${{matrix.mpi}}
+      #  run: .github/workflows/build.sh ${{matrix.mpi}} ${{matrix.library}} gcc@7.3.0
+      #- uses: actions/upload-artifact@v3
+      #  if: failure()
+      #  with:
+      #    name: CMakeError.log ${{matrix.mpi}} ${{matrix.library}}
+      #    path: build/CMakeFiles/CMakeError.log
 

@@ -12,7 +12,7 @@ jobs:
   build:
     strategy:
       matrix:
-        mpi: [openmpi, intel-oneapi-mpi, mpich]
+        mpi: [openmpi, intel-oneapi-mpi, mpich, mvapich]
         library: [heffte, fftw, accfft, ffte]
 # Removed swfft and 2decomp until they work correctly
       fail-fast: false

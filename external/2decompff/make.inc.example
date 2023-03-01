@@ -1,0 +1,13 @@
+# Path where to copy the content of this repo. Usually that is the location of 
+# the library 2decomp&FFT
+PREFIX=/tmp/2decomp_iface
+
+# Name of the folder that will contain the build
+BUILD=build
+
+# Localization of the library
+DECOMP_ROOT=${DECOMPFFT_ROOT}
+
+# Paths where to copy the header and library of the interface
+DECOMP_INC=$(DECOMP_ROOT)/include
+DECOMP_LIB=$(DECOMP_ROOT)/lib

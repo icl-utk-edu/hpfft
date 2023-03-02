@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         mpi: [openmpi, intel-oneapi-mpi, mpich, mvapich]
-        library: [heffte, fftw, accfft, ffte]
+        library: [heffte, fftw, accfft, ffte, swfft]
 # Removed swfft and 2decomp until they work correctly
       fail-fast: false
     runs-on: gpu_nvidia

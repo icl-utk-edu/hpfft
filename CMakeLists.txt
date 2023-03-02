@@ -81,6 +81,9 @@ endif()
 
 if (FIBER_ENABLE_2DECOMP)
     add_definitions(-DFIBER_ENABLE_2DECOMP)
+    add_subdirectory(external/2decompfft)
+    include_directories(PUBLIC ${CMAKE_CURRENT_LIST_DIR}/external/2decompfft/include)
+    link_directories(${CMAKE_BINARY_DIR}/external/2decompfft/lib)
 endif()
 
 if (FIBER_ENABLE_NB3DFFT)

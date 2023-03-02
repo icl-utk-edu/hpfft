@@ -18,7 +18,7 @@ algorithms."""
 
     maintainers = ['G-Ragghianti']
 
-    version('1.5.847', sha256='b137d7cf9b771de0a174d1e6c4ff0e48b4a84b51ff6c62140b4f522092e6784f')
+    version('1.5.847', git="https://github.com/certik/2decomp_fft")
 
     variant(
         'backend', default='generic', description='FFT backend',
@@ -49,6 +49,7 @@ algorithms."""
             f90flags += ' -I{0}'.format(spec['mkl'].prefix.include)
             make_args.append('MKL_PATH={0}/mkl'.format(spec['mkl'].prefix))
         make_args.append(f90flags)
+        mkdirp('include')
         make('lib', *make_args)
 
     def install(self, spec, prefix):

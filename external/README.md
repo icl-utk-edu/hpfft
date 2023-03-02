@@ -21,4 +21,23 @@ AccFFT
 2DECOMP&FFT
 ============
 
-The [2DECOMP&FFT](http://www.2decomp.org/) library is written in Fortran and no longer being maintained. Creating a C-interface requires some extra work, which we elaborate in [2Decomp C-Interface](https://github.com/cayrols/2decompFFT_c_iface/tree/3957f639890c2e9a8113d27b49c5cf75eb060d95).
+
+The [2DECOMP&FFT](http://www.2decomp.org/) library is written in Fortran and no longer being maintained. 
+Creating a C-interface requires some extra work, which we elaborate in [2Decomp C-Interface](https://github.com/cayrols/2decompFFT_c_iface/tree/3957f639890c2e9a8113d27b49c5cf75eb060d95).
+
+### Create the interface
+
+The following will automatically download the interface source files and build the corresponding library.
+
+To compile the interface, we need to have `FFTW_PATH` and `DECOMPFFT_ROOT` env variables set.
+One example to create the interface is:
+```
+mkdir <build_folder>
+cmake -DFFTW_PATH=<path_to_fftw_root> <path_to_CMakeLists.txt>
+make 
+```
+
+The created library `lib2decomp_fft_iface.a` and the include file `decomp_2d_iface.h` will be located in the `<build_folder>`.
+
+Note: the interface uses the file `src/Makefile.inc` of the 2decomp&FFT library, which itself needs the path to FFTW through `FFTW_PATH`.
+

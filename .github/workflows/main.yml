@@ -19,7 +19,7 @@ jobs:
     runs-on: gpu_nvidia
     steps:
       - name: Cleanup
-        run: rm -rf .
+        run: rm -rf .git || true
       - uses: actions/checkout@v3
       - name: Build with spack - ${{ matrix.library }} ${{matrix.mpi}}
         run: .github/workflows/build_spack.sh ${{matrix.mpi}} ${{matrix.library}} gcc@7.3.0

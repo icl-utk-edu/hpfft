@@ -1,4 +1,14 @@
-![FBI_banner](https://bitbucket.org/aayala32/logos/raw/de08df3c3bfd9d595587bf840f31afcb45d6019c/fiber.png)
+.
+
+     _             ___    ___       
+    | |           / __)  / __)  _   
+    | |__  ____ _| |__ _| |__ _| |_ 
+    |  _ \|  _ (_   __|_   __|_   _)
+    | | | | |_| || |    | |    | |_ 
+    |_| |_|  __/ |_|    |_|     \__)
+      |_|                       
+
+* * *
 
 **FFT Benchmarking Initiative**
 
@@ -13,7 +23,14 @@
 About
 =====
 
-The FFT Infrastructure Benchmark for Exascale Research (FIBER) provides a framework for Fast Fourier Transform (FFT) benchmarks targeting exascale computing systems. It evaluates performance and scalability of distributed FFTs on different architectures. Furthermore, it analyzes the effect on applications that directly depend on FFTs. It can also stress and test the overall network of a supercomputer, give an indication on bisection bandwidth, noise, and other network and MPI collectives limitations that are of interest to many other ECP applications.
+The High Performance FFT (HPFFT) provides a framework for Fast Fourier
+Transform (FFT) benchmarks targeting exascale computing systems. It
+evaluates performance and scalability of distributed FFTs on different
+architectures. Furthermore, it analyzes the effect on applications that
+directly depend on FFTs. It can also stress and test the overall network
+of a supercomputer, give an indication on bisection bandwidth, noise,
+and other network and MPI collectives limitations that are of interest
+to many other ECP applications.
 
 
 The current harness software puts together FFT libraries supporting distributed 3-D complex-to-complex and real-to-complex FFTs.

@@ -3,14 +3,14 @@
 * heFFTe backend
 * ---------------
 */
-#ifndef FIBER_BACKEND_HEFFTE_H
-#define FIBER_BACKEND_HEFFTE_H
+#ifndef HPFFT_BACKEND_HEFFTE_H
+#define HPFFT_BACKEND_HEFFTE_H
 
 #include <stdio.h>
 
 //=====================  Complex-to-Complex transform =========================
 
-#if defined(FIBER_ENABLE_HEFFTE)
+#if defined(HPFFT_ENABLE_HEFFTE)
 #include "heffte.h"
 
 //=================== Initialization (if required) ============================
@@ -226,4 +226,4 @@ void compute_z2d_heffte( int const inbox_low[3], int const inbox_high[3],
 {}
 #endif
 
-#endif  //! FIBER_BACKEND_HEFFTE_H
+#endif  //! HPFFT_BACKEND_HEFFTE_H

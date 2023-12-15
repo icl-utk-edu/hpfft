@@ -1,5 +1,5 @@
 
-#include "fiber_swfft.h"
+#include "hpfft_swfft.h"
 
 /* SWFFT header files */
 #include "distribution.h"

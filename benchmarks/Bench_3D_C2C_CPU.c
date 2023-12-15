@@ -7,8 +7,8 @@
 
 // Use this program to benchmark R2C FFT performance for all libraries
 
-#include "fiber_backends.h"
-#include "fiber_utils.h"
+#include "hpfft_backends.h"
+#include "hpfft_utils.h"
 
 int main(int argc, char** argv){
 
@@ -41,7 +41,7 @@ int main(int argc, char** argv){
 
     int size_inbox  = 32;
 
-    fiber_complex *input  = calloc(size_inbox, sizeof(fiber_complex));
+    hpfft_complex *input  = calloc(size_inbox, sizeof(hpfft_complex));
 
     // Data Initialization
     for(i=0; i<size_inbox; i++){
@@ -70,7 +70,7 @@ int main(int argc, char** argv){
             c2c_time[2*i] = c2c_time[2*i+1] = -1;
         }
         else{
-            fiber_execute_z2z[i].function(box_low, box_high, box_low, box_high, comm, input, input, 0, timer);
+            hpfft_execute_z2z[i].function(box_low, box_high, box_low, box_high, comm, input, input, 0, timer);
             c2c_time[2*i] = timer[0]; 
             c2c_time[2*i+1] = timer[1];
         }

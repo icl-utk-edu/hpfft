@@ -3,12 +3,12 @@
 * FFTADVMPI backend
 * -----------------
 */
-#ifndef FIBER_BACKEND_FFTADVMPI_H
-#define FIBER_BACKEND_FFTADVMPI_H
+#ifndef HPFFT_BACKEND_FFTADVMPI_H
+#define HPFFT_BACKEND_FFTADVMPI_H
 
 #include <stdio.h>
 
-#if defined(FIBER_ENABLE_FFTADVMPI)
+#if defined(HPFFT_ENABLE_FFTADVMPI)
 
 #include <fftw3-mpi.h>
 #include <mpi.h>
@@ -251,4 +251,4 @@ void compute_z2d_fftadvmpi( int const inbox_low[3], int const inbox_high[3],
 #endif
 
 
-#endif  //! FIBER_BACKEND_FFTADVMPI_H
+#endif  //! HPFFT_BACKEND_FFTADVMPI_H

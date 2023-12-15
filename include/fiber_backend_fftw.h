@@ -3,18 +3,18 @@
 * FFTW backend
 * ---------------
 */
-#ifndef FIBER_BACKEND_FFTW_H
-#define FIBER_BACKEND_FFTW_H
+#ifndef HPFFT_BACKEND_FFTW_H
+#define HPFFT_BACKEND_FFTW_H
 
 #include <stdio.h>
 
-#if defined(FIBER_ENABLE_FFTW)
+#if defined(HPFFT_ENABLE_FFTW)
 #include <fftw3-mpi.h>
 
 
 /*!
  * \ingroup CPU_libraries
- * \addtogroup fiber_cpu Backend fftw3
+ * \addtogroup hpfft_cpu Backend fftw3
  *
  * Wrappers and template specializations related to the FFTW backend.
  * Requires CMake option:
@@ -211,4 +211,4 @@ void compute_z2d_fftw( int const inbox_low[3], int const inbox_high[3],
 #endif
 
 
-#endif  //! FIBER_BACKEND_FFTW_H
+#endif  //! HPFFT_BACKEND_FFTW_H

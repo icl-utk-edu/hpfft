@@ -3,12 +3,12 @@
 * P3DFFT backend
 * ---------------
 */
-#ifndef FIBER_BACKEND_P3DFFT_H
-#define FIBER_BACKEND_P3DFFT_H
+#ifndef HPFFT_BACKEND_P3DFFT_H
+#define HPFFT_BACKEND_P3DFFT_H
 
 #include <stdio.h>
 
-#if defined(FIBER_ENABLE_P3DFFT)
+#if defined(HPFFT_ENABLE_P3DFFT)
 #include "p3dfft.h"
 
 //=================== Initialization (if required) ============================
@@ -262,4 +262,4 @@ void compute_z2d_p3dfft( int const inbox_low[3], int const inbox_high[3],
 #endif 
 
 
-#endif  //! FIBER_BACKEND_P3DFFT_H
+#endif  //! HPFFT_BACKEND_P3DFFT_H

@@ -1,5 +1,5 @@
-#ifndef FIBER_UTILS_H
-#define FIBER_UTILS_H
+#ifndef HPFFT_UTILS_H
+#define HPFFT_UTILS_H
 
 #include <math.h>
 #include <stdio.h>
@@ -9,7 +9,7 @@
 typedef struct{
     double r;
     double i;
-} fiber_complex;
+} hpfft_complex;
 
 // constants
   const char *syntax =
@@ -60,7 +60,7 @@ void error_one(const char *str)
 
 
 // Command line parsing
-void fiber_parse_options(int argc, char** argv, int * backend_options, char * lib_name, char * lib_1d_backend){
+void hpfft_parse_options(int argc, char** argv, int * backend_options, char * lib_name, char * lib_1d_backend){
   int iarg = 1;
   while (iarg < argc) {
     if (strcmp(argv[iarg],"-h") == 0) {
@@ -112,13 +112,13 @@ void fiber_parse_options(int argc, char** argv, int * backend_options, char * li
 }
 
 
-#if defined(FIBER_ENABLE_CUDA)
+#if defined(HPFFT_ENABLE_CUDA)
   #include <cufft.h>
-  #define fiber_copy_cpu2gpu(h_, g_, size_)  cudaMemcpy((g_), (h_), (size_), cudaMemcpyHostToDevice)
-  #define fiber_copy_gpu2cpu(g_, h_, size_)  cudaMemcpy((h_), (g_), (size_), cudaMemcpyDeviceToHost)
+  #define hpfft_copy_cpu2gpu(h_, g_, size_)  cudaMemcpy((g_), (h_), (size_), cudaMemcpyHostToDevice)
+  #define hpfft_copy_gpu2cpu(g_, h_, size_)  cudaMemcpy((h_), (g_), (size_), cudaMemcpyDeviceToHost)
 #else 
-  #define fiber_copy_cpu2gpu(h_, g_, size_)
-  #define fiber_copy_gpu2cpu(h_, g_, size_)
+  #define hpfft_copy_cpu2gpu(h_, g_, size_)
+  #define hpfft_copy_gpu2cpu(h_, g_, size_)
 #endif    
 
 double surfarea(int i, int j, int k, int nx, int ny, int nz)
@@ -270,7 +270,7 @@ int factorize(int n)
   return(nfactor);
 }
 
-int fiber_get_backend(char * backend)
+int hpfft_get_backend(char * backend)
 {
       if (strcmp(backend,"heffte") == 0)
          return 0;
@@ -299,7 +299,7 @@ int fiber_get_backend(char * backend)
 }
 
 
-int fiber_get_1d_backend(char * backend)
+int hpfft_get_1d_backend(char * backend)
 {
       if (strcmp(backend,"stock") == 0)
          return 0;
@@ -321,4 +321,4 @@ int fiber_get_1d_backend(char * backend)
 
 
 
-#endif//! FIBER_UTILS_H
+#endif//! HPFFT_UTILS_H

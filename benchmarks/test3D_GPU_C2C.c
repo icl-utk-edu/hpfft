@@ -8,15 +8,15 @@ All libraries must pass this error validation tester.
 make clean; make -j; mpirun -n 2 ./test3D_GPU_C2C <gpu_library>
 */
 
-#include "fiber_backends.h"
-#include "fiber_utils.h"
+#include "hpfft_backends.h"
+#include "hpfft_utils.h"
 #include <cufft.h>
 
 
 int main(int argc, char** argv){
    
     // Get backend type from user
-    int my_backend  = fiber_get_backend(argv[1]);
+    int my_backend  = hpfft_get_backend(argv[1]);
 
     MPI_Init(&argc, &argv);
     MPI_Comm comm = MPI_COMM_WORLD;
@@ -57,11 +57,11 @@ int main(int argc, char** argv){
     int size_inbox  = 32;
     int size_outbox = 32;
 
-    fiber_complex *input  = calloc(size_outbox, sizeof(fiber_complex));
-    fiber_complex *output = calloc(size_outbox, sizeof(fiber_complex));
+    hpfft_complex *input  = calloc(size_outbox, sizeof(hpfft_complex));
+    hpfft_complex *output = calloc(size_outbox, sizeof(hpfft_complex));
 
-    fiber_complex *d_input = NULL;
-    size_t fft_size_in  = sizeof(fiber_complex) * size_inbox;
+    hpfft_complex *d_input = NULL;
+    size_t fft_size_in  = sizeof(hpfft_complex) * size_inbox;
     cudaMalloc((void**) &d_input,  fft_size_in);
 
 
@@ -90,7 +90,7 @@ int main(int argc, char** argv){
     // ********************************
     // Compute forward (Z2Z) transform
     // ********************************
-    fiber_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, d_input, d_input, backend_options, timer);
+    hpfft_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, d_input, d_input, backend_options, timer);
 
 
     // Moving data: GPU->CPU
@@ -131,9 +131,9 @@ int main(int argc, char** argv){
     //     input[i].i = 0.0;
     // }        
 
-    // fiber_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, input, 1, timer);
+    // hpfft_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, input, 1, timer);
     backend_options[option_fft_op] = 1;
-    fiber_execute_z2z[8].function(box_low, box_high, box_low, box_high, comm, input, input, backend_options, timer);
+    hpfft_execute_z2z[8].function(box_low, box_high, box_low, box_high, comm, input, input, backend_options, timer);
 
     // Output after backward
     for(i=0; i<size_inbox; i++) {

@@ -7,8 +7,8 @@ Use this program to verify the correct integration of a third-party library
 make clean; make -j; mpirun -n 2 ./test3D_CPU_C2C <library>
 */
 
-#include "fiber_backends.h"
-#include "fiber_utils.h"
+#include "hpfft_backends.h"
+#include "hpfft_utils.h"
 
 int main(int argc, char** argv){
 
@@ -38,7 +38,7 @@ int main(int argc, char** argv){
     }
 
     // Get backend type from user
-    int my_backend  = fiber_get_backend(argv[1]);
+    int my_backend  = hpfft_get_backend(argv[1]);
 
     int i;
     // Initial configuration setup
@@ -54,7 +54,7 @@ int main(int argc, char** argv){
     int size_outbox = 32;
 
     double *input  = malloc(size_inbox * sizeof(double));
-    fiber_complex *output = calloc(size_outbox, sizeof(fiber_complex));
+    hpfft_complex *output = calloc(size_outbox, sizeof(hpfft_complex));
 
     // Data Initialization
     for(i=0; i<size_inbox; i++)
@@ -73,7 +73,7 @@ int main(int argc, char** argv){
     // ********************************
     // Compute forward (D2Z) transform
     // ********************************
-    fiber_execute_d2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, output, backend_options, timer);
+    hpfft_execute_d2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, output, backend_options, timer);
 
     // Output after forward
     for(i=0; i<size_outbox; i++) 
@@ -107,7 +107,7 @@ int main(int argc, char** argv){
 
     if (my_backend == 0){
         // Backward execution
-        fiber_execute_z2d[my_backend].function(box_low, box_high, box_low, box_high, comm, output, input, backend_options, timer);
+        hpfft_execute_z2d[my_backend].function(box_low, box_high, box_low, box_high, comm, output, input, backend_options, timer);
 
         // Output after backward
         for(i=0; i<size_inbox; i++) 

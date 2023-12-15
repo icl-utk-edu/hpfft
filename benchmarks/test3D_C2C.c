@@ -8,8 +8,8 @@ As input, give the library you want to benchmark, the FFT size (nx,ny,nz), and t
     mpirun -n $NUM_RANKS ./test3D_C2C -lib <library> -backend <1D_backend> -size <nx> <ny> <nz> -pgrid <p> <q>
 */
 
-#include "fiber_backends.h"
-#include "fiber_utils.h"
+#include "hpfft_backends.h"
+#include "hpfft_utils.h"
 
 
 int main(int argc, char** argv){
@@ -31,16 +31,16 @@ int main(int argc, char** argv){
     char lib_1d_backend[30] = {"fftw"}; // FFTW is the default backend for most parallel FFT libraries
     backend_options[option_niter] = 10; // default number of iterations
 
-    fiber_parse_options(argc, argv, backend_options, lib_name, lib_1d_backend);
+    hpfft_parse_options(argc, argv, backend_options, lib_name, lib_1d_backend);
     backend_options[option_fft_op] = 0;  // Fixed to benchmark a forward FFT computation
-    backend_options[option_backend] = fiber_get_1d_backend(lib_1d_backend);
+    backend_options[option_backend] = hpfft_get_1d_backend(lib_1d_backend);
 
     if(me==0){
         printf("----------------------------------------------- \n");
         printf("Benchmarking %s library using %s backend \n", lib_name, lib_1d_backend);
         printf("----------------------------------------------- \n");
     }        
-    int my_backend  = fiber_get_backend(lib_name);
+    int my_backend  = hpfft_get_backend(lib_name);
 
     // Global grid
     int nx, ny, nz ;
@@ -96,8 +96,8 @@ int main(int argc, char** argv){
    printf("[%d] proc_grid 1x%dx%d - [New MPI process %d] I am located at (%d, %d).   %d-%d-%d    %d-%d-%d   local_size={%d} \n", me, proc_grid[0], proc_grid[1],  proc_rank, proc_coords[0],proc_coords[1], \
                                         box_low[0], box_low[1], box_low[2], box_high[0], box_high[1], box_high[2], local_fft_size);
 
-    fiber_complex *input  = calloc(local_fft_size, sizeof(fiber_complex));
-    fiber_complex *output = calloc(local_fft_size, sizeof(fiber_complex));
+    hpfft_complex *input  = calloc(local_fft_size, sizeof(hpfft_complex));
+    hpfft_complex *output = calloc(local_fft_size, sizeof(hpfft_complex));
 
     // Data Initialization
     int i;
@@ -116,7 +116,7 @@ int main(int argc, char** argv){
     
     // Initialize Library
     int init_option = 1; // 
-    if(fiber_initialize[my_backend].function(init_option) == 0){
+    if(hpfft_initialize[my_backend].function(init_option) == 0){
         if(me==0)
             printf("[%s] successfully initialized.\n", lib_name);
     }
@@ -127,7 +127,7 @@ int main(int argc, char** argv){
     // ********************************
     // Compute forward (Z2Z) transform
     // ********************************
-    fiber_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, output, backend_options, timer);
+    hpfft_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, output, backend_options, timer);
 
     if (me==0){
         printf("Time for FFT plan  = %10.6g \n", timer[0]);
@@ -144,8 +144,8 @@ int main(int argc, char** argv){
 
     backend_options[option_fft_op] = 1; // Setting to backward for error validation
     // Using heffte for backward FFT:
-    // fiber_execute_z2z[0].function(box_low, box_high, box_low, box_high, comm, output, input, backend_options, timer);
-    fiber_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, output, input, backend_options, timer);
+    // hpfft_execute_z2z[0].function(box_low, box_high, box_low, box_high, comm, output, input, backend_options, timer);
+    hpfft_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, output, input, backend_options, timer);
 
     // Output after backward
     for(i=0; i<local_fft_size; i++) {

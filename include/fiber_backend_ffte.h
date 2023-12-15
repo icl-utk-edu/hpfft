@@ -3,24 +3,24 @@
 * FFTE backend
 * ---------------
 */
-#ifndef FIBER_BACKEND_FFTE_H
-#define FIBER_BACKEND_FFTE_H
+#ifndef HPFFT_BACKEND_FFTE_H
+#define HPFFT_BACKEND_FFTE_H
 
 #include <stdio.h>
 
-#if defined(FIBER_ENABLE_FFTE)
+#if defined(HPFFT_ENABLE_FFTE)
 
-#include <fiber_utils.h>
-#include <fiber_fortran.h>
+#include <hpfft_utils.h>
+#include <hpfft_fortran.h>
 
 //=================== Initialization (if required) ============================
 int init_ffte(int option){
     return(0);
 }
 
-extern void fiber_pzfft3d(void const *in, void *out, int *nx, int *ny, int *nz,
+extern void hpfft_pzfft3d(void const *in, void *out, int *nx, int *ny, int *nz,
     MPI_Fint *fcomm, int *comm_size, int *opt);
-extern void fiber_pdzfft3d(double const *in, void *out, int *nx, int *ny, int *nz,
+extern void hpfft_pdzfft3d(double const *in, void *out, int *nx, int *ny, int *nz,
     MPI_Fint *fcomm, int *comm_rank, int *comm_size, int *opt);
 
 /* =====================  Complex-to-Complex transform ========================= */
@@ -51,7 +51,7 @@ void compute_z2z_ffte(int const inbox_low[3], int const inbox_high[3],
     MPI_Comm_size(comm, &comm_size);
     MPI_Comm_rank(comm, &comm_rank);
     opt = 0;
-    fiber_pzfft3d(in, out, &nx, &ny, &nz, &fcomm, &comm_size, &opt);
+    hpfft_pzfft3d(in, out, &nx, &ny, &nz, &fcomm, &comm_size, &opt);
 
     MPI_Barrier(comm);
     timer[0] += MPI_Wtime();
@@ -67,7 +67,7 @@ void compute_z2z_ffte(int const inbox_low[3], int const inbox_high[3],
     */
     opt = ffte_options[option_fft_op] == 0 ? -1 : 1;
     if (0==comm_rank) printf("iopt=%d %p %p\n", opt, in, out);
-    fiber_pzfft3d(in, out, &nx, &ny, &nz, &fcomm, &comm_size, &opt);
+    hpfft_pzfft3d(in, out, &nx, &ny, &nz, &fcomm, &comm_size, &opt);
 
     MPI_Barrier(comm);
     timer[1] = +MPI_Wtime();
@@ -108,7 +108,7 @@ void compute_d2z_ffte(int const inbox_low[3], int const inbox_high[3],
     MPI_Comm_rank(comm, &comm_rank);
     MPI_Comm_size(comm, &comm_size);
     opt = 0;
-    fiber_pdzfft3d(in, out, &nx, &ny, &nz, &fcomm, &comm_rank, &comm_size, &opt);
+    hpfft_pdzfft3d(in, out, &nx, &ny, &nz, &fcomm, &comm_rank, &comm_size, &opt);
 
     MPI_Barrier(comm);
     timer[0] += MPI_Wtime();
@@ -123,7 +123,7 @@ void compute_d2z_ffte(int const inbox_low[3], int const inbox_high[3],
     compute FFT
     */
     opt = ffte_options[option_fft_op] == 0 ? -1 : 1;
-    fiber_pdzfft3d(in, out, &nx, &ny, &nz, &fcomm, &comm_rank, &comm_size, &opt);
+    hpfft_pdzfft3d(in, out, &nx, &ny, &nz, &fcomm, &comm_rank, &comm_size, &opt);
 
     MPI_Barrier(comm);
     timer[1] = +MPI_Wtime();
@@ -168,4 +168,4 @@ void compute_z2d_ffte(int const inbox_low[3], int const inbox_high[3],
 
 #endif
 
-#endif  /* ! FIBER_BACKEND_FFTE_H */
+#endif  /* ! HPFFT_BACKEND_FFTE_H */

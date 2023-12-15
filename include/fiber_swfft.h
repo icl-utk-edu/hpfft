@@ -1,7 +1,7 @@
 /* Declaration of SWFFT funcitons for use in C code */
 
-#ifndef FIBER_SWFFT_H
-#define FIBER_SWFFT_H
+#ifndef HPFFT_SWFFT_H
+#define HPFFT_SWFFT_H
 
 #include <mpi.h>
 
@@ -21,4 +21,4 @@ void SWFFT_backward(void *dfft, void *output);
 }
 #endif
 
-#endif  /* FIBER_SWFFT_H */
+#endif  /* HPFFT_SWFFT_H */

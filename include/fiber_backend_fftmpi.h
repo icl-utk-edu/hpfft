@@ -3,12 +3,12 @@
 * FFTMPI backend
 * ---------------
 */
-#ifndef FIBER_BACKEND_FFTMPI_H
-#define FIBER_BACKEND_FFTMPI_H
+#ifndef HPFFT_BACKEND_FFTMPI_H
+#define HPFFT_BACKEND_FFTMPI_H
 
 #include <stdio.h>
 
-#if defined(FIBER_ENABLE_FFTMPI)
+#if defined(HPFFT_ENABLE_FFTMPI)
 #include "fft3d_wrap.h"
 
 
@@ -141,4 +141,4 @@ void compute_z2d_fftmpi( int const inbox_low[3], int const inbox_high[3],
 
 #endif
 
-#endif  //! FIBER_BACKEND_FFTMPI_H
+#endif  //! HPFFT_BACKEND_FFTMPI_H

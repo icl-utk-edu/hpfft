@@ -8,13 +8,13 @@ All libraries must pass this error validation tester.
 make clean; make -j; mpirun -n 2 ./test3D_CPU_C2C <library>
 */
 
-#include "fiber_backends.h"
-#include "fiber_utils.h"
+#include "hpfft_backends.h"
+#include "hpfft_utils.h"
 
 int main(int argc, char** argv){
    
     // Get backend type from user
-    int my_backend  = fiber_get_backend(argv[1]);
+    int my_backend  = hpfft_get_backend(argv[1]);
 
     MPI_Init(&argc, &argv);
     MPI_Comm comm = MPI_COMM_WORLD;
@@ -55,8 +55,8 @@ int main(int argc, char** argv){
     int size_inbox  = 32;
     int size_outbox = 32;
 
-    fiber_complex *input  = calloc(size_outbox, sizeof(fiber_complex));
-    fiber_complex *output = calloc(size_outbox, sizeof(fiber_complex));
+    hpfft_complex *input  = calloc(size_outbox, sizeof(hpfft_complex));
+    hpfft_complex *output = calloc(size_outbox, sizeof(hpfft_complex));
 
     // Data Initialization
     for(i=0; i<size_inbox; i++){
@@ -86,7 +86,7 @@ int main(int argc, char** argv){
     // ********************************
     // Compute forward (Z2Z) transform
     // ********************************
-    fiber_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, input, backend_options, timer);
+    hpfft_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, input, backend_options, timer);
 
     // Output after forward
     for(i=0; i<size_outbox; i++) 
@@ -123,13 +123,13 @@ int main(int argc, char** argv){
     //     input[i].i = 0.0;
     // }        
 
-    // fiber_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, input, 1, timer);
+    // hpfft_execute_z2z[my_backend].function(box_low, box_high, box_low, box_high, comm, input, input, 1, timer);
     backend_options[option_fft_op] = 1; // forward/backward flag
     printf("fftw op 0 = %d \n", backend_options[option_fft_op]);
     backend_options[option_nx] = 4; // nx flag
     backend_options[option_ny] = 4; // ny flag
     backend_options[option_nz] = 4; // nz flag
-    fiber_execute_z2z[8].function(box_low, box_high, box_low, box_high, comm, input, input, backend_options, timer);
+    hpfft_execute_z2z[8].function(box_low, box_high, box_low, box_high, comm, input, input, backend_options, timer);
 
     // Output after backward
     for(i=0; i<size_inbox; i++) {

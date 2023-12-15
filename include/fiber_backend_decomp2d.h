@@ -3,13 +3,13 @@
 * DECOM2D backend
 * ---------------
 */
-#ifndef FIBER_BACKEND_DECOM2D_H
-#define FIBER_BACKEND_DECOM2D_H
+#ifndef HPFFT_BACKEND_DECOM2D_H
+#define HPFFT_BACKEND_DECOM2D_H
 
 #include <stdio.h>
-#include <fiber_utils.h>
+#include <hpfft_utils.h>
 
-#if defined(FIBER_ENABLE_2DECOMP)
+#if defined(HPFFT_ENABLE_2DECOMP)
 #include <decomp_2d_iface.h>
 
 //=================== Initialization (if required) ============================
@@ -143,4 +143,4 @@ void compute_z2d_decomp2d( int const inbox_low[3], int const inbox_high[3],
 #endif
 
 
-#endif  //! FIBER_BACKEND_DECOM2D_H
+#endif  //! HPFFT_BACKEND_DECOM2D_H

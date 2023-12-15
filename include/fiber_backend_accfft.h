@@ -3,11 +3,11 @@
 * AccFFT backend
 * ---------------
 */
-#ifndef FIBER_BACKEND_ACCFFT_H
-#define FIBER_BACKEND_ACCFFT_H
+#ifndef HPFFT_BACKEND_ACCFFT_H
+#define HPFFT_BACKEND_ACCFFT_H
 
 
-#if defined(FIBER_ENABLE_ACCFFT)
+#if defined(HPFFT_ENABLE_ACCFFT)
 #include <accfft_c.h>
 
 

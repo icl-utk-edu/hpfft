@@ -3,13 +3,13 @@
 * NB3DFFT backend
 * ---------------
 */
-#ifndef FIBER_BACKEND_NB3DFFT_H
-#define FIBER_BACKEND_NB3DFFT_H
+#ifndef HPFFT_BACKEND_NB3DFFT_H
+#define HPFFT_BACKEND_NB3DFFT_H
 
 #include <stdio.h>
 // #include "nb3dfft.h"
 
-#if defined(FIBER_ENABLE_NB3DFFT)
+#if defined(HPFFT_ENABLE_NB3DFFT)
 
 //=================== Initialization (if required) ============================
 int init_nb3dfft(int option){
@@ -103,4 +103,4 @@ void compute_z2d_nb3dfft( int const inbox_low[3], int const inbox_high[3],
 #endif 
 
 
-#endif  //! FIBER_BACKEND_NB3DFFT_H
+#endif  //! HPFFT_BACKEND_NB3DFFT_H

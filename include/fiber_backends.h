@@ -1,19 +1,19 @@
-#ifndef FIBER_BACKENDS_H_
-#define FIBER_BACKENDS_H_
+#ifndef HPFFT_BACKENDS_H
+#define HPFFT_BACKENDS_H
 
 #include <mpi.h>
 
-#include "fiber_backend_heffte.h"
-#include "fiber_backend_fftmpi.h"
-#include "fiber_backend_accfft.h"
-#include "fiber_backend_p3dfft.h"
-#include "fiber_backend_ffte.h"
-#include "fiber_backend_swfft.h"
-#include "fiber_backend_decomp2d.h"
-#include "fiber_backend_nb3dfft.h"
-#include "fiber_backend_fftw.h"
-#include "fiber_backend_fftadvmpi.h"
-#include "fiber_backend_fftwpp.h"
+#include "hpfft_backend_heffte.h"
+#include "hpfft_backend_fftmpi.h"
+#include "hpfft_backend_accfft.h"
+#include "hpfft_backend_p3dfft.h"
+#include "hpfft_backend_ffte.h"
+#include "hpfft_backend_swfft.h"
+#include "hpfft_backend_decomp2d.h"
+#include "hpfft_backend_nb3dfft.h"
+#include "hpfft_backend_fftw.h"
+#include "hpfft_backend_fftadvmpi.h"
+#include "hpfft_backend_fftwpp.h"
 
 // Available backends
 char backends[][20] = {"heFFTe", "FFTMPI", "AccFFT", "P3DFFT", "FFTE", "SWFFT", "2DECOMP&FFT", "nb3dFFT", "FFTW", "fftadvmpi", "FFTW++"};
@@ -22,13 +22,13 @@ int n_backends = 11;
 enum backend{heffte, fftmpi, accfft, p3dfft, ffte, swfft, decomp2d, nb3dfft, fftw, fftadvmpi, fftwpp};
 
 // Backends initialization
-struct fiber_init
+struct hpfft_init
 {
     char *name;
     int (*function)( int );
 };
 
-const struct fiber_init fiber_initialize[] = {
+const struct hpfft_init hpfft_initialize[] = {
     { "heffte",     &init_heffte    },
     { "fftmpi",     &init_fftmpi    },
     { "accfft",     &init_accfft    },
@@ -43,13 +43,13 @@ const struct fiber_init fiber_initialize[] = {
 };
 
 // Real-to-complex transform
-struct fiber_map_backend_d2z
+struct hpfft_map_backend_d2z
 {
     char *name;
     void (*function)( int const * , int const *, int const * , int const * , MPI_Comm const , double const *, void *, int *, double *);
 };
 
-const struct fiber_map_backend_d2z fiber_execute_d2z[] = {
+const struct hpfft_map_backend_d2z hpfft_execute_d2z[] = {
     { "heffte",     &compute_d2z_heffte    },
     { "fftmpi",     &compute_d2z_fftmpi    },
     { "accfft",     &compute_d2z_accfft    },
@@ -65,13 +65,13 @@ const struct fiber_map_backend_d2z fiber_execute_d2z[] = {
 
 
 // Complex-to-real transform
-struct fiber_map_backend_z2d
+struct hpfft_map_backend_z2d
 {
     char *name;
     void (*function)( int const * , int const *, int const * , int const * , MPI_Comm const , void const *, double *, int *, double *);
 };
 
-const struct fiber_map_backend_z2d fiber_execute_z2d[] = {
+const struct hpfft_map_backend_z2d hpfft_execute_z2d[] = {
     { "heffte",     &compute_z2d_heffte    },
     { "fftmpi",     &compute_z2d_fftmpi    },
     { "accfft",     &compute_z2d_accfft    },
@@ -87,13 +87,13 @@ const struct fiber_map_backend_z2d fiber_execute_z2d[] = {
 
 
 // Complex-to-Complex transform
-struct fiber_map_backend_z2z
+struct hpfft_map_backend_z2z
 {
     char *name;
     void (*function)( int const * , int const *, int const * , int const * , MPI_Comm const , void const *, void *, int *, double *);
 };
 
-const struct fiber_map_backend_z2z fiber_execute_z2z[] = {
+const struct hpfft_map_backend_z2z hpfft_execute_z2z[] = {
     { "heffte",     &compute_z2z_heffte    },
     { "fftmpi",     &compute_z2z_fftmpi    },
     { "accfft",     &compute_z2z_accfft    },
@@ -107,4 +107,4 @@ const struct fiber_map_backend_z2z fiber_execute_z2z[] = {
     { "fftwpp",     &compute_z2z_fftwpp }
 };
 
-#endif  //! FIBER_BACKENDS_H_ 
+#endif  //! HPFFT_BACKENDS_H_

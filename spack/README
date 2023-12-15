@@ -1,8 +1,8 @@
-This is a spack repository for the fiber spack package.
+This is a spack repository for the hpfft spack package.
 
 To use this package in your spack install, run:
 
 ```
-spack repo add $DIR/fiber/spack/
+spack repo add $DIR/hpfft/spack/
 ```
 

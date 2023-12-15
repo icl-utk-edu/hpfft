@@ -4,7 +4,7 @@
 External Interfaces
 =====
 
-FIBER is built in C language to support most libraries in the literature. Use this folder to add C-interface for libraries that do not support wrappers by default.
+HPFFT is built in C language to support most libraries in the literature. Use this folder to add C-interface for libraries that do not support wrappers by default.
 
 
 * * *

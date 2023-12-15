@@ -16,11 +16,11 @@ FFT_LIBS = (
 )
 
 
-class Fiber(CMakePackage):
+class Hpfft(CMakePackage):
     """High Performance Fast Fourier Transform benchmark."""
 
-    homepage = "https://fiber.icl.utk.edu/"
-    git      = "https://github.com/icl-utk-edu/fiber"
+    homepage = "https://hpfft.icl.utk.edu/"
+    git      = "https://github.com/icl-utk-edu/hpfft"
 
     maintainers = ['G-Ragghianti', 'luszczek']
 
@@ -42,10 +42,10 @@ class Fiber(CMakePackage):
     def cmake_args(self):
         args = []
         for fft in self.spec.variants['fft'].value:
-            args.extend(["-DFIBER_ENABLE_{0}=ON".format(fft.upper())])
+            args.extend(["-DHPFFT_ENABLE_{0}=ON".format(fft.upper())])
             # These don't seem to be required within spack 
-            #args.extend("-DFIBER_FFT_INCLUDE_DIRS={0}".format(self.spec[fft].prefix.include))
-            #args.extend("-DFIBER_FFT_LIB_DIRS={0}".format(self.spec[fft].prefix.lib))
+            #args.extend("-DHPFFT_FFT_INCLUDE_DIRS={0}".format(self.spec[fft].prefix.include))
+            #args.extend("-DHPFFT_FFT_LIB_DIRS={0}".format(self.spec[fft].prefix.lib))
         return args
 
     @run_after('install')

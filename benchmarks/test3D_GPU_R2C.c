@@ -7,8 +7,8 @@ Use this program to verify the correct integration of a third-party library
 make clean; make -j; mpirun -n 2 ./test3D_GPU_C2C <library>
 */
 
-#include "fiber_backends.h"
-#include "fiber_utils.h"
+#include "hpfft_backends.h"
+#include "hpfft_utils.h"
 #include <cufft.h>
 
 
@@ -40,7 +40,7 @@ int main(int argc, char** argv){
     }
 
     // Get backend type from user
-    int my_backend  = fiber_get_backend(argv[1]);
+    int my_backend  = hpfft_get_backend(argv[1]);
 
     int i;
     // Initial configuration setup
@@ -56,10 +56,10 @@ int main(int argc, char** argv){
     int size_outbox = 32;
 
     double *input  = malloc(size_inbox * sizeof(double));
-    fiber_complex *output = calloc(size_outbox, sizeof(fiber_complex));
+    hpfft_complex *output = calloc(size_outbox, sizeof(hpfft_complex));
     
     double *d_input = NULL;
-    fiber_complex *d_output = NULL;
+    hpfft_complex *d_output = NULL;
 
     size_t fft_size_in  = sizeof(double) * size_inbox;
     size_t fft_size_out = sizeof(double) * size_inbox;
@@ -80,7 +80,7 @@ int main(int argc, char** argv){
     printf("\n");        
 
     // Moving data: CPU->GPU
-    // fiber_copy_cpu2gpu(input, d_input, fft_size_in);
+    // hpfft_copy_cpu2gpu(input, d_input, fft_size_in);
     cudaMemcpy(d_input, input, fft_size_in, cudaMemcpyHostToDevice);
     double timer[20];
     int backend_options[n_options];
@@ -90,10 +90,10 @@ int main(int argc, char** argv){
     // ********************************
     // Compute forward (D2Z) transform
     // ********************************
-    fiber_execute_d2z[my_backend].function(box_low, box_high, box_low, box_high, comm, d_input, d_output, backend_options, timer);
+    hpfft_execute_d2z[my_backend].function(box_low, box_high, box_low, box_high, comm, d_input, d_output, backend_options, timer);
 
     // Moving data: GPU->CPU
-    // fiber_copy_gpu2cpu(d_output, output, fft_size_out);
+    // hpfft_copy_gpu2cpu(d_output, output, fft_size_out);
     cudaMemcpy(output, d_output, fft_size_out, cudaMemcpyDeviceToHost);
 
     // Output after forward
@@ -126,7 +126,7 @@ int main(int argc, char** argv){
     for(i=0; i<size_inbox; i++) input[i] = 0.0;
 
     // Backward execution
-    fiber_execute_z2d[my_backend].function(box_low, box_high, box_low, box_high, comm, output, input, backend_options, timer);
+    hpfft_execute_z2d[my_backend].function(box_low, box_high, box_low, box_high, comm, output, input, backend_options, timer);
 
     // Output after backward
     for(i=0; i<size_inbox; i++) 

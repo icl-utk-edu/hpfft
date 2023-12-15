@@ -66,7 +66,7 @@ Create a folder; e.g., `Benchmarks_FFT`, and install the FFT libraries to benchm
         |-- FFTW++
 ~~~
 
-Current libraries targeted by FIBER:
+Current libraries targeted by HPFFT:
 - CPU support: [fftMPI](https://lammps.github.io/fftmpi/), [SWFFT](https://xgitlab.cels.anl.gov/hacc/SWFFT), 
 [P3DFFT](https://github.com/sdsc/p3dfft.3),
 [nb3dFFT](https://gitlab.jsc.fz-juelich.de/goebbert/nb3dfft),
@@ -79,19 +79,19 @@ Compilation
 ===========
 
 Next clone this repository and create  build folder, and execute the `cmake` commands.
-In the following example, we install FIBER with heFFTe and fftMPI backends:
+In the following example, we install HPFFT with heFFTe and fftMPI backends:
 
 ~~~
 mkdir build; cd $_
 build/
-cmake -DFIBER_FFT_LIB_DIRS="/home/Benchmarks_FFT/fftmpi/src;/home/heffte/build/lib"
--DFIBER_FFT_INCLUDE_DIRS="/home/Benchmarks_FFT/fftmpi/src;/home/heffte/build/include"
--DFIBER_ENABLE_HEFFTE=ON -DFIBER_ENABLE_FFTMPI=ON
+cmake -DHPFFT_FFT_LIB_DIRS="/home/Benchmarks_FFT/fftmpi/src;/home/heffte/build/lib"
+-DHPFFT_FFT_INCLUDE_DIRS="/home/Benchmarks_FFT/fftmpi/src;/home/heffte/build/include"
+-DHPFFT_ENABLE_HEFFTE=ON -DHPFFT_ENABLE_FFTMPI=ON
 -DMPI_DIR=/sw/openmpi/4.0.0/ .. 
 make -j
 ~~~
 
-List the `lib` and `include` folders of libraries to test, respectively, in `FIBER_FFT_LIB_DIRS` and `FIBER_FFT_INCLUDE_DIRS`.
+List the `lib` and `include` folders of libraries to test, respectively, in `HPFFT_FFT_LIB_DIRS` and `HPFFT_FFT_INCLUDE_DIRS`.
 
 Testing integration
 ===================
@@ -103,7 +103,7 @@ mpirun -n 2 ./test3D_CPU_C2C <library>
 mpirun -n 2 ./test3D_CPU_R2C <library>
 ~~~
 
-If FIBER was build linked to GPU enabled libraries:
+If HPFFT was build linked to GPU enabled libraries:
 ~~~
 cd build/benchmarks
 mpirun -n 2 ./test3D_GPU_C2C <gpu_library>
@@ -132,7 +132,7 @@ Documentation
 Getting Help
 ============
 
-For assistance with the FIBER project, email *fiber@icl.utk.edu* or start a GitHub issue. 
+For assistance with the HPFFT project, email *hpfft@icl.utk.edu* or start a GitHub issue. 
 
 Contributions are very welcome, please create a pull request.
 
@@ -140,7 +140,7 @@ Resources
 =========
 
 
-* Visit the [FIBER website](http://icl.utk.edu/fiber/) for more information about the HeFFTe project.
+* Visit the [HPFFT website](http://icl.utk.edu/hpfft/) for more information about the HeFFTe project.
 * Visit the [ECP website](https://exascaleproject.org) to find out more about the DOE Exascale Computing Initiative.
 
 * * *

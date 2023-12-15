@@ -3,13 +3,13 @@
 * SWFFT backend
 * ---------------
 */
-#ifndef FIBER_BACKEND_SWFFT_H
-#define FIBER_BACKEND_SWFFT_H
+#ifndef HPFFT_BACKEND_SWFFT_H
+#define HPFFT_BACKEND_SWFFT_H
 
 #include <stdio.h>
 
-#if defined(FIBER_ENABLE_SWFFT)
-#include "fiber_swfft.h"
+#if defined(HPFFT_ENABLE_SWFFT)
+#include "hpfft_swfft.h"
 
 #include <fftw3.h>
 
@@ -117,4 +117,4 @@ void compute_z2d_swfft( int const inbox_low[3], int const inbox_high[3],
 
 #endif
 
-#endif  //! FIBER_BACKEND_SWFFT_H
+#endif  //! HPFFT_BACKEND_SWFFT_H
